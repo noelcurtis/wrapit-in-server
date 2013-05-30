@@ -19,7 +19,7 @@ object GiftList {
    * Parse a User from a ResultSet
    */
   val parseSingle = {
-       get[Pk[Long]]("gift_list.id") ~
+      get[Pk[Long]]("gift_list.id") ~
       get[Option[String]]("gift_list.name") ~
       get[Option[String]]("gift_list.purpose") ~
       get[Option[Date]]("gift_list.due_date") map {
@@ -27,6 +27,11 @@ object GiftList {
     }
   }
 
+  /**
+   * Use to create a Gift List
+   * @param giftList
+   * @return
+   */
   def create(giftList: GiftList): Option[GiftList] = {
     try {
       DB.withConnection {
@@ -51,6 +56,25 @@ object GiftList {
         Logger.error(e.getMessage)
         None
       }
+    }
+  }
+
+  /**
+   * Use to create a GiftList for a user,
+   * User will be assigned as Creator of the GiftList
+   * @param giftList
+   * @param userId
+   * @return
+   */
+  def create(giftList: GiftList, userId: Long) : Option[GiftListRole] = {
+    val nList = create(giftList) // create the gift list
+    nList match {
+      case Some(nList) => {
+        val glRole = GiftListRole(userId, nList.id.get, Some(GiftListRole.Role.getInt(GiftListRole.Role.Creator)))
+        GiftListRole.create(glRole) // create the gift list role
+        Some(glRole)
+      }
+      case None => None
     }
   }
 

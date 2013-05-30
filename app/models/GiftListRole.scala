@@ -6,7 +6,25 @@ import play.api.Play.current
 import play.Logger
 import anorm.SqlParser._
 
-case class GiftListRole(userId: Long, giftListId: Long, role: Option[Int])
+case class GiftListRole(userId: Long, giftListId: Long, role: Option[Int]) {
+
+  /**
+   * use to get the user
+   * @return
+   */
+  def getUser : Option[User] = {
+    User.find(userId)
+  }
+
+  /**
+   * use to get the gift list
+   * @return
+   */
+  def getGiftList : Option[GiftList] = {
+    GiftList.find(giftListId)
+  }
+
+}
 
 object GiftListRole {
 

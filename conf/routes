@@ -6,10 +6,7 @@
 GET     /                           controllers.Application.index
 
 # Test
-GET     /test/model                 controllers.Test.testModel
-GET     /test/createuser            controllers.Test.testUserCreate
-GET     /test/giftlist              controllers.Test.testGiftListCreate
-GET     /test/role                  controllers.Test.testGiftListRole
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
