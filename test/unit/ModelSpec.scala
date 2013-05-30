@@ -5,15 +5,32 @@ import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._
 import models.{GiftListRole, GiftList, User}
-import anorm.NotAssigned
+import anorm._
 import java.util.Date
 import play.Logger
+import org.specs2.execute.{AsResult, Result}
+import scala.Some
+import play.api.Play.current
+import play.api.db.DB
+
+
+abstract class WithCleanDb extends WithApplication {
+  override def around[T: AsResult](t: => T) = super.around {
+    DB.withConnection {
+      implicit connection => {
+        Logger.debug("Clearing database...");
+        SQL("truncate gift_list_role, users, gift_list").execute()
+      }
+    }
+    AsResult(t)
+  }
+}
 
 class ModelSpec extends Specification {
 
   "User Model" should {
 
-    "User can be created" in new WithApplication {
+    "User can be created" in new WithCleanDb {
       val testUser = User(NotAssigned, Some("foo@bar.com"), Some("foobar"), Some(new Date()))
       val newUser = User.create(testUser)
       newUser match {
@@ -27,7 +44,7 @@ class ModelSpec extends Specification {
 
   "Gift List Model" should {
 
-    "GiftList can be created" in new WithApplication {
+    "allow GiftList creation" in new WithCleanDb {
       val testGiftList = GiftList(NotAssigned, Some("BalaBoo"), Some("For Birthday"), Some(new Date()))
       val newList = GiftList.create(testGiftList)
       newList match {
@@ -38,7 +55,7 @@ class ModelSpec extends Specification {
       }
     }
 
-    "GiftList can be created for User" in new WithApplication {
+    "allow GiftList creation for User" in new WithCleanDb {
       val testGiftList = GiftList(NotAssigned, Some("BalaBoo"), Some("For Birthday"), Some(new Date()))
       val testUser = User(NotAssigned, Some("foo1@bar.com"), Some("foobar"), Some(new Date()))
       val newUser = User.create(testUser)
@@ -58,7 +75,7 @@ class ModelSpec extends Specification {
 
   "Gift List Role Model" should {
 
-    "GiftListRole can be created" in new WithApplication {
+    "allow GiftListRole creation" in new WithCleanDb {
       val testRole = GiftListRole(5, 5, Some(GiftListRole.Role.getInt(GiftListRole.Role.Contributor)))
       GiftListRole.create(testRole)
       val foundRole = GiftListRole.find(testRole.userId, testRole.giftListId)
