@@ -71,4 +71,8 @@ object GiftListRole {
     }
   }
 
+//  def find(userId: Long): Option[List[GiftListRole]] = {
+//
+//  }
+
 }
