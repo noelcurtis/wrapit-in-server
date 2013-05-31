@@ -10,7 +10,17 @@ import anorm.SqlParser._
 import anorm.~
 
 case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Option[String],
-                lastSignIn: Option[Date])
+                lastSignIn: Option[Date]) {
+
+  /**
+   * Use to get the GiftListRoles for a User
+   * @return
+   */
+  def getGiftListRoles : Option[List[GiftListRole]] = {
+    None
+  }
+
+}
 
 object User {
 
@@ -18,7 +28,7 @@ object User {
    * Parse a User from a ResultSet
    */
   val parseSingle = {
-    get[Pk[Long]]("users.id") ~
+      get[Pk[Long]]("users.id") ~
       get[Option[String]]("users.email") ~
       get[Option[String]]("users.encrypted_password") ~
       get[Option[Date]]("users.last_sign_in") map {
@@ -59,6 +69,13 @@ object User {
     DB.withConnection {
       implicit connection =>
         SQL("select * from users where id = {id}").on('id -> id).as(User.parseSingle.singleOpt)
+    }
+  }
+
+  def find(email: String): Option[User] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select * from users where email = {email}").on('email -> email).as(User.parseSingle.singleOpt)
     }
   }
 

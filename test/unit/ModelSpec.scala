@@ -16,21 +16,40 @@ import play.api.db.DB
 
 abstract class WithCleanDb extends WithApplication {
   override def around[T: AsResult](t: => T) = super.around {
+    cleanDb // clean the database
+    createTestData // create some test data
+    AsResult(t)
+  }
+
+  def cleanDb = {
     DB.withConnection {
       implicit connection => {
         Logger.debug("Clearing database...");
         SQL("truncate gift_list_role, users, gift_list").execute()
       }
     }
-    AsResult(t)
   }
+
+  def createTestData = {
+    // create some users
+    val foobar = User.create(User(NotAssigned, Some("foobar@gmail.com"), Some("foobar"), Some(new Date())))
+    val foobar1 = User.create(User(NotAssigned, Some("foobar1@gmail.com"), Some("foobar1"), Some(new Date())))
+
+    // create some gift lists for users
+    val foobarList = GiftList(NotAssigned, Some("foobar"), Some("by foobar"), Some(new Date()))
+    val foobar1List = GiftList(NotAssigned, Some("foobar1"), Some("by foobar1"), Some(new Date()))
+
+    GiftList.create(foobarList, foobar.get.id.get)
+    GiftList.create(foobar1List, foobar1.get.id.get)
+  }
+
 }
 
 class ModelSpec extends Specification {
 
   "User Model" should {
 
-    "User can be created" in new WithCleanDb {
+    "allow User creation" in new WithCleanDb {
       val testUser = User(NotAssigned, Some("foo@bar.com"), Some("foobar"), Some(new Date()))
       val newUser = User.create(testUser)
       newUser match {
@@ -38,6 +57,20 @@ class ModelSpec extends Specification {
           newUser.id should_!= (None)
         }
         case None => failure("User creation failed")
+      }
+    }
+
+    "allow get of GiftListRoles" in new WithCleanDb {
+      val foundUser = User.find("foobar@gmail.com")
+      foundUser match {
+        case Some(foundUser) => {
+          val giftListRoles = foundUser.getGiftListRoles
+          giftListRoles match {
+            case Some(giftListRoles) => assert(!giftListRoles.isEmpty)
+            case None => failure("GiftListRoles not found when they should be")
+          }
+        }
+        case None => failure("User not found")
       }
     }
   }

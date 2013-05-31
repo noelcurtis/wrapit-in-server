@@ -9,14 +9,6 @@ import anorm.SqlParser._
 case class GiftListRole(userId: Long, giftListId: Long, role: Option[Int]) {
 
   /**
-   * use to get the user
-   * @return
-   */
-  def getUser : Option[User] = {
-    User.find(userId)
-  }
-
-  /**
    * use to get the gift list
    * @return
    */
