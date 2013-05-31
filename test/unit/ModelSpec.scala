@@ -60,22 +60,22 @@ class ModelSpec extends Specification {
       }
     }
 
+    "allow User creation without parameters" in new WithCleanDb {
+      val testUser = User(email=Some("fab@bar.com"), password=Some("blah"), lastSignIn=None)
+      val newUser = User.create(testUser)
+      newUser match {
+        case Some(newUser) => {
+          newUser.id should_!= (None)
+        }
+        case None => failure("User creation failed")
+      }
+    }
+
   }
 
   "Gift List Model" should {
 
-    "allow GiftList creation" in new WithCleanDb {
-      val testGiftList = GiftList(NotAssigned, Some("BalaBoo"), Some("For Birthday"), Some(new Date()))
-      val newList = GiftList.create(testGiftList)
-      newList match {
-        case Some(newList) => {
-          newList.id should_!= (None)
-        }
-        case None => failure("Gift List Creation failed")
-      }
-    }
-
-    "allow GiftList creation for User" in new WithCleanDb {
+    "allow User to create a GiftList" in new WithCleanDb {
       val testGiftList = GiftList(NotAssigned, Some("BalaBoo"), Some("For Birthday"), Some(new Date()))
       val testUser = User(NotAssigned, Some("foo1@bar.com"), Some("foobar"), Some(new Date()))
       val newUser = User.create(testUser)
@@ -96,11 +96,10 @@ class ModelSpec extends Specification {
   "Gift List Role Model" should {
 
     "allow GiftListRole creation" in new WithCleanDb {
-      val testRole = GiftListRole(5, 5, Some(GiftListRole.Role.getInt(GiftListRole.Role.Contributor)))
-      GiftListRole.create(testRole)
-      val foundRole = GiftListRole.find(testRole.userId, testRole.giftListId)
+      val testRole = GiftListRole.create(5, 5, Some(GiftListRole.Role.getInt(GiftListRole.Role.Contributor)))
+      val foundRole = GiftListRole.find(testRole.get.userId, testRole.get.giftListId)
       foundRole match {
-        case Some(foundRole) => foundRole shouldEqual (testRole)
+        case Some(foundRole) => foundRole shouldEqual (testRole.get)
         case None => failure("No GiftListRole Found")
       }
     }

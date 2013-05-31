@@ -32,7 +32,7 @@ object GiftList {
    * @param giftList
    * @return
    */
-  def create(giftList: GiftList): Option[GiftList] = {
+  private def create(giftList: GiftList): Option[GiftList] = {
     try {
       DB.withConnection {
         implicit connection =>
@@ -70,9 +70,8 @@ object GiftList {
     val nList = create(giftList) // create the gift list
     nList match {
       case Some(nList) => {
-        val glRole = GiftListRole(userId, nList.id.get, Some(GiftListRole.Role.getInt(GiftListRole.Role.Creator)))
-        GiftListRole.create(glRole) // create the gift list role
-        Some(glRole)
+        val glRole = GiftListRole.create(userId, nList.id.get, Some(GiftListRole.Role.getInt(GiftListRole.Role.Creator)))
+        glRole
       }
       case None => None
     }

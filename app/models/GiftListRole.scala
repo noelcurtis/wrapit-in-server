@@ -74,7 +74,7 @@ object GiftListRole {
   }
 
 
-  def create(role: GiftListRole) = {
+  def create(userId: Long, giftListId: Long, role: Option[Int]) : Option[GiftListRole] = {
     try {
       DB.withConnection {
         implicit connection =>
@@ -82,13 +82,18 @@ object GiftListRole {
             """insert into gift_list_role(user_id, gift_list_id, role)
             values({userId}, {giftListId}, {role})"""
           ).on(
-            'userId -> role.userId,
-            'giftListId -> role.giftListId,
-            'role -> role.role
+            'userId -> userId,
+            'giftListId -> giftListId,
+            'role -> role
           ).executeInsert()
+        val giftListRole = GiftListRole(userId, giftListId, role)
+        Some(giftListRole)
       }
     } catch {
-      case e: Exception => Logger.error(e.getMessage)
+      case e: Exception => {
+        Logger.error(e.getMessage)
+        None
+      }
     }
   }
 

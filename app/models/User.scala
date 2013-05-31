@@ -10,7 +10,7 @@ import anorm.SqlParser._
 import anorm.~
 
 case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Option[String],
-                lastSignIn: Option[Date]) {
+                lastSignIn: Option[Date] = None) {
 
 }
 
@@ -41,7 +41,7 @@ object User {
             'id -> user.id,
             'email -> user.email,
             'password -> hpwd.toString,
-            'lastSignIn -> user.lastSignIn
+            'lastSignIn -> new Date()
           ).executeInsert()
 
           createdId match {
