@@ -12,14 +12,6 @@ import anorm.~
 case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Option[String],
                 lastSignIn: Option[Date]) {
 
-  /**
-   * Use to get the GiftListRoles for a User
-   * @return
-   */
-  def getGiftListRoles : Option[List[GiftListRole]] = {
-    None
-  }
-
 }
 
 object User {

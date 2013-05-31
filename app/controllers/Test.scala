@@ -9,4 +9,9 @@ import play.Logger
 
 object Test extends Controller {
 
+  def testroles = Action {
+    GiftListRole.find(56)
+    Ok
+  }
+
 }

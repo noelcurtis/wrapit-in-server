@@ -60,19 +60,6 @@ class ModelSpec extends Specification {
       }
     }
 
-    "allow get of GiftListRoles" in new WithCleanDb {
-      val foundUser = User.find("foobar@gmail.com")
-      foundUser match {
-        case Some(foundUser) => {
-          val giftListRoles = foundUser.getGiftListRoles
-          giftListRoles match {
-            case Some(giftListRoles) => assert(!giftListRoles.isEmpty)
-            case None => failure("GiftListRoles not found when they should be")
-          }
-        }
-        case None => failure("User not found")
-      }
-    }
   }
 
   "Gift List Model" should {
@@ -116,6 +103,18 @@ class ModelSpec extends Specification {
         case Some(foundRole) => foundRole shouldEqual (testRole)
         case None => failure("No GiftListRole Found")
       }
+    }
+
+    "allows GiftListRoles to be found for user" in new WithCleanDb {
+      val user = User.find("foobar@gmail.com")
+      val roles = GiftListRole.find(user.get.id.get)
+      roles.length shouldEqual (1)
+      roles(0).getGiftList.get.name.get shouldEqual("foobar")
+    }
+
+    "check empty list returned for non existant user" in new WithCleanDb {
+      val roles = GiftListRole.find(123445)
+      assert(roles.isEmpty)
     }
 
   }

@@ -8,12 +8,28 @@ import anorm.SqlParser._
 
 case class GiftListRole(userId: Long, giftListId: Long, role: Option[Int]) {
 
+  private[this] var giftList : Option[GiftList] = None
+
   /**
    * use to get the gift list
    * @return
    */
   def getGiftList : Option[GiftList] = {
-    GiftList.find(giftListId)
+    this.giftList match {
+      case Some(giftList) => Some(giftList) // return the gift list
+      case None => {
+        this.giftList = GiftList.find(giftListId) // "Lazy load" the gift list
+        this.giftList
+      }
+    }
+  }
+
+  /**
+   * Use to set the gift list
+   * @param giftList
+   */
+  def setGiftList(giftList:Option[GiftList]) = {
+    this.giftList = giftList
   }
 
 }
@@ -33,15 +49,30 @@ object GiftListRole {
   }
 
   /**
-   * Parse a User from a ResultSet
+   * Parse a GiftListRole from a ResultSet
    */
   val parseSingle = {
       get[Long]("gift_list_role.user_id") ~
       get[Long]("gift_list_role.gift_list_id") ~
       get[Option[Int]]("gift_list_role.role") map {
-      case userId ~ giftListId ~ role => GiftListRole(userId, giftListId, role)
+        case userId ~ giftListId ~ role => GiftListRole(userId, giftListId, role)
     }
   }
+
+
+  /**
+   * Parse a GiftListRole with a GiftList from a ResultSet
+   */
+  val parseWithGiftList = {
+    GiftListRole.parseSingle ~
+    GiftList.parseSingle map {
+      case giftListRole ~ giftList => {
+        giftListRole.setGiftList(Some(giftList))
+        giftListRole
+      }
+    }
+  }
+
 
   def create(role: GiftListRole) = {
     try {
@@ -71,8 +102,20 @@ object GiftListRole {
     }
   }
 
-//  def find(userId: Long): Option[List[GiftListRole]] = {
-//
-//  }
+  def find(userId: Long) : List[GiftListRole]= {
+    DB.withConnection {
+      implicit connection => {
+        val roles : List[GiftListRole] = SQL(
+          """
+            select * from gift_list_role
+            left join gift_list on gift_list_role.gift_list_id = gift_list.id
+            where gift_list_role.user_id = {userId}
+          """).on(
+          'userId -> userId
+        ).as(GiftListRole.parseWithGiftList *)
+        roles
+      }
+    }
+  }
 
 }
