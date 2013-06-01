@@ -57,6 +57,26 @@ object User {
     }
   }
 
+  /**
+   * Authenticate a User.
+   */
+  def authenticate(email: String, password: String): Option[User] = {
+    val hf = Hashing.sha256();
+    val hpwd = hf.hashString(password);
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+         select * from users where
+         email = {email} and encrypted_password = {password}
+        """
+      ).on(
+        'email -> email,
+        'password -> hpwd.toString
+      ).as(User.parseSingle.singleOpt)
+    }
+  }
+
+
   def find(id: Long): Option[User] = {
     DB.withConnection {
       implicit connection =>

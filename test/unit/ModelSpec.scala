@@ -71,6 +71,22 @@ class ModelSpec extends Specification {
       }
     }
 
+    "allow User sign in" in new WithCleanDb {
+      val auth = User.authenticate("foobar@gmail.com", "foobar")
+      auth match {
+        case Some(user) => success
+        case None => failure("User could not be authenticated")
+      }
+    }
+
+    "not allow bad password sign in" in new WithCleanDb {
+      val auth = User.authenticate("foobar@gmail.com", "blah")
+      auth match {
+        case Some(user) => failure("User allowed with bad password")
+        case None => success
+      }
+    }
+
   }
 
   "Gift List Model" should {
