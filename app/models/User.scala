@@ -45,7 +45,7 @@ object User {
           ).executeInsert()
 
           createdId match {
-            case Some(createdId) => Some(user.copy(id = anorm.Id(createdId)))
+            case Some(createdId) => Logger.info("Created new user: " + createdId.toString); Some(user.copy(id = anorm.Id(createdId)))
             case None => None
           }
       }

@@ -20,11 +20,32 @@ object Application extends Controller {
     })
   )
 
+  /**
+   * create form
+   *
+   */
+  val createForm = Form(
+    tuple(
+      "email" -> text,
+      "password" -> text
+    ) verifying ("Invalid email or password", result => result match {
+      case (email, password) => User.create(User(email = Some(email), password = Some(password))).isDefined
+    })
+  )
+
   def index = Action { implicit request =>
     val email = request.session.get("email")
     email match {
       case Some(email) => Redirect(routes.GiftLists.index)
       case None => Ok(views.html.index(loginForm))
+    }
+  }
+
+  def create = Action { implicit request =>
+    val email = request.session.get("email")
+    email match {
+      case Some(email) => Redirect(routes.GiftLists.index)
+      case None => Ok(views.html.create(createForm))
     }
   }
 
@@ -34,6 +55,16 @@ object Application extends Controller {
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.index(formWithErrors)),
+      user => Redirect(routes.GiftLists.index).withSession("email" -> user._1)
+    )
+  }
+
+  /**
+   * Handle create account submission.
+   */
+  def handlecreate = Action { implicit request =>
+    createForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.create(formWithErrors)),
       user => Redirect(routes.GiftLists.index).withSession("email" -> user._1)
     )
   }

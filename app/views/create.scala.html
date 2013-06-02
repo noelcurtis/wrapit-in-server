@@ -5,9 +5,9 @@
     s"<link rel='stylesheet' media='screen' href='$route'>"
 }
 
-@main("WrapiIt.in", moreCss){
+@main("WrapIt.in", moreCss) {
 
-    @helper.form(routes.Application.authenticate, 'class -> "form-signin") {
+    @helper.form(routes.Application.handlecreate, 'class -> "form-signin") {
 
         <h3 class="form-signin-heading">WraptIt.in</h3>
         <div class="control-group">
@@ -16,22 +16,17 @@
             <span class="help-block">Invalid email.</span>
         </div>
         <div class="control-group">
-            <input type="password" class="input-block-level" placeholder="Password" name="password">
+            <input type="password" class="input-block-level" placeholder="A password" name="password">
             <i class="input-icon fui-lock"></i>
             <span class="help-block">Wrong password.</span>
-            <a class="login-link" href="#">Lost your password?</a>
         </div>
         @form.globalError.map { error =>
             <span class="login-error error">
                 @error.message
             </span>
         }
-        <button class="btn btn-small btn-block btn-primary" type="submit">Sign in</button>
-        <a href="@routes.Application.handlecreate" class="btn btn-small btn-block btn-info">New Account</a>
-        <a href="#fakelink" class="btn btn-small btn-block btn-social-facebook">
-            <i class="fui-facebook"></i>
-            Connect with Facebook
-        </a>
+        <button class="btn btn-small btn-block btn-info" type="submit">Create Account</button>
+        <a href="@routes.Application.index()" class="btn btn-small btn-block">Back</a>
 
     }
 }
