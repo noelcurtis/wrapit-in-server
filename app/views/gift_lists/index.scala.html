@@ -1,5 +1,10 @@
 
 
-@main("Wrapit.in") {
-    Gift lists
+@moreCss = @{
+    val route = routes.Assets.at("stylesheets/login.css")
+    s"<link rel='stylesheet' media='screen' href='$route'>"
+}
+
+@main("Wrapit.in", moreCss) {
+
 }
