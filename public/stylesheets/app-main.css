@@ -57,7 +57,7 @@ ul.item-list li
     -o-transition: 0.25s;
     transition: 0.25s;
     -webkit-backface-visibility: hidden;
-    background-color: #eff0f2;
+    background-color: #FFFFFF;
 }
 
 ul.nav-tabs > li > a
