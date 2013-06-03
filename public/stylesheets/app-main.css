@@ -2,3 +2,49 @@
 {
     color: #e74c3c;
 }
+
+@media (max-width: 767px)
+{
+    body
+    {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+}
+
+.navbar
+{
+    margin-bottom: 0px;
+}
+
+.navbar-inner
+{
+    height: 20px;
+    text-align: center;
+}
+
+.navvy-item
+{
+    margin: 8px 15px 0px 15px;
+    font-size: 20px;
+}
+
+.navvy-item a
+{
+    color: #16a085 !important;
+}
+
+.navvy-item:hover a
+{
+    color: #1abc9c !important;
+}
+
+.navvy-title
+{
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    color: #1abc9c !important;
+    font-weight: bold;
+    font-size: 24px;
+    padding-top: 5px;
+}
