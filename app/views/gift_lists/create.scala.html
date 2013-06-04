@@ -1,0 +1,56 @@
+
+
+@moreCss = @{
+    val route = routes.Assets.at("stylesheets/item-list.css")
+    s"<link rel='stylesheet' media='screen' href='$route'>"
+}
+
+@main("Wrapit.in", moreCss) {
+
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="navvy-item pull-left">
+                    <a href="@routes.GiftLists.index()"><span class="fui-triangle-left-large"></span></a>
+                </div>
+                <span class="navvy-title">New List</span>
+                <div class="navvy-item pull-right">
+                    <a href="#fakelink"><span class="fui-check"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container list">
+    @helper.form(routes.Application.authenticate) {
+        <ul class="nav nav-list item-list form-list">
+            <li>
+                <a class="item-wrapper">
+                    <div class="item-icon fui-list-numbered" style="font-size: 20px"></div>
+                    <div class="control-group">
+                        <input type="text" placeholder="A name for your list" class="flat">
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a class="item-wrapper">
+                    <div class="item-icon fui-calendar" style="font-size: 20px"></div>
+                    <div class="control-group">
+                        <input type="text" placeholder="When is this list due" class="flat">
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a class="item-wrapper">
+                    <div class="item-icon fui-document" style="font-size: 20px"></div>
+                    <div class="control-group">
+                        <textarea placeholder="Any notes for the list" class="flat"></textarea>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    }
+    </div>
+}

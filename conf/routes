@@ -13,6 +13,8 @@ POST    /create                     controllers.Application.handlecreate
 
 # Lists
 GET     /list                   controllers.GiftLists.index
+GET     /list/create            controllers.GiftLists.create
+#POST    /list/create            controllers.GiftLists.handleCreate
 
 # Test
 GET    /testroles                   controllers.Test.testroles

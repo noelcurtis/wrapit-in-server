@@ -19,7 +19,7 @@
 
 .navvy-item
 {
-    margin: 8px 15px 0px 15px;
+    margin: 8px 5px 0px 5px;
     font-size: 20px;
 }
 
@@ -94,7 +94,12 @@ ul.nav-list.item-list .item-wrapper .item-icon
 {
     float: left;
     font-size: 24px;
-    padding: 11px 18px 0 0;
+    padding: 10px 14px 0 0;
+}
+
+ul.nav-list.item-list.form-list .item-wrapper .item-icon
+{
+    padding-right: 4px;
 }
 
 ul.nav-list.item-list .item-wrapper .item-detail
@@ -115,6 +120,21 @@ ul.nav-list.item-list .item-wrapper .item-remain
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
+
+ul.nav-list.item-list .item-wrapper .control-group
+{
+    margin-bottom: 0px;
+}
+
+ul.nav-list.item-list .item-wrapper input,
+ul.nav-list.item-list .item-wrapper textarea
+{
+    font-size: 17px;
+    width: 90%;
+}
+
+
+
 
 @media (max-width: 979px)
 {
@@ -142,6 +162,14 @@ ul.nav-list.item-list .item-wrapper .item-remain
         margin-right: 0px;
         margin-left: 0px;
     }
+
+    ul.nav-list.item-list .item-wrapper input,
+    ul.nav-list.item-list .item-wrapper textarea
+    {
+        margin-bottom: 0px;
+        margin-top: 0px;
+        width: 90%;
+    }
 }
 
 
@@ -152,5 +180,13 @@ ul.nav-list.item-list .item-wrapper .item-remain
     ul.item-list li a.item-wrapper:focus
     {
         margin-bottom: 0px;
+    }
+
+    ul.nav-list.item-list .item-wrapper input,
+    ul.nav-list.item-list .item-wrapper textarea
+    {
+        margin-bottom: 0px;
+        margin-top: 0px;
+        width: 80%;
     }
 }
