@@ -1,4 +1,4 @@
-
+@(form: Form[(String,String, String)])(implicit flash: Flash)
 
 @moreCss = @{
     val route = routes.Assets.at("stylesheets/item-list.css")
@@ -7,6 +7,7 @@
 
 @main("Wrapit.in", moreCss) {
 
+    @helper.form(routes.GiftLists.handlecreate()) {
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
             <div class="container">
@@ -15,20 +16,19 @@
                 </div>
                 <span class="navvy-title">New List</span>
                 <div class="navvy-item pull-right">
-                    <a href="#fakelink"><span class="fui-check"></span></a>
+                    <button class="navvy-button fui-check" type="submit"></button>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container list">
-    @helper.form(routes.Application.authenticate) {
         <ul class="nav nav-list item-list form-list">
             <li>
                 <a class="item-wrapper">
                     <div class="item-icon fui-list-numbered" style="font-size: 20px"></div>
                     <div class="control-group">
-                        <input type="text" placeholder="A name for your list" class="flat">
+                        <input type="text" name="name" placeholder="A name for your list" class="flat">
                     </div>
                 </a>
             </li>
@@ -37,7 +37,7 @@
                 <a class="item-wrapper">
                     <div class="item-icon fui-calendar" style="font-size: 20px"></div>
                     <div class="control-group">
-                        <input type="text" placeholder="When is this list due" class="flat">
+                        <input type="text" name="dueDate" placeholder="When is this list due" class="flat">
                     </div>
                 </a>
             </li>
@@ -46,11 +46,17 @@
                 <a class="item-wrapper">
                     <div class="item-icon fui-document" style="font-size: 20px"></div>
                     <div class="control-group">
-                        <textarea placeholder="Any notes for the list" class="flat"></textarea>
+                        <textarea name="notes" placeholder="Any notes for the list" class="flat"></textarea>
                     </div>
                 </a>
             </li>
         </ul>
+
+        @form.globalError.map { error =>
+            <span class="error">
+                @error.message
+            </span>
+        }
     }
     </div>
 }

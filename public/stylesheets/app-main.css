@@ -23,6 +23,25 @@
     font-size: 20px;
 }
 
+.navvy-button
+{
+    border: none;
+    background: transparent;
+    text-decoration: none;
+    text-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-backface-visibility: hidden;
+    color: #16a085;
+    font-size: 20px;
+}
+
+.navvy-button:hover
+{
+    color: #1abc9c;
+}
+
 .navvy-item a
 {
     color: #16a085 !important;

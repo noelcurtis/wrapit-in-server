@@ -34,6 +34,7 @@ object GiftList {
    */
   private def create(giftList: GiftList): Option[GiftList] = {
     try {
+      Logger.info("Creating GiftList " + giftList.toString)
       DB.withConnection {
         implicit connection =>
           val createdId: Option[Long] = SQL(
@@ -67,10 +68,12 @@ object GiftList {
    * @return
    */
   def create(giftList: GiftList, userId: Long) : Option[GiftListRole] = {
+    Logger.info("Creating GiftList " + giftList.toString + " for User {" + userId + "}")
     val nList = create(giftList) // create the gift list
     nList match {
       case Some(nList) => {
         val glRole = GiftListRole.create(userId, nList.id.get, Some(GiftListRole.Role.getInt(GiftListRole.Role.Creator)))
+        Logger.info("Creating GiftList role success")
         glRole
       }
       case None => None
