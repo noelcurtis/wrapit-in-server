@@ -4,7 +4,7 @@ import org.specs2.mutable._
 
 import play.api.test._
 import play.api.test.Helpers._
-import models.{GiftListRole, GiftList, User}
+import models.{GiftListRole, GiftList, User, Item}
 import anorm._
 import java.util.Date
 import play.Logger
@@ -25,7 +25,13 @@ abstract class WithCleanDb extends WithApplication {
     DB.withConnection {
       implicit connection => {
         Logger.debug("Clearing database...");
-        SQL("truncate gift_list_role, users, gift_list").execute()
+        SQL(
+          """
+            |truncate item, gift_list_role, users, gift_list;
+            |ALTER SEQUENCE gift_list_seq RESTART;
+            |ALTER SEQUENCE item_seq RESTART;
+            |ALTER SEQUENCE users_seq RESTART;
+          """.stripMargin).execute()
       }
     }
   }
@@ -39,8 +45,20 @@ abstract class WithCleanDb extends WithApplication {
     val foobarList = GiftList(NotAssigned, Some("foobar"), Some("by foobar"), Some(new Date()))
     val foobar1List = GiftList(NotAssigned, Some("foobar1"), Some("by foobar1"), Some(new Date()))
 
-    GiftList.create(foobarList, foobar.get.id.get)
-    GiftList.create(foobar1List, foobar1.get.id.get)
+    val foobarListC = GiftList.create(foobarList, foobar.get.id.get)
+    val foobar1ListC = GiftList.create(foobar1List, foobar1.get.id.get)
+
+    // create some items for gift lists
+    // foobarList
+    GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    // foobar1List
+    GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
   }
 
 }
@@ -105,6 +123,27 @@ class ModelSpec extends Specification {
         }
         case None => failure("Gift List Role Creation failed")
       }
+    }
+
+    "allow to add an Item" in new WithCleanDb {
+      val testGiftList = GiftList(NotAssigned, Some("BalaBoo"), Some("For Birthday"), Some(new Date()))
+      val testUser = User(NotAssigned, Some("foo1@bar.com"), Some("foobar"), Some(new Date()))
+      val newUser = User.create(testUser)
+
+      val giftListRole = GiftList.create(testGiftList, newUser.get.id.get)
+      val id = GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), giftListRole.get.giftListId)
+      assert(id != null)
+    }
+
+  }
+
+  "Item Model" should {
+
+    "allow to get Items on a GiftList" in new WithCleanDb {
+      val items = Item.find(1)
+      Logger.info(items.toString())
+      assert(items.isEmpty == false)
+      assert(items.length == 4)
     }
 
   }

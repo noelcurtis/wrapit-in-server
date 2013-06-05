@@ -87,4 +87,21 @@ object GiftList {
     }
   }
 
+  /**
+   * Use to add an item to a gift list
+   * @param item
+   * @return
+   */
+  def addItem(item: Item, giftListId: Long) :Option[Long] = {
+    val nItem = item.copy(giftListId = Some(giftListId))
+    val cItem = Item.create(nItem)
+    cItem match {
+      case Some(item) => Some(item.id.get)
+      case None => {
+        Logger.error("Failed to add item " + item.toString + " to list " + giftListId)
+        None
+      }
+    }
+  }
+
 }

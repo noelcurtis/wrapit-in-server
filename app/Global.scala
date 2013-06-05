@@ -48,20 +48,39 @@ object InitialData {
 
     val foobar1List = GiftList(NotAssigned, Some("A List by Foobar 1"), Some("Something interesting about this list"), Some(dateInFuture.toDate))
 
-    GiftList.create(foobarList, foobar.get.id.get)
-    GiftList.create(foobarList1, foobar.get.id.get)
+    val foobarListC = GiftList.create(foobarList, foobar.get.id.get)
+    val foobar1ListC = GiftList.create(foobarList1, foobar.get.id.get)
     GiftList.create(foobarList2, foobar.get.id.get)
     GiftList.create(foobarList3, foobar.get.id.get)
     GiftList.create(foobarList4, foobar.get.id.get)
 
     GiftList.create(foobar1List, foobar1.get.id.get)
+
+    // create some items for gift lists
+    // foobarList
+    GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    // foobar1List
+    GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+
   }
 
   def cleanDb = {
     DB.withConnection {
       implicit connection => {
         Logger.debug("Clearing database.");
-        SQL("truncate gift_list_role, users, gift_list").execute()
+        SQL(
+          """
+            |truncate item, gift_list_role, users, gift_list;
+            |ALTER SEQUENCE gift_list_seq RESTART;
+            |ALTER SEQUENCE item_seq RESTART;
+            |ALTER SEQUENCE users_seq RESTART;
+          """.stripMargin).execute()
       }
     }
   }

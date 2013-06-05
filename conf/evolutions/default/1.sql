@@ -20,13 +20,25 @@ create table gift_list_role (
 
 create table gift_list (
   id        bigint  not null,
-  name      varchar(255) not null,
+  name      text not null,
   purpose   text not null,
   due_date  timestamp,
   constraint  pk_gift_list primary key (id)
 );
 
 create sequence gift_list_seq;
+
+create table item (
+  id            bigint not null,
+  gift_list_id  int not null,
+  name          varchar(255) not null,
+  needed        int not null,
+  purchased     int not null,
+  constraint  pk_item primary key (id),
+  foreign key(gift_list_id) references gift_list(id) on delete cascade
+);
+
+create sequence item_seq;
 
 
 # --- !Downs
@@ -37,6 +49,11 @@ drop sequence if exists users_seq;
 
 drop table if exists gift_list_role;
 
-drop table if exists gift_list;
+drop table if exists gift_list cascade;
 
 drop sequence if exists gift_list_seq;
+
+drop table if exists item cascade;
+
+drop sequence if exists item_seq;
+
