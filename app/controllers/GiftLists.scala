@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
-import models.{GiftList, User}
+import models.{GiftListRole, GiftList, User}
 import views.html
 import play.Logger
 import play.api.data.Form
@@ -14,7 +14,7 @@ object GiftLists extends Controller with Secured{
   def index = IsAuthenticated { email => _ =>
     val user = User.find(email)
     user match {
-      case Some(user) => Ok(html.gift_lists.index())
+      case Some(user) => Ok(html.gift_lists.index(GiftListRole.find(user.id.get)))
       case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
     }
   }
