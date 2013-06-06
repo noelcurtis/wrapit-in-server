@@ -116,10 +116,6 @@ ul.nav-list.item-list .item-wrapper .item-icon
     padding: 10px 14px 0 0;
 }
 
-ul.nav-list.item-list.form-list .item-wrapper .item-icon
-{
-    padding-right: 4px;
-}
 
 ul.nav-list.item-list .item-wrapper .item-detail
 {
@@ -145,13 +141,52 @@ ul.nav-list.item-list .item-wrapper .control-group
     margin-bottom: 0px;
 }
 
-ul.nav-list.item-list .item-wrapper input,
-ul.nav-list.item-list .item-wrapper textarea
+
+ul.nav-list.item-list.form-list input,
+ul.nav-list.item-list.form-list textarea
 {
     font-size: 17px;
     width: 90%;
 }
 
+.form-list .input-prepend
+{
+    margin-bottom: 0px;
+    width: 90%;
+}
+
+.form-list .btn > [class^="fui-"]
+{
+    top: 0;
+}
+
+.form-list .control-group
+{
+    margin-left: 10px;
+}
+
+.form-list .control-group.active .input-prepend button,
+.form-list .control-group.active .input-prepend div.btn,
+.form-list .control-group.active .input-prepend input,
+.form-list .control-group.active .input-prepend textarea
+{
+    border-color: #16a085;
+}
+
+.form-list .control-group .input-prepend button,
+.form-list .control-group .input-prepend input,
+.form-list .control-group .input-prepend textarea,
+.form-list .control-group .input-prepend div.btn
+{
+    border-color: transparent;
+}
+
+.input-prepend textarea
+{
+    -webkit-border-radius: 0 6px 6px 0;
+    -moz-border-radius: 0 6px 6px 0;
+    border-radius: 0 6px 6px 0;
+}
 
 .item-image
 {

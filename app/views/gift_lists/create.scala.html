@@ -5,7 +5,12 @@
     s"<link rel='stylesheet' media='screen' href='$route'>"
 }
 
-@main("Wrapit.in", moreCss) {
+@moreJs = @{
+    val route = routes.Assets.at("javascripts/formlist.js")
+    s"<script src='$route' type='text/javascript'></script>"
+}
+
+@main(title = "WrapIt.in", moreCss = moreCss, moreJs = moreJs) {
 
     @helper.form(routes.GiftLists.handlecreate()) {
     <div class="navbar navbar-fixed-top navbar-inverse">
@@ -26,27 +31,33 @@
         <ul class="nav nav-list item-list form-list">
             <li>
                 <a class="item-wrapper">
-                    <div class="item-icon fui-list-numbered" style="font-size: 20px"></div>
                     <div class="control-group">
-                        <input type="text" name="name" placeholder="A name for your list" class="flat">
+                        <div class="input-prepend input-datepicker">
+                            <button type="button" class="btn"><span class="fui-list-numbered"></span></button>
+                            <input type="text" name="name" placeholder="A name for your list" class="flat" value="" id="datepicker-name">
+                        </div>
                     </div>
                 </a>
             </li>
 
             <li>
                 <a class="item-wrapper">
-                    <div class="item-icon fui-calendar" style="font-size: 20px"></div>
                     <div class="control-group">
-                        <input type="text" name="dueDate" placeholder="When is this list due" class="flat">
+                        <div class="input-prepend input-datepicker">
+                            <button type="button" class="btn"><span class="fui-calendar"></span></button>
+                            <input type="text" name="dueDate" placeholder="When is this list due" value="" class="flat" id="datepicker-duedate">
+                        </div>
                     </div>
                 </a>
             </li>
 
             <li>
                 <a class="item-wrapper">
-                    <div class="item-icon fui-document" style="font-size: 20px"></div>
                     <div class="control-group">
-                        <textarea name="notes" placeholder="Any notes for the list" class="flat"></textarea>
+                        <div class="input-prepend input-datepicker">
+                            <div class="btn" style="height: 39px"><span class="fui-document"></span></div>
+                            <textarea name="notes" placeholder="Any notes for the list" class="flat"></textarea>
+                        </div>
                     </div>
                 </a>
             </li>
