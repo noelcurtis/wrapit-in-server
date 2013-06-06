@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
-import models.{GiftListRole, GiftList, User}
+import models.{Item, GiftListRole, GiftList, User}
 import views.html
 import play.Logger
 import play.api.data.Form
@@ -50,6 +50,16 @@ object GiftLists extends Controller with Secured{
         Redirect(routes.GiftLists.index())
       }
     )
+  }
+
+  def show (id: Long) = IsAuthenticated { email => implicit request =>
+    val list = GiftList.find(id)
+    val items = Item.find(id)
+    Ok(views.html.gift_lists.show(list, items))
+  }
+
+  def additem (id: Long) = IsAuthenticated { email => implicit request =>
+    Ok
   }
 
 }

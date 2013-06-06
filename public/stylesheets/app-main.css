@@ -55,11 +55,10 @@
 
 .navvy-title
 {
+    font-family: 'Oleo Script', cursive;
     display: inline-block;
-    -webkit-font-smoothing: antialiased;
     color: #1abc9c !important;
-    font-weight: bold;
-    font-size: 24px;
+    font-size: 30px;
     padding-top: 5px;
 }
 
@@ -154,6 +153,18 @@ ul.nav-list.item-list .item-wrapper textarea
 }
 
 
+.item-image
+{
+
+}
+
+.item-placeholder
+{
+    display: inline-block;
+    background-image: url(../framework/flatui/images/icons/Gift-Box@2x.png);
+    width: 20px;
+    height: 20px;
+}
 
 
 @media (max-width: 979px)

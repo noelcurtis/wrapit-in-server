@@ -15,7 +15,9 @@
 
 .form-signin .form-signin-heading
 {
+    font-family: 'oleo script', cursive;
     margin-bottom: 15px;
+    text-align: center;
 }
 
 .form-signin input[type="text"],

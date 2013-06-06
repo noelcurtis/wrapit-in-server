@@ -16,6 +16,10 @@ GET     /list                   controllers.GiftLists.index
 GET     /list/create            controllers.GiftLists.create
 POST    /list/create            controllers.GiftLists.handlecreate
 
+# Items
+GET     /list/:id/items         controllers.GiftLists.show(id: Long)
+GET    /list/:id/add            controllers.GiftLists.additem(id: Long)
+
 # Test
 GET    /testroles                   controllers.Test.testroles
 
