@@ -149,6 +149,17 @@ ul.nav-list.item-list.form-list textarea
     width: 90%;
 }
 
+ul.nav-list.item-list .item-wrapper .sub-info
+{
+    color: #34495e;
+    font-size: 13px;
+}
+
+ul.nav-list.item-list .item-wrapper .sub-info i
+{
+    margin: 0px 4px;
+}
+
 .form-list .input-prepend
 {
     margin-bottom: 0px;

@@ -19,6 +19,7 @@ POST    /list/create            controllers.GiftLists.handlecreate
 # Items
 GET     /list/:id/items         controllers.GiftLists.show(id: Long)
 GET    /list/:id/add            controllers.GiftLists.additem(id: Long)
+POST   /list/:id/add            controllers.GiftLists.handleadditem(id: Long)
 
 # Test
 GET    /testroles                   controllers.Test.testroles

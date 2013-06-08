@@ -19,7 +19,7 @@ object GiftLists extends Controller with Secured{
     }
   }
 
-  val createForm = Form(
+  val createGiftForm = Form(
     tuple(
       "name" -> nonEmptyText,
       "dueDate" -> text,
@@ -30,14 +30,14 @@ object GiftLists extends Controller with Secured{
   def create = IsAuthenticated { email => implicit request =>
     val user = User.find(email)
     user match {
-      case Some(user) => Ok(html.gift_lists.create(createForm))
+      case Some(user) => Ok(html.gift_lists.create(createGiftForm))
       case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
     }
   }
 
   def handlecreate = IsAuthenticated { email => implicit request =>
     // consider email will always exist
-    createForm.bindFromRequest.fold(
+    createGiftForm.bindFromRequest.fold(
       formWithErrors => {
         BadRequest(html.gift_lists.create(formWithErrors))
       },
@@ -58,8 +58,37 @@ object GiftLists extends Controller with Secured{
     Ok(views.html.gift_lists.show(list, items))
   }
 
+  val itemCreateForm = Form(
+    tuple(
+      "name" -> nonEmptyText,
+      "needed" -> number,
+      "link" -> text,
+      "getImage" -> number
+    )
+  )
+
   def additem (id: Long) = IsAuthenticated { email => implicit request =>
-    Ok
+    val user = User.find(email)
+    user match {
+      case Some(user) => Ok(html.items.create(itemCreateForm, id))
+      case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
+    }
+  }
+
+  def handleadditem (id: Long) =  IsAuthenticated { email => implicit request =>
+    itemCreateForm.bindFromRequest().fold(
+      formWithErrors => {
+        BadRequest(html.items.create(formWithErrors, id))
+      },
+      item => {
+        // parse the date
+        val newItem = Item(name = Some(item._1), needed = Some(item._2), url = Some(item._3))
+        Logger.info(newItem.toString)
+        // add item to the list
+        GiftList.addItem(newItem, id)
+        Redirect(routes.GiftLists.show(id))
+      }
+    )
   }
 
 }

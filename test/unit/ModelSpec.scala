@@ -50,15 +50,15 @@ abstract class WithCleanDb extends WithApplication {
 
     // create some items for gift lists
     // foobarList
-    GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobarListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobarListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobarListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Yellow Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Green Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"),needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Blue Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Fish Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"), needed = Some(1)), foobarListC.get.giftListId)
     // foobar1List
-    GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Yellow Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Green Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Blue Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Fish Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"), needed = Some(1)), foobar1ListC.get.giftListId)
   }
 
 }
@@ -131,7 +131,7 @@ class ModelSpec extends Specification {
       val newUser = User.create(testUser)
 
       val giftListRole = GiftList.create(testGiftList, newUser.get.id.get)
-      val id = GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), giftListRole.get.giftListId)
+      val id = GiftList.addItem(Item(name = Some("Yellow Gift"), url = Some("http://store.apple.com/us/browse/home/shop_mac/family/macbook_pro"), needed = Some(1)), giftListRole.get.giftListId)
       assert(id != null)
     }
 

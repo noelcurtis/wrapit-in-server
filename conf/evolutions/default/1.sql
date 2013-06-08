@@ -32,6 +32,7 @@ create table item (
   id            bigint not null,
   gift_list_id  int not null,
   name          varchar(255) not null,
+  url           text not null,
   needed        int not null,
   purchased     int not null,
   constraint  pk_item primary key (id),

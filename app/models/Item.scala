@@ -10,8 +10,8 @@ import anorm.~
 import scala.Some
 import play.api.Play.current
 
-case class Item(id: Pk[Long] = NotAssigned, name: Option[String], needed: Option[Int] = Some(1),
-                purchased: Option[Int] = Some(0), giftListId: Option[Long] = None )
+case class Item(id: Pk[Long] = NotAssigned, name: Option[String], url: Option[String] = Some(""), needed: Option[Int] = Some(1),
+                purchased: Option[Int] = Some(0), giftListId: Option[Long] = None)
 
 object Item {
 
@@ -21,24 +21,26 @@ object Item {
   val parseSingle = {
       get[Pk[Long]]("item.id") ~
       get[Option[String]]("item.name") ~
+      get[Option[String]]("item.url") ~
       get[Option[Int]]("item.needed") ~
       get[Option[Int]]("item.purchased") ~
       get[Option[Long]]("item.gift_list_id") map {
-      case id ~ name ~ needed ~ purchased ~ giftListId => Item(id, name, needed, purchased, giftListId)
+      case id ~ name ~ url ~ needed ~ purchased ~ giftListId => Item(id, name, url, needed, purchased, giftListId)
     }
   }
 
   def create(item: Item) : Option[Item] = {
     try {
-      Logger.info("Creating GiftList " + item.toString)
+      Logger.info("Creating Item " + item.toString)
       DB.withConnection {
         implicit connection =>
           val createdId: Option[Long] = SQL(
-            """insert into item(id, gift_list_id, name, needed, purchased)
-            values((select nextval('item_seq')), {giftListId}, {name}, {needed}, {purchased})"""
+            """insert into item(id, gift_list_id, name, url, needed, purchased)
+            values((select nextval('item_seq')), {giftListId}, {name}, {url}, {needed}, {purchased})"""
           ).on(
             'giftListId -> item.giftListId,
             'name -> item.name,
+            'url  -> item.url,
             'needed -> item.needed,
             'purchased -> item.purchased
           ).executeInsert()
