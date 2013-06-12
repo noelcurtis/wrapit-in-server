@@ -75,18 +75,30 @@ object GiftLists extends Controller with Secured{
     }
   }
 
-  def handleadditem (id: Long) =  IsAuthenticated { email => implicit request =>
+  def handleadditem (listId: Long) =  IsAuthenticated { email => implicit request =>
     itemCreateForm.bindFromRequest().fold(
       formWithErrors => {
-        BadRequest(html.items.create(formWithErrors, id))
+        BadRequest(html.items.create(formWithErrors, listId))
       },
       item => {
         // parse the date
         val newItem = Item(name = Some(item._1), needed = Some(item._2), url = Some(item._3))
         Logger.info(newItem.toString)
         // add item to the list
-        GiftList.addItem(newItem, id)
-        Redirect(routes.GiftLists.show(id))
+        val newItemId = GiftList.addItem(newItem, listId)
+        newItemId match {
+          case Some(newItemId) => {
+            if (item._4 == 1)
+            {
+              Redirect(routes.Items.webimages(listId, newItemId)) // Get images from the web
+            }
+            else
+            {
+              Redirect(routes.GiftLists.show(listId)) // Upload an image from your device
+            }
+          }
+          case None => Logger.error("Could not add Item "+ newItem.toString +" to GiftList " + listId); Redirect(routes.GiftLists.show(listId))
+        }
       }
     )
   }

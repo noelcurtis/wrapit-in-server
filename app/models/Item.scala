@@ -11,7 +11,7 @@ import scala.Some
 import play.api.Play.current
 
 case class Item(id: Pk[Long] = NotAssigned, name: Option[String], url: Option[String] = Some(""), needed: Option[Int] = Some(1),
-                purchased: Option[Int] = Some(0), giftListId: Option[Long] = None)
+                purchased: Option[Int] = Some(0), giftListId: Option[Long] = None, imgUrl: Option[String] = Some(""))
 
 object Item {
 
@@ -24,8 +24,9 @@ object Item {
       get[Option[String]]("item.url") ~
       get[Option[Int]]("item.needed") ~
       get[Option[Int]]("item.purchased") ~
-      get[Option[Long]]("item.gift_list_id") map {
-      case id ~ name ~ url ~ needed ~ purchased ~ giftListId => Item(id, name, url, needed, purchased, giftListId)
+      get[Option[Long]]("item.gift_list_id") ~
+      get[Option[String]]("item.img_url")  map {
+      case id ~ name ~ url ~ needed ~ purchased ~ giftListId ~ imgUrl => Item(id, name, url, needed, purchased, giftListId, imgUrl)
     }
   }
 
@@ -35,14 +36,15 @@ object Item {
       DB.withConnection {
         implicit connection =>
           val createdId: Option[Long] = SQL(
-            """insert into item(id, gift_list_id, name, url, needed, purchased)
-            values((select nextval('item_seq')), {giftListId}, {name}, {url}, {needed}, {purchased})"""
+            """insert into item(id, gift_list_id, name, url, needed, purchased, img_url)
+            values((select nextval('item_seq')), {giftListId}, {name}, {url}, {needed}, {purchased}, {imgUrl})"""
           ).on(
             'giftListId -> item.giftListId,
             'name -> item.name,
             'url  -> item.url,
             'needed -> item.needed,
-            'purchased -> item.purchased
+            'purchased -> item.purchased,
+            'imgUrl -> item.imgUrl
           ).executeInsert()
 
           createdId match {
@@ -61,14 +63,47 @@ object Item {
   def find(giftListId: Long) : List[Item] = {
     DB.withConnection {
       implicit connection => {
-        val roles : List[Item] = SQL(
+        val items : List[Item] = SQL(
           """
             select * from item where gift_list_id = {giftListId}
           """).on(
           'giftListId -> giftListId
         ).as(Item.parseSingle *)
-        roles
+        items
       }
+    }
+  }
+
+  def findById(itemId: Long) : Option[Item] = {
+    DB.withConnection {
+      implicit connection => {
+        val item : Option[Item] = SQL(
+          """
+            select * from item where id = {itemId}
+          """).on(
+          'itemId -> itemId
+        ).as(Item.parseSingle.singleOpt)
+        item
+      }
+    }
+  }
+
+  def update(item: Item) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update item
+          set name = {name}, url = {url}, needed = {needed}, purchased = {purchased}, img_url = {imgUrl}
+          where id = {id}
+        """
+      ).on(
+        'name -> item.name,
+        'url -> item.url,
+        'needed -> item.needed,
+        'purchased -> item.purchased,
+        'imgUrl -> item.imgUrl,
+        'id -> item.id
+      ).executeUpdate()
     }
   }
 

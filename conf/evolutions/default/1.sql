@@ -35,6 +35,7 @@ create table item (
   url           text not null,
   needed        int not null,
   purchased     int not null,
+  img_url       text not null,
   constraint  pk_item primary key (id),
   foreign key(gift_list_id) references gift_list(id) on delete cascade
 );

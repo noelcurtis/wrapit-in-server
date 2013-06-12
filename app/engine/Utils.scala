@@ -45,4 +45,12 @@ object Utils {
     }
   }
 
+  def toInt(value: String, default: Int) : Int =  {
+    try {
+      value.toInt
+    } catch {
+      case e:Exception => default
+    }
+  }
+
 }

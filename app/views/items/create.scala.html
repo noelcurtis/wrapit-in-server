@@ -33,8 +33,8 @@
                     <a class="item-wrapper">
                         <div class="control-group">
                             <div class="input-prepend input-datepicker">
-                                <button type="button" class="btn"><span class="fui-list-numbered"></span></button>
-                                <input type="text" name="name" placeholder="A name for your list" class="flat" value="">
+                                <button type="button" class="btn" style="padding: 6px 6px 8px 12px"><span class="icon-gift" style="font-size: 22px"></span></button>
+                                <input type="text" name="name" placeholder="A name for this item" class="flat" value="">
                             </div>
                         </div>
                     </a>
@@ -44,8 +44,8 @@
                     <a class="item-wrapper">
                         <div class="control-group">
                             <div class="input-prepend input-datepicker">
-                                <button type="button" class="btn"><span class="fui-list-numbered"></span></button>
-                                <input type="text" name="needed" placeholder="How many do you need" class="flat" value="">
+                                <button type="button" class="btn" style="padding: 9px 6px 10px 12px"><span class="fui-question" style="font-size: 18px"></span></button>
+                                <input type="text" name="needed" placeholder="How many do you need?" class="flat" value="">
                             </div>
                         </div>
                     </a>
@@ -55,22 +55,23 @@
                     <a class="item-wrapper">
                         <div class="control-group">
                             <div class="input-prepend input-datepicker">
-                                <button type="button" class="btn"><span class="fui-list-numbered"></span></button>
-                                <input type="text" name="link" placeholder="A link" class="flat" value="">
+                                <button type="button" class="btn"><span class="fui-link"></span></button>
+                                <input type="text" name="link" placeholder="A web URL " class="flat" value="">
                             </div>
                         </div>
                     </a>
                 </li>
 
                 <li>
-                    <a class="item-wrapper">
-                        <div class="control-group">
-                            <div class="input-prepend input-datepicker">
-                                <button type="button" class="btn"><span class="fui-list-numbered"></span></button>
-                                <input type="text" name="getImage" placeholder="Yes or no to get image" class="flat" value="">
-                            </div>
-                        </div>
-                    </a>
+                    <div class="spacer" style="height: 12px"></div>
+                    <label class="radio checked">
+                        <span class="icons"><span class="first-icon fui-radio-unchecked"></span><span class="second-icon fui-radio-checked"></span></span><input type="radio" name="getImage" id="" value="1" data-toggle="radio" checked="checked">
+                        Get images from URL?
+                    </label>
+                    <label class="radio">
+                        <span class="icons"><span class="first-icon fui-radio-unchecked"></span><span class="second-icon fui-radio-checked"></span></span><input type="radio" name="getImage" id="" value="2" data-toggle="radio">
+                        Upload a picture yourself?
+                    </label>
                 </li>
             </ul>
 

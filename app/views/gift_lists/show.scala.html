@@ -41,7 +41,11 @@
             @for(item <- items) {
                 <li>
                     <a href="" class="item-wrapper">
-                        <div class="item-icon icon-gift"></div>
+                        @if(item.imgUrl.isDefined && item.imgUrl.get != ""){
+                            <img src="@item.imgUrl.get" width="80px">
+                        } else {
+                            <img src="@routes.Assets.at("framework/flatui/images/icons/Gift-Box@2x.png")" alt="" width="50px">
+                        }
                         <div class="item-content">
                             <h4 class="item-name">
                             @item.name
