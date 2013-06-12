@@ -1,0 +1,41 @@
+@(imageUrls: List[(String, Int)], item: Item, listId: Long)
+
+    @moreCss = @{
+        val route = routes.Assets.at("stylesheets/image-layout.css")
+        s"<link rel='stylesheet' media='screen' href='$route'>"
+    }
+
+    @moreJs = @{
+        val route = routes.Assets.at("javascripts/image-layout.js")
+        s"<script src='$route' type='text/javascript'></script>"
+    }
+
+@main(title = "WrapIt.in", moreCss = moreCss, moreJs = moreJs) {
+
+
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                @*<div class="navvy-item pull-left">*@
+                @*<a href="#fakelink"><span class="fui-list"></span></a>*@
+                @*</div>*@
+                <span class="navvy-title">Choose An Image</span>
+                <div class="navvy-item pull-right">
+                    <a href="@routes.GiftLists.show(listId)"><span class="fui-cross"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fluid-image-container" class="clearfix">
+    @for(image <- imageUrls) {
+
+        <div class="photo-box">
+            <img src="@image._1" class="photo-img">
+            <a href="@routes.Items.update(listId, item.id.get)?imgUrl=@helper.urlEncode(image._1)"><div class="photo-link">Use it</div></a>
+        </div>
+
+    }
+    </div>
+
+}

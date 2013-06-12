@@ -44,7 +44,8 @@
                         @if(item.imgUrl.isDefined && item.imgUrl.get != ""){
                             <img src="@item.imgUrl.get" width="80px">
                         } else {
-                            <img src="@routes.Assets.at("framework/flatui/images/icons/Gift-Box@2x.png")" alt="" width="50px">
+                            @*<img src="@routes.Assets.at("framework/flatui/images/icons/Gift-Box@2x.png")" alt="" width="50px" style="background-color: rgb(230, 126, 34)">*@
+                            <div class="item-icon icon-gift" style="margin-left: 31px; margin-right: 31px"></div>
                         }
                         <div class="item-content">
                             <h4 class="item-name">
