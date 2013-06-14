@@ -42,9 +42,8 @@
                 <li>
                     <a href="" class="item-wrapper">
                         @if(item.imgUrl.isDefined && item.imgUrl.get != ""){
-                            <img src="@item.imgUrl.get" width="80px">
+                            <div class="img-preview" style="background-image: url('@item.imgUrl.get')"> </div>
                         } else {
-                            @*<img src="@routes.Assets.at("framework/flatui/images/icons/Gift-Box@2x.png")" alt="" width="50px" style="background-color: rgb(230, 126, 34)">*@
                             <div class="item-icon icon-gift" style="margin-left: 31px; margin-right: 31px"></div>
                         }
                         <div class="item-content">
