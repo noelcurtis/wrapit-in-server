@@ -9,6 +9,10 @@ import play.api.db.DB
 import anorm.~
 import scala.Some
 import play.api.Play.current
+import play.api.libs.ws.WS
+import java.net.URL
+import fly.play.s3.{BucketFile, S3}
+import play.api.libs.concurrent.Execution.Implicits._
 
 case class Item(id: Pk[Long] = NotAssigned, name: Option[String], url: Option[String] = Some(""), needed: Option[Int] = Some(1),
                 purchased: Option[Int] = Some(0), giftListId: Option[Long] = None, imgUrl: Option[String] = Some(""))
@@ -104,6 +108,43 @@ object Item {
         'imgUrl -> item.imgUrl,
         'id -> item.id
       ).executeUpdate()
+    }
+  }
+
+  val s3Bucket = "wi-dev"
+  val cacheTime = 864000
+
+  def addPhoto(item: Item, externalUrl: String) = {
+    try {
+      val url = new URL(externalUrl)
+      val extension = url.getFile.dropWhile(_ != '.') // get the file extension
+      // get the file and push to S3
+      WS.url(externalUrl).get().map{
+        r => {
+          val contentType = r.getAHCResponse.getContentType
+          val bytes = r.getAHCResponse.getResponseBodyAsBytes
+          // create a new photo
+          val newPhoto = Photo.create(Photo(folder = "", path = ""))
+          newPhoto match {
+            case Some(photo) => {
+              val filePath = "/items/" + newPhoto.get.id + extension
+              val bucket = S3(s3Bucket) // get the bucket
+              val awsUpload = bucket + BucketFile(filePath, contentType, bytes, None, Some(Map("Cache-Control" -> s"max-age=$cacheTime, must-revalidate")))
+              awsUpload.map{
+                case Left(error) => throw new Exception("AWS upload error " + error.originalXml.toString)
+                case Right(success) => {
+                  val updatePhoto = newPhoto.get.copy(folder = "items", path = newPhoto.get.id + extension)
+                  Photo.update(updatePhoto) // Update the photo with the new S3 path
+                  PhotoRelation.create(item.id.get, updatePhoto.id.get) // Add the Photo to the Item
+                }
+              }
+            }
+            case None => Logger.error("Blank Photo could not be created")
+          }
+        }
+      }
+    } catch {
+      case e: Exception => Logger.info(s"Error adding Photo {$externalUrl} to Item {$item} " + e.getMessage)
     }
   }
 

@@ -18,8 +18,8 @@ object ImageGetter {
 
 
   def getImages (url: String) : List[(String, Int)] = {
-    Logger.info(s"Getting images {$url} started");
-    val doc = Jsoup.connect(url).get()
+    Logger.info(s"Getting images {$url} started")
+    val doc = Jsoup.connect(url).get() // GET request to the URL
     val images = doc.select("img")
     val iterator  = images.iterator()
     var srcs: mutable.ListBuffer[(String, Int)] = mutable.ListBuffer()
@@ -31,7 +31,7 @@ object ImageGetter {
     }
     val found = srcs.toList sortBy(- _._2)
     val filtered = found.filter( x => validateUrl(x._1))
-    Logger.info(s"Getting images {$url} ended");
+    Logger.info(s"Getting images {$url} ended")
     filtered
   }
 
@@ -39,8 +39,8 @@ object ImageGetter {
   def validateUrl (testUrl: String) : Boolean = {
     var valid = true
     try {
-      val url = new URL(testUrl);
-      val conn = url.openConnection();
+      val url = new URL(testUrl)
+      val conn = url.openConnection()
       conn.connect();
     } catch {
       case e:Exception => Logger.info("Invalid URL: " + e.getMessage); valid = false

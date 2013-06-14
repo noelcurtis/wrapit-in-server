@@ -1,3 +1,4 @@
+import _root_.models.{Item, GiftList, User}
 import org.joda.time.DateTime
 import play.api._
 
@@ -73,13 +74,14 @@ object InitialData {
   def cleanDb = {
     DB.withConnection {
       implicit connection => {
-        Logger.debug("Clearing database.");
+        Logger.debug("Clearing database fpr dev.");
         SQL(
           """
-            |truncate item, gift_list_role, users, gift_list;
+            |truncate photo_relation, photo, item, gift_list_role, users, gift_list;
             |ALTER SEQUENCE gift_list_seq RESTART;
             |ALTER SEQUENCE item_seq RESTART;
             |ALTER SEQUENCE users_seq RESTART;
+            |ALTER SEQUENCE photo_seq RESTART;
           """.stripMargin).execute()
       }
     }

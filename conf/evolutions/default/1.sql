@@ -1,6 +1,5 @@
 # --- !Ups
 
-
 create table users (
   id                        bigint not null,
   email                     varchar(255) not null unique,
@@ -42,6 +41,20 @@ create table item (
 
 create sequence item_seq;
 
+create table photo (
+  id      bigint not null,
+  folder  varchar(255) not null,
+  path    text not null,
+  constraint pk_photo primary key (id)
+);
+
+create sequence photo_seq;
+
+create table photo_relation (
+  owner_id  bigint not null,
+  photo_id bigint not null,
+  constraint pk_photo_join primary key (owner_id, photo_id)
+);
 
 # --- !Downs
 
@@ -58,4 +71,10 @@ drop sequence if exists gift_list_seq;
 drop table if exists item cascade;
 
 drop sequence if exists item_seq;
+
+drop table if exists photo cascade;
+
+drop sequence if exists photo_seq;
+
+drop table if exists photo_relation;
 
