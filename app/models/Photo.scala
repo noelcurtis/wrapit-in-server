@@ -11,11 +11,11 @@ import play.api.Play.current
 import com.google.common.base.Strings
 import engine.Utils
 
-case class Photo(id: Pk[Long] = NotAssigned, folder: String, path: String) {
+case class Photo(id: Pk[Long] = NotAssigned, folder: String, fileName: String) {
 
   def getPath: Option[String] = {
-    if (!Strings.isNullOrEmpty(folder) && !Strings.isNullOrEmpty(path)) {
-      Some(Utils.getAwsBucketPath + "/" + folder + "/" +path)
+    if (!Strings.isNullOrEmpty(folder) && !Strings.isNullOrEmpty(fileName)) {
+      Some(Utils.getAwsBucketPath + "/" + folder + "/" +fileName)
     }
     else {
       None
@@ -31,8 +31,8 @@ object Photo {
   val parseSingle = {
     get[Pk[Long]]("photo.id") ~
       get[String]("photo.folder") ~
-      get[String]("photo.path") map {
-      case id ~ folder ~ path => Photo(id, folder, path)
+      get[String]("photo.file_name") map {
+      case id ~ folder ~ fileName => Photo(id, folder, fileName)
     }
   }
 
@@ -47,11 +47,11 @@ object Photo {
       DB.withConnection {
         implicit connection =>
           val createdId: Option[Long] = SQL(
-            """insert into photo(id, folder, path)
-            values((select nextval('photo_seq')), {folder}, {path})"""
+            """insert into photo(id, folder, file_name)
+            values((select nextval('photo_seq')), {folder}, {fileName})"""
           ).on(
             'folder -> photo.folder,
-            'path -> photo.path
+            'fileName -> photo.fileName
           ).executeInsert()
 
           createdId match {
@@ -78,12 +78,12 @@ object Photo {
         SQL(
           """
           update photo
-          set folder = {folder}, path = {path}
+          set folder = {folder}, file_name = {fileName}
           where id = {id}
           """
         ).on(
           'folder -> photo.folder,
-          'path -> photo.path,
+          'fileName -> photo.fileName,
           'id -> photo.id
         ).executeUpdate()
     }
@@ -95,6 +95,16 @@ object Photo {
         SQL("select * from photo where id = {id}").on(
           'id -> id
         ).as(Photo.parseSingle.singleOpt)
+    }
+  }
+
+  def getCount(folder: String, fileName: String): Long = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select count(*) from photo where folder = {folder} and file_name = {fileName}").on(
+          'folder -> folder,
+          'fileName -> fileName
+        ).as(scalar[Long].single)
     }
   }
 

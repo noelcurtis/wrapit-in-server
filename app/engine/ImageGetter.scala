@@ -19,19 +19,23 @@ object ImageGetter {
 
   def getImages(url: String): List[(String, Int)] = {
     Logger.info(s"Getting images {$url} started")
-    val doc = Jsoup.connect(url).get() // GET request to the URL
-    val images = doc.select("img")
-    val iterator = images.iterator()
-    var srcs: mutable.ListBuffer[(String, Int)] = mutable.ListBuffer()
-    while (iterator.hasNext) {
-      val cur = iterator.next()
-      val attrs = (cur.attr("src"), Utils.toInt(cur.attr("width"), 0))
-      srcs += attrs
+    try {
+      val doc = Jsoup.connect(url).get() // GET request to the URL
+      val images = doc.select("img")
+      val iterator = images.iterator()
+      var srcs: mutable.ListBuffer[(String, Int)] = mutable.ListBuffer()
+      while (iterator.hasNext) {
+        val cur = iterator.next()
+        val attrs = (cur.attr("src"), Utils.toInt(cur.attr("width"), 0))
+        srcs += attrs
+      }
+      val found = srcs.toList sortBy (-_._2)
+      val filtered = found.filter(x => validateUrl(x._1))
+      Logger.info(s"Getting images {$url} ended")
+      filtered
+    } catch {
+      case e:Exception => Logger.error("Error getting images " + e.getMessage); List()
     }
-    val found = srcs.toList sortBy (-_._2)
-    val filtered = found.filter(x => validateUrl(x._1))
-    Logger.info(s"Getting images {$url} ended")
-    filtered
   }
 
 

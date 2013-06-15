@@ -35,7 +35,7 @@ object Items extends Controller with Secured {
           val url = request.getQueryString("imgUrl")
           val item = Item.findById(itemId)
           item match {
-            case Some(item) => Item.update(item.copy(imgUrl = url))
+            case Some(item) => Item.addPhoto(item, url.getOrElse(""))
             case None => Logger.error(s"Item not found id ${itemId}")
           }
           Redirect(routes.GiftLists.show(listId))

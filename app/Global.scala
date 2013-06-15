@@ -59,22 +59,30 @@ object InitialData {
 
     // create some items for gift lists
     // foobarList
-    GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1), imgUrl = Some("http://store.storeimages.cdn-apple.com/3423/as-images.apple.com/is/image/AppleInc/HB956?wid=276&hei=153&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1369943390003")), foobarListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobarListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1), imgUrl = Some("http://teleflora.edgesuite.net/images/products/HW0_477885.jpg")), foobarListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1), imgUrl = Some("http://g-ecx.images-amazon.com/images/G/01/kindle/dp/2012/KT/KT-slate-01-sm._V401027115_.jpg")), foobarListC.get.giftListId)
-    // foobar1List
-    GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    val i1 = GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    val i2 = GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    val i3 = GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobarListC.get.giftListId)
 
+    // foobar1List
+    val i4 = GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    val i5 = GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    val i6 = GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+
+    // Add photos to the items
+    Item.addPhoto(Item.findById(i1.get).get, "http://store.storeimages.cdn-apple.com/3423/as-images.apple.com/is/image/AppleInc/HB956?wid=276&hei=153&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1369943390003", false)
+    Item.addPhoto(Item.findById(i2.get).get, "http://teleflora.edgesuite.net/images/products/HW0_477885.jpg", false)
+    Item.addPhoto(Item.findById(i3.get).get, "http://g-ecx.images-amazon.com/images/G/01/kindle/dp/2012/KT/KT-slate-01-sm._V401027115_.jpg", false)
+    Item.addPhoto(Item.findById(i4.get).get, "http://store.storeimages.cdn-apple.com/3423/as-images.apple.com/is/image/AppleInc/HB956?wid=276&hei=153&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1369943390003", false)
+    Item.addPhoto(Item.findById(i5.get).get, "http://teleflora.edgesuite.net/images/products/HW0_477885.jpg", false)
+    Item.addPhoto(Item.findById(i6.get).get, "http://g-ecx.images-amazon.com/images/G/01/kindle/dp/2012/KT/KT-slate-01-sm._V401027115_.jpg", false)
   }
 
   def cleanDb = {
     DB.withConnection {
       implicit connection => {
-        Logger.debug("Clearing database fpr dev.");
+        Logger.debug("Clearing database for dev.");
         SQL(
           """
             |truncate photo_relation, photo, item, gift_list_role, users, gift_list;

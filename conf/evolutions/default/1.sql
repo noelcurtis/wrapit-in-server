@@ -34,7 +34,6 @@ create table item (
   url           text not null,
   needed        int not null,
   purchased     int not null,
-  img_url       text not null,
   constraint  pk_item primary key (id),
   foreign key(gift_list_id) references gift_list(id) on delete cascade
 );
@@ -42,9 +41,9 @@ create table item (
 create sequence item_seq;
 
 create table photo (
-  id      bigint not null,
-  folder  varchar(255) not null,
-  path    text not null,
+  id            bigint not null,
+  folder        varchar(255) not null,
+  file_name     text not null,
   constraint pk_photo primary key (id)
 );
 

@@ -41,8 +41,8 @@
             @for(item <- items) {
                 <li>
                     <a href="" class="item-wrapper">
-                        @if(item.imgUrl.isDefined && item.imgUrl.get != "") {
-                            <div class="img-preview" style="background-image: url('@item.imgUrl.get')"> </div>
+                        @if(item.getPhoto.isDefined && item.getPhoto.get.getPath.isDefined) {
+                            <div class="img-preview" style="background-image: url('@item.getPhoto.get.getPath.getOrElse("")')"> </div>
                         } else {
                             <div class="item-icon icon-gift" style="margin-left: 31px; margin-right: 31px"></div>
                         }
