@@ -1,1 +1,1 @@
-web: target/start -Dhttp.port=${PORT} ${JAVA_OPTS} -DapplyEvolutions.default=true -Ddb.default.url=${DATABASE_URL} -Ddb.default.password=coseltbnjzjtwh -Ddb.default.user=TO58idt6GS0XbP9Rq6S1Q2RIt
+web: target/start -Dhttp.port=${PORT} ${JAVA_OPTS} -Dconfig.resource=appplication.prod.conf
