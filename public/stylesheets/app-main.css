@@ -59,7 +59,7 @@
     display: inline-block;
     color: #1abc9c !important;
     font-size: 30px;
-    padding-top: 5px;
+    padding-top: 3px;
 }
 
 .container.list
@@ -91,6 +91,7 @@ ul.nav-list.item-list li .radio
 {
     margin-left: 50px;
     font-size: 17px;
+    padding-left: 28px;
 }
 
 ul.nav-list.item-list li a.item-wrapper
@@ -211,7 +212,7 @@ ul.nav-list.item-list .item-wrapper .sub-info i
     border: none;
 }
 
-.form-list .control-group.active .input-prepend button
+.form-list .control-group.active .input-prepend .btn
 {
     color: #1abc9c;
 }
@@ -227,6 +228,11 @@ ul.nav-list.item-list .item-wrapper .sub-info i
 .form-list .control-group .input-prepend button
 {
     height: 41px;
+}
+
+.form-list .control-group input
+{
+    height: 25px;
 }
 
 .input-prepend textarea
@@ -254,12 +260,16 @@ ul.nav-list.item-list .item-wrapper .sub-info i
 {
     body
     {
-        padding-top: 50px;
+        padding-top: 40px;
     }
 
     .navbar-fixed-top, .navbar-fixed-bottom
     {
         position: fixed;
+    }
+
+    .navbar-fixed-top .navbar-inner, .navbar-fixed-bottom .navbar-inner {
+        padding: 0px;
     }
 }
 
@@ -283,6 +293,11 @@ ul.nav-list.item-list .item-wrapper .sub-info i
         margin-bottom: 0px;
         margin-top: 0px;
         width: 90%;
+    }
+
+    .form-list .control-group input
+    {
+        height: 41px;
     }
 }
 

@@ -18,4 +18,17 @@ $(function(){
         yearRange: '-1:+1'
     });
     $.extend($.datepicker, {_checkOffset:function(inst,offset,isFixed){return offset}});
+
+    $('.form-list textarea').focus(function() {
+        console.log($(this).parents(".control-group"))
+        $(this).parents(".control-group").each(function() {
+            console.log(this)
+            $(this).addClass("active")
+        });
+    }).blur(function(){
+        $(this).parents(".control-group").each(function() {
+            $(this).removeClass("active")
+        });
+    })
+
 });
