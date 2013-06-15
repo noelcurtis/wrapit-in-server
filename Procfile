@@ -1,1 +1,1 @@
-web: target/start -Dhttp.port=${PORT} ${JAVA_OPTS} -Dconfig.resource=appplication.prod.conf
+web: target/start -Dhttp.port=${PORT} ${JAVA_OPTS} -Dconfig.resource=application.prod.conf
