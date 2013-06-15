@@ -89,7 +89,7 @@ ul.nav-list.item-list li
 
 ul.nav-list.item-list li .radio
 {
-    margin-left: 35px;
+    margin-left: 50px;
     font-size: 17px;
 }
 
@@ -99,11 +99,6 @@ ul.nav-list.item-list li a.item-wrapper
     padding-bottom: 0px;
     margin-right: 0px;
     padding-right: 0px;
-}
-
-ul.nav-list.item-list li a.item-wrapper:active
-{
-    color: #1abc9c;
 }
 
 ul.nav-list.item-list .item-wrapper .item-content
@@ -173,7 +168,12 @@ ul.nav-list.item-list.form-list input,
 ul.nav-list.item-list.form-list textarea
 {
     font-size: 17px;
-    width: 90%;
+    width: 80%;
+}
+
+ul.nav-list.item-list.form-list textarea
+{
+    padding: 5px 7px;
 }
 
 ul.nav-list.item-list .item-wrapper .sub-info
@@ -189,8 +189,8 @@ ul.nav-list.item-list .item-wrapper .sub-info i
 
 .form-list .input-prepend
 {
-    margin-bottom: 0px;
-    width: 90%;
+    margin: 10px 0px 10px 40px;
+    width: 80%;
 }
 
 .form-list .btn > [class^="fui-"]
@@ -200,7 +200,7 @@ ul.nav-list.item-list .item-wrapper .sub-info i
 
 .form-list .control-group
 {
-    margin-left: 10px;
+    margin: 0px auto;
 }
 
 .form-list .control-group.active .input-prepend button,
@@ -208,7 +208,12 @@ ul.nav-list.item-list .item-wrapper .sub-info i
 .form-list .control-group.active .input-prepend input,
 .form-list .control-group.active .input-prepend textarea
 {
-    border-color: #16a085;
+    border: none;
+}
+
+.form-list .control-group.active .input-prepend button
+{
+    color: #1abc9c;
 }
 
 .form-list .control-group .input-prepend button,
@@ -216,7 +221,12 @@ ul.nav-list.item-list .item-wrapper .sub-info i
 .form-list .control-group .input-prepend textarea,
 .form-list .control-group .input-prepend div.btn
 {
-    border-color: transparent;
+    border: none;
+}
+
+.form-list .control-group .input-prepend button
+{
+    height: 41px;
 }
 
 .input-prepend textarea
