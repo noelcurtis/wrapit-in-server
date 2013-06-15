@@ -49,8 +49,11 @@ object GiftLists extends Controller with Secured {
           // parse the date
           val newList = GiftList(name = Some(giftList._1), dueDate = engine.Utils.dateFromString(Some(giftList._2)), purpose = Some(giftList._3))
           // create a new list
-          GiftList.create(newList, user.get.id.get)
-          Redirect(routes.GiftLists.index())
+          val giftListRole = GiftList.create(newList, user.get.id.get)
+          giftListRole match {
+            case Some(giftListRole) => Redirect(routes.GiftLists.show(giftListRole.giftListId))
+            case None => Redirect(routes.GiftLists.index())
+          }
         }
       )
   }
