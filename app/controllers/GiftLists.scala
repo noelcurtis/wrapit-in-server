@@ -9,14 +9,15 @@ import play.api.data.Forms._
 import scala.Some
 import java.text.SimpleDateFormat
 
-object GiftLists extends Controller with Secured{
+object GiftLists extends Controller with Secured {
 
-  def index = IsAuthenticated { email => _ =>
-    val user = User.find(email)
-    user match {
-      case Some(user) => Ok(html.gift_lists.index(GiftListRole.find(user.id.get)))
-      case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
-    }
+  def index = IsAuthenticated {
+    email => _ =>
+      val user = User.find(email)
+      user match {
+        case Some(user) => Ok(html.gift_lists.index(GiftListRole.find(user.id.get)))
+        case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
+      }
   }
 
   val createGiftForm = Form(
@@ -27,35 +28,38 @@ object GiftLists extends Controller with Secured{
     )
   )
 
-  def create = IsAuthenticated { email => implicit request =>
-    val user = User.find(email)
-    user match {
-      case Some(user) => Ok(html.gift_lists.create(createGiftForm))
-      case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
-    }
-  }
-
-  def handlecreate = IsAuthenticated { email => implicit request =>
-    // consider email will always exist
-    createGiftForm.bindFromRequest.fold(
-      formWithErrors => {
-        BadRequest(html.gift_lists.create(formWithErrors))
-      },
-      giftList => {
-        val user = User.find(email)
-        // parse the date
-        val newList = GiftList(name = Some(giftList._1), dueDate = engine.Utils.dateFromString(Some(giftList._2)), purpose = Some(giftList._3))
-        // create a new list
-        GiftList.create(newList, user.get.id.get)
-        Redirect(routes.GiftLists.index())
+  def create = IsAuthenticated {
+    email => implicit request =>
+      val user = User.find(email)
+      user match {
+        case Some(user) => Ok(html.gift_lists.create(createGiftForm))
+        case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
       }
-    )
   }
 
-  def show (id: Long) = IsAuthenticated { email => implicit request =>
-    val list = GiftList.find(id)
-    val items = Item.find(id)
-    Ok(views.html.gift_lists.show(list, items))
+  def handlecreate = IsAuthenticated {
+    email => implicit request =>
+    // consider email will always exist
+      createGiftForm.bindFromRequest.fold(
+        formWithErrors => {
+          BadRequest(html.gift_lists.create(formWithErrors))
+        },
+        giftList => {
+          val user = User.find(email)
+          // parse the date
+          val newList = GiftList(name = Some(giftList._1), dueDate = engine.Utils.dateFromString(Some(giftList._2)), purpose = Some(giftList._3))
+          // create a new list
+          GiftList.create(newList, user.get.id.get)
+          Redirect(routes.GiftLists.index())
+        }
+      )
+  }
+
+  def show(id: Long) = IsAuthenticated {
+    email => implicit request =>
+      val list = GiftList.find(id)
+      val items = Item.find(id)
+      Ok(views.html.gift_lists.show(list, items))
   }
 
   val itemCreateForm = Form(
@@ -67,40 +71,40 @@ object GiftLists extends Controller with Secured{
     )
   )
 
-  def additem (id: Long) = IsAuthenticated { email => implicit request =>
-    val user = User.find(email)
-    user match {
-      case Some(user) => Ok(html.items.create(itemCreateForm, id))
-      case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
-    }
+  def additem(id: Long) = IsAuthenticated {
+    email => implicit request =>
+      val user = User.find(email)
+      user match {
+        case Some(user) => Ok(html.items.create(itemCreateForm, id))
+        case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
+      }
   }
 
-  def handleadditem (listId: Long) =  IsAuthenticated { email => implicit request =>
-    itemCreateForm.bindFromRequest().fold(
-      formWithErrors => {
-        BadRequest(html.items.create(formWithErrors, listId))
-      },
-      item => {
-        // parse the date
-        val newItem = Item(name = Some(item._1), needed = Some(item._2), url = Some(item._3))
-        Logger.info(newItem.toString)
-        // add item to the list
-        val newItemId = GiftList.addItem(newItem, listId)
-        newItemId match {
-          case Some(newItemId) => {
-            if (item._4 == 1)
-            {
-              Redirect(routes.Items.webimages(listId, newItemId)) // Get images from the web
+  def handleadditem(listId: Long) = IsAuthenticated {
+    email => implicit request =>
+      itemCreateForm.bindFromRequest().fold(
+        formWithErrors => {
+          BadRequest(html.items.create(formWithErrors, listId))
+        },
+        item => {
+          // parse the date
+          val newItem = Item(name = Some(item._1), needed = Some(item._2), url = Some(item._3))
+          Logger.info(newItem.toString)
+          // add item to the list
+          val newItemId = GiftList.addItem(newItem, listId)
+          newItemId match {
+            case Some(newItemId) => {
+              if (item._4 == 1) {
+                Redirect(routes.Items.webimages(listId, newItemId)) // Get images from the web
+              }
+              else {
+                Redirect(routes.GiftLists.show(listId)) // Upload an image from your device
+              }
             }
-            else
-            {
-              Redirect(routes.GiftLists.show(listId)) // Upload an image from your device
-            }
+            case None => Logger.error("Could not add Item " + newItem.toString + " to GiftList " + listId); Redirect(routes.GiftLists.show(listId))
           }
-          case None => Logger.error("Could not add Item "+ newItem.toString +" to GiftList " + listId); Redirect(routes.GiftLists.show(listId))
         }
-      }
-    )
+      )
   }
 
 }

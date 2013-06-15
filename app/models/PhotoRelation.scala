@@ -8,7 +8,7 @@ import scala.Some
 import play.Logger
 import play.api.Play.current
 
-case class PhotoRelation (ownerId: Long, photoId: Long)
+case class PhotoRelation(ownerId: Long, photoId: Long)
 
 object PhotoRelation {
 
@@ -16,14 +16,14 @@ object PhotoRelation {
    * Parse a PhotoRelation from a ResultSet
    */
   val parseSingle = {
-      get[Long]("photo_relation.owner_id") ~
+    get[Long]("photo_relation.owner_id") ~
       get[Long]("photo_relation.photo_id") map {
       case ownerId ~ photoId => PhotoRelation(ownerId, photoId)
     }
   }
 
 
-  def create(ownerId: Long, photoId: Long) : Option[PhotoRelation] = {
+  def create(ownerId: Long, photoId: Long): Option[PhotoRelation] = {
     try {
       DB.withConnection {
         implicit connection =>
@@ -42,6 +42,24 @@ object PhotoRelation {
         Logger.error(e.getMessage)
         None
       }
+    }
+  }
+
+  def findFirst(ownerId: Long): Option[PhotoRelation] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select * from photo_relation where owner_id = {ownerId} limit 1").on(
+          'ownerId -> ownerId
+        ).as(PhotoRelation.parseSingle.singleOpt)
+    }
+  }
+
+  def find(ownerId: Long): List[PhotoRelation] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select * from photo_relation where owner_id = {ownerId}").on(
+          'ownerId -> ownerId
+        ).as(PhotoRelation.parseSingle *)
     }
   }
 

@@ -1,14 +1,14 @@
 @(imageUrls: List[(String, Int)])
 
-@moreCss = @{
-    val route = routes.Assets.at("stylesheets/image-layout.css")
-    s"<link rel='stylesheet' media='screen' href='$route'>"
-}
+    @moreCss = @{
+        val route = routes.Assets.at("stylesheets/image-layout.css")
+        s"<link rel='stylesheet' media='screen' href='$route'>"
+    }
 
-@moreJs = @{
-    val route = routes.Assets.at("javascripts/image-layout.js")
-    s"<script src='$route' type='text/javascript'></script>"
-}
+    @moreJs = @{
+        val route = routes.Assets.at("javascripts/image-layout.js")
+        s"<script src='$route' type='text/javascript'></script>"
+    }
 
 @main(title = "WrapIt.in", moreCss = moreCss, moreJs = moreJs) {
 
@@ -17,7 +17,7 @@
         <div class="navbar-inner">
             <div class="container">
                 @*<div class="navvy-item pull-left">*@
-                    @*<a href="#fakelink"><span class="fui-list"></span></a>*@
+                @*<a href="#fakelink"><span class="fui-list"></span></a>*@
                 @*</div>*@
                 <span class="navvy-title">Choose An Image</span>
                 <div class="navvy-item pull-right">

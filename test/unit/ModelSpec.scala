@@ -162,6 +162,12 @@ class ModelSpec extends Specification {
       assert(items.length == 4)
     }
 
+    "allow to add a Photo to an Item" in new WithCleanDb {
+      val items = Item.find(1)
+      val firstItem = items(1)
+      Item.addPhoto(firstItem, "http://g-ecx.images-amazon.com/images/G/01/kindle/dp/2012/KT/KT-slate-01-sm._V401027115_.jpg")
+    }
+
   }
 
   "Gift List Role Model" should {

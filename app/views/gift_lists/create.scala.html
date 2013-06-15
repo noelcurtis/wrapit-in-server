@@ -1,73 +1,73 @@
-@(form: Form[(String,String, String)])(implicit flash: Flash)
+@(form: Form[(String, String, String)])(implicit flash: Flash)
 
-@moreCss = @{
-    val route = routes.Assets.at("stylesheets/item-list.css")
-    s"<link rel='stylesheet' media='screen' href='$route'>"
-}
+    @moreCss = @{
+        val route = routes.Assets.at("stylesheets/item-list.css")
+        s"<link rel='stylesheet' media='screen' href='$route'>"
+    }
 
-@moreJs = @{
-    val route = routes.Assets.at("javascripts/formlist.js")
-    s"<script src='$route' type='text/javascript'></script>"
-}
+    @moreJs = @{
+        val route = routes.Assets.at("javascripts/formlist.js")
+        s"<script src='$route' type='text/javascript'></script>"
+    }
 
 @main(title = "WrapIt.in", moreCss = moreCss, moreJs = moreJs) {
 
     @helper.form(routes.GiftLists.handlecreate()) {
-    <div class="navbar navbar-fixed-top navbar-inverse">
-        <div class="navbar-inner">
-            <div class="container">
-                <div class="navvy-item pull-left">
-                    <a href="@routes.GiftLists.index()"><span class="fui-triangle-left-large"></span></a>
-                </div>
-                <span class="navvy-title">New List</span>
-                <div class="navvy-item pull-right">
-                    <button class="navvy-button fui-check" type="submit"></button>
+        <div class="navbar navbar-fixed-top navbar-inverse">
+            <div class="navbar-inner">
+                <div class="container">
+                    <div class="navvy-item pull-left">
+                        <a href="@routes.GiftLists.index()"><span class="fui-triangle-left-large"></span></a>
+                    </div>
+                    <span class="navvy-title">New List</span>
+                    <div class="navvy-item pull-right">
+                        <button class="navvy-button fui-check" type="submit"></button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="container list">
-        <ul class="nav nav-list item-list form-list">
-            <li>
-                <a class="item-wrapper">
-                    <div class="control-group">
-                        <div class="input-prepend input-datepicker">
-                            <button type="button" class="btn"><span class="fui-list-numbered"></span></button>
-                            <input type="text" name="name" placeholder="A name for your list" class="flat" value="" id="datepicker-name">
+        <div class="container list">
+            <ul class="nav nav-list item-list form-list">
+                <li>
+                    <a class="item-wrapper">
+                        <div class="control-group">
+                            <div class="input-prepend input-datepicker">
+                                <button type="button" class="btn"><span class="fui-list-numbered"></span></button>
+                                <input type="text" name="name" placeholder="A name for your list" class="flat" value="" id="datepicker-name">
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </li>
+                    </a>
+                </li>
 
-            <li>
-                <a class="item-wrapper">
-                    <div class="control-group">
-                        <div class="input-prepend input-datepicker">
-                            <button type="button" class="btn"><span class="fui-calendar"></span></button>
-                            <input type="text" name="dueDate" placeholder="When is this list due" value="" class="flat" id="datepicker-duedate">
+                <li>
+                    <a class="item-wrapper">
+                        <div class="control-group">
+                            <div class="input-prepend input-datepicker">
+                                <button type="button" class="btn"><span class="fui-calendar"></span></button>
+                                <input type="text" name="dueDate" placeholder="When is this list due" value="" class="flat" id="datepicker-duedate">
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </li>
+                    </a>
+                </li>
 
-            <li>
-                <a class="item-wrapper">
-                    <div class="control-group">
-                        <div class="input-prepend input-datepicker">
-                            <div class="btn" style="height: 39px"><span class="fui-document"></span></div>
-                            <textarea name="notes" placeholder="Any notes for the list" class="flat"></textarea>
+                <li>
+                    <a class="item-wrapper">
+                        <div class="control-group">
+                            <div class="input-prepend input-datepicker">
+                                <div class="btn" style="height: 39px"><span class="fui-document"></span></div>
+                                <textarea name="notes" placeholder="Any notes for the list" class="flat"></textarea>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </li>
-        </ul>
+                    </a>
+                </li>
+            </ul>
 
-        @form.globalError.map { error =>
-            <span class="error">
-                @error.message
-            </span>
-        }
-    }
-    </div>
+            @form.globalError.map { error =>
+                <span class="error">
+                    @error.message
+                </span>
+            }
+            }
+</div>
 }

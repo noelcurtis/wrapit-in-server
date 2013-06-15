@@ -8,8 +8,20 @@ import play.api.db.DB
 import anorm.~
 import scala.Some
 import play.api.Play.current
+import com.google.common.base.Strings
+import engine.Utils
 
-case class Photo(id: Pk[Long] = NotAssigned, folder: String, path: String)
+case class Photo(id: Pk[Long] = NotAssigned, folder: String, path: String) {
+
+  def getPath: Option[String] = {
+    if (!Strings.isNullOrEmpty(folder) && !Strings.isNullOrEmpty(path)) {
+      Some(Utils.getAwsBucketPath + "/" + folder + "/" +path)
+    }
+    else {
+      None
+    }
+  }
+}
 
 object Photo {
 
@@ -17,7 +29,7 @@ object Photo {
    * Parse a Photo from a ResultSet
    */
   val parseSingle = {
-      get[Pk[Long]]("photo.id") ~
+    get[Pk[Long]]("photo.id") ~
       get[String]("photo.folder") ~
       get[String]("photo.path") map {
       case id ~ folder ~ path => Photo(id, folder, path)
@@ -61,18 +73,28 @@ object Photo {
    * @return
    */
   def update(photo: Photo) = {
-    DB.withConnection { implicit connection =>
-      SQL(
-        """
+    DB.withConnection {
+      implicit connection =>
+        SQL(
+          """
           update photo
           set folder = {folder}, path = {path}
           where id = {id}
-        """
-      ).on(
-        'folder -> photo.folder,
-        'path -> photo.path,
-        'id -> photo.id
-      ).executeUpdate()
+          """
+        ).on(
+          'folder -> photo.folder,
+          'path -> photo.path,
+          'id -> photo.id
+        ).executeUpdate()
+    }
+  }
+
+  def find(id: Long): Option[Photo] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select * from photo where id = {id}").on(
+          'id -> id
+        ).as(Photo.parseSingle.singleOpt)
     }
   }
 

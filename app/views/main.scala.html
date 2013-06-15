@@ -33,15 +33,15 @@
             <!-- Any other CSS loaded in moreCss-->
         @Html(moreCss)
 
-        <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-        <!--[if lt IE 9]>
+            <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+            <!--[if lt IE 9]>
           <script src="@routes.Assets.at("framework/flatui/js/html5shiv.js")" type="text/javascript"></script>
         <![endif]-->
     </head>
 
     <body>
         @content
-        <!-- Load all JS -->
+            <!-- Load all JS -->
         <script src="@routes.Assets.at("framework/flatui/js/jquery-1.8.3.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("framework/flatui/js/jquery-ui-1.10.3.custom.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("framework/flatui/js/jquery.ui.touch-punch.min.js")" type="text/javascript"></script>

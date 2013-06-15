@@ -1,9 +1,9 @@
-@(form: Form[(String,String)])(implicit flash: Flash)
+@(form: Form[(String, String)])(implicit flash: Flash)
 
-@moreCss = @{
-    val route = routes.Assets.at("stylesheets/login.css")
-    s"<link rel='stylesheet' media='screen' href='$route'>"
-}
+    @moreCss = @{
+        val route = routes.Assets.at("stylesheets/login.css")
+        s"<link rel='stylesheet' media='screen' href='$route'>"
+    }
 
 @main(title = "WrapIt.in", moreCss = moreCss) {
 

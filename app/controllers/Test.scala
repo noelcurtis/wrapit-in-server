@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
-import models.{GiftListRole, User, GiftList}
+import models.{Item, GiftListRole, User, GiftList}
 import anorm.NotAssigned
 import java.util.Date
 import play.Logger
@@ -21,6 +21,18 @@ object Test extends Controller {
     val url = "http://www.bestbuy.com/site/Samsung+-+Ultrabook+13.3%26%2334%3B+Geek+Squad+Certified+Refurbished+Touch-Screen+Laptop+-+4GB+Memory/8815915.p?id=1218902578275&skuId=8815915"
     val images = ImageGetter.getImages(url)
     Ok(views.html.test.testimages(images))
+  }
+
+  def testphoto = Action {
+
+    val item = Item.findById(1)
+    Item.addPhoto(item.get, "http://g-ecx.images-amazon.com/images/G/01/kindle/dp/2012/KT/KT-slate-01-sm._V401027115_.jpg");
+    Ok
+  }
+
+  def testfoundphoto = Action {
+    val item = Item.findById(1)
+    Ok("<img src='"+ item.get.getPhoto.get.getPath.getOrElse("") +"' style='width: 80px'><img>").as("text/html")
   }
 
 }

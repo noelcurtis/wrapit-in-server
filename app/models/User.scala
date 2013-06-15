@@ -20,7 +20,7 @@ object User {
    * Parse a User from a ResultSet
    */
   val parseSingle = {
-      get[Pk[Long]]("users.id") ~
+    get[Pk[Long]]("users.id") ~
       get[Option[String]]("users.email") ~
       get[Option[String]]("users.encrypted_password") ~
       get[Option[Date]]("users.last_sign_in") map {
@@ -63,16 +63,17 @@ object User {
   def authenticate(email: String, password: String): Option[User] = {
     val hf = Hashing.sha256();
     val hpwd = hf.hashString(password);
-    DB.withConnection { implicit connection =>
-      SQL(
-        """
+    DB.withConnection {
+      implicit connection =>
+        SQL(
+          """
          select * from users where
          email = {email} and encrypted_password = {password}
-        """
-      ).on(
-        'email -> email,
-        'password -> hpwd.toString
-      ).as(User.parseSingle.singleOpt)
+          """
+        ).on(
+          'email -> email,
+          'password -> hpwd.toString
+        ).as(User.parseSingle.singleOpt)
     }
   }
 

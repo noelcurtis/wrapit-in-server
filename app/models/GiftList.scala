@@ -19,7 +19,7 @@ object GiftList {
    * Parse a User from a ResultSet
    */
   val parseSingle = {
-      get[Pk[Long]]("gift_list.id") ~
+    get[Pk[Long]]("gift_list.id") ~
       get[Option[String]]("gift_list.name") ~
       get[Option[String]]("gift_list.purpose") ~
       get[Option[Date]]("gift_list.due_date") map {
@@ -67,7 +67,7 @@ object GiftList {
    * @param userId
    * @return
    */
-  def create(giftList: GiftList, userId: Long) : Option[GiftListRole] = {
+  def create(giftList: GiftList, userId: Long): Option[GiftListRole] = {
     Logger.info("Creating GiftList " + giftList.toString + " for User {" + userId + "}")
     val nList = create(giftList) // create the gift list
     nList match {
@@ -92,7 +92,7 @@ object GiftList {
    * @param item
    * @return
    */
-  def addItem(item: Item, giftListId: Long) :Option[Long] = {
+  def addItem(item: Item, giftListId: Long): Option[Long] = {
     val nItem = item.copy(giftListId = Some(giftListId))
     val cItem = Item.create(nItem)
     cItem match {

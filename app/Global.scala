@@ -13,8 +13,8 @@ object Global extends GlobalSettings {
 
   override def onStart(app: Application) {
     Logger.debug("Application start")
-    if (play.Play.isDev) // seed data in dev mode
-    {
+    // seed data in dev mode
+    if (play.Play.isDev) {
       InitialData.cleanDb
       InitialData.insert
     }

@@ -8,13 +8,13 @@ import anorm.SqlParser._
 
 case class GiftListRole(userId: Long, giftListId: Long, role: Option[Int]) {
 
-  private[this] var giftList : Option[GiftList] = None
+  private[this] var giftList: Option[GiftList] = None
 
   /**
    * use to get the gift list
    * @return
    */
-  def getGiftList : Option[GiftList] = {
+  def getGiftList: Option[GiftList] = {
     this.giftList match {
       case Some(giftList) => Some(giftList) // return the gift list
       case None => {
@@ -28,7 +28,7 @@ case class GiftListRole(userId: Long, giftListId: Long, role: Option[Int]) {
    * Use to set the gift list
    * @param giftList
    */
-  def setGiftList(giftList:Option[GiftList]) = {
+  def setGiftList(giftList: Option[GiftList]) = {
     this.giftList = giftList
   }
 
@@ -39,7 +39,7 @@ object GiftListRole {
   object Role extends Enumeration {
     val Creator, Contributor, RestrictedContributor = Value
 
-    def getInt (role:Value) : Int = {
+    def getInt(role: Value): Int = {
       role match {
         case Creator => 1
         case Contributor => 2
@@ -52,10 +52,10 @@ object GiftListRole {
    * Parse a GiftListRole from a ResultSet
    */
   val parseSingle = {
-      get[Long]("gift_list_role.user_id") ~
+    get[Long]("gift_list_role.user_id") ~
       get[Long]("gift_list_role.gift_list_id") ~
       get[Option[Int]]("gift_list_role.role") map {
-        case userId ~ giftListId ~ role => GiftListRole(userId, giftListId, role)
+      case userId ~ giftListId ~ role => GiftListRole(userId, giftListId, role)
     }
   }
 
@@ -65,7 +65,7 @@ object GiftListRole {
    */
   val parseWithGiftList = {
     GiftListRole.parseSingle ~
-    GiftList.parseSingle map {
+      GiftList.parseSingle map {
       case giftListRole ~ giftList => {
         giftListRole.setGiftList(Some(giftList))
         giftListRole
@@ -74,7 +74,7 @@ object GiftListRole {
   }
 
 
-  def create(userId: Long, giftListId: Long, role: Option[Int]) : Option[GiftListRole] = {
+  def create(userId: Long, giftListId: Long, role: Option[Int]): Option[GiftListRole] = {
     try {
       DB.withConnection {
         implicit connection =>
@@ -86,8 +86,8 @@ object GiftListRole {
             'giftListId -> giftListId,
             'role -> role
           ).executeInsert()
-        val giftListRole = GiftListRole(userId, giftListId, role)
-        Some(giftListRole)
+          val giftListRole = GiftListRole(userId, giftListId, role)
+          Some(giftListRole)
       }
     } catch {
       case e: Exception => {
@@ -107,10 +107,10 @@ object GiftListRole {
     }
   }
 
-  def find(userId: Long) : List[GiftListRole]= {
+  def find(userId: Long): List[GiftListRole] = {
     DB.withConnection {
       implicit connection => {
-        val roles : List[GiftListRole] = SQL(
+        val roles: List[GiftListRole] = SQL(
           """
             select * from gift_list_role
             left join gift_list on gift_list_role.gift_list_id = gift_list.id
