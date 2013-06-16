@@ -8,6 +8,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import scala.Some
 import java.text.SimpleDateFormat
+import engine.ImageGetter
 
 object GiftLists extends Controller with Secured {
 
@@ -75,6 +76,9 @@ object GiftLists extends Controller with Secured {
       "needed" -> number,
       "link" -> text,
       "getImage" -> number
+    ).verifying(
+      // Add an additional constraint: link should be a valid URL
+      "Your URL seems invalid.", formValues => !ImageGetter.validateUrl(formValues._3)
     )
   )
 

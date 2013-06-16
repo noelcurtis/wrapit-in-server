@@ -30,7 +30,7 @@ object ImageGetter {
         srcs += attrs
       }
       val found = srcs.toList sortBy (-_._2)
-      val filtered = found.filter(x => validateUrl(x._1))
+      val filtered = found.filter(x => validateUrl(x._1)) // TODO: Decide whether its worth making a connection to the URL
       Logger.info(s"Getting images {$url} ended")
       filtered
     } catch {
@@ -38,17 +38,22 @@ object ImageGetter {
     }
   }
 
-
-  def validateUrl(testUrl: String): Boolean = {
+  def validateUrl(testUrl: String, withConnection: Boolean): Boolean = {
     var valid = true
     try {
       val url = new URL(testUrl)
-      val conn = url.openConnection()
-      conn.connect();
+      if (withConnection) {
+        val conn = url.openConnection()
+        conn.connect();
+      }
     } catch {
       case e: Exception => Logger.info("Invalid URL: " + e.getMessage); valid = false
     }
     valid
+  }
+
+  def validateUrl(testUrl: String): Boolean = {
+       validateUrl(testUrl, false);
   }
 
 }

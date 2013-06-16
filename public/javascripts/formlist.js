@@ -15,6 +15,10 @@ $(function(){
         selectOtherMonths: true,
         dateFormat: "mm/dd/yy",
         yearRange: '-1:+1'
+    }).change(function (){ // remove errors if field is not blank
+        if ($(this).val() !== ""){
+            $(this).parents(".control-group.error").removeClass("error");
+        }
     });
     $.extend($.datepicker, {_checkOffset:function(inst,offset,isFixed){return offset}});
 
@@ -30,8 +34,12 @@ $(function(){
         });
     })
 
-    // Focus on the first input
-    $('.form-list input').first().focus();
+    // Focus on the first input\
+    if ($('.form-list .control-group.error input').first().length != 0){
+        $('.form-list .control-group.error input').first().focus();
+    } else {
+        $('.form-list input').first().focus();
+    }
 
     // If Field is in error state and you start typing clear errors
     $('.form-list input').keypress(function (){

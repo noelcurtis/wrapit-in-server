@@ -31,10 +31,11 @@
             <ul class="nav nav-list item-list form-list">
                 <li>
                     <a class="item-wrapper">
-                        <div class="control-group">
+                        <div class="control-group @if(form.error("name").isDefined){ error }">
                             <div class="input-prepend input-datepicker">
                                 <button type="button" class="btn" style="padding: 6px 6px 8px 12px"><span class="icon-gift" style="font-size: 22px"></span></button>
-                                <input type="text" name="name" placeholder="A name for this item" class="flat" value="">
+                                <input type="text" autocomplete="off" name="name" placeholder="A name for this item" class="flat" value="@if(form.data.get("name").isDefined){ @form.data.get("name").get }">
+                                <label class="error-note">This item needs a name.</label>
                             </div>
                         </div>
                     </a>
@@ -42,10 +43,11 @@
 
                 <li>
                     <a class="item-wrapper">
-                        <div class="control-group">
+                        <div class="control-group @if(form.error("needed").isDefined){ error }">
                             <div class="input-prepend input-datepicker">
                                 <button type="button" class="btn" style="padding: 9px 6px 10px 12px"><span class="fui-question" style="font-size: 18px"></span></button>
-                                <input type="text" name="needed" placeholder="How many do you need?" class="flat" value="">
+                                <input type="text" autocomplete="off" name="needed" placeholder="How many do you need?" class="flat" value="@if(form.data.get("needed").isDefined){ @form.data.get("needed").get }">
+                                <label class="error-note">Should be a number.</label>
                             </div>
                         </div>
                     </a>
@@ -53,10 +55,11 @@
 
                 <li>
                     <a class="item-wrapper">
-                        <div class="control-group">
+                        <div class="control-group @if(form.error("link").isDefined || (form.error("").isDefined && form.error("").get.message.toLowerCase.contains("url"))){ error }">
                             <div class="input-prepend input-datepicker">
                                 <button type="button" class="btn"><span class="fui-link"></span></button>
-                                <input type="text" name="link" placeholder="A web URL " class="flat" value="">
+                                <input type="text" autocomplete="off" name="link" placeholder="A web URL " class="flat" value="@if(form.data.get("link").isDefined){ @form.data.get("link").get }">
+                                <label class="error-note">Your URL seems invalid.</label>
                             </div>
                         </div>
                     </a>
@@ -74,12 +77,6 @@
                     </label>
                 </li>
             </ul>
-
-            @form.globalError.map { error =>
-                <span class="error">
-                    @error.message
-                </span>
-            }
             }
 </div>
 }
