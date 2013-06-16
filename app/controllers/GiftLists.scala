@@ -23,8 +23,11 @@ object GiftLists extends Controller with Secured {
   val createGiftForm = Form(
     tuple(
       "name" -> nonEmptyText,
-      "dueDate" -> text,
+      "dueDate" -> jodaDate("MM/dd/yyyy"),
       "notes" -> text
+    ).verifying(
+      // Add an additional constraint: dueDate must be after today
+      "Date can be today or some future day.", formValues => !formValues._2.isBeforeNow
     )
   )
 
@@ -42,12 +45,13 @@ object GiftLists extends Controller with Secured {
     // consider email will always exist
       createGiftForm.bindFromRequest.fold(
         formWithErrors => {
+          Logger.info("Create GiftList form error " + formWithErrors.errorsAsJson.toString())
           BadRequest(html.gift_lists.create(formWithErrors))
         },
         giftList => {
           val user = User.find(email)
           // parse the date
-          val newList = GiftList(name = Some(giftList._1), dueDate = engine.Utils.dateFromString(Some(giftList._2)), purpose = Some(giftList._3))
+          val newList = GiftList(name = Some(giftList._1), dueDate = Some(giftList._2.toDate), purpose = Some(giftList._3))
           // create a new list
           val giftListRole = GiftList.create(newList, user.get.id.get)
           giftListRole match {

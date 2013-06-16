@@ -87,7 +87,7 @@ ul.nav-list.item-list li
     margin-bottom: 0px;
 }
 
-ul.nav-list.item-list li .radio
+ul.nav-list.item-list li label.radio
 {
     margin-left: 50px;
     font-size: 17px;
@@ -175,6 +175,27 @@ ul.nav-list.item-list.form-list textarea
 ul.nav-list.item-list.form-list textarea
 {
     padding: 5px 7px;
+}
+
+ul.nav-list.item-list.form-list .control-group.error input,
+ul.nav-list.item-list.form-list .control-group.error .btn
+{
+    color:  #e74c3c;
+}
+
+ul.nav-list.item-list.form-list label
+{
+    margin-left: 10px;
+}
+
+ul.nav-list.item-list.form-list label.error-note
+{
+    display: none;
+}
+
+ul.nav-list.item-list.form-list .control-group.error label.error-note
+{
+    display: block;
 }
 
 ul.nav-list.item-list .item-wrapper .sub-info
