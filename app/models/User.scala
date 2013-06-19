@@ -12,6 +12,10 @@ import anorm.~
 case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Option[String],
                 lastSignIn: Option[Date] = None) {
 
+  def getFacebookInfo:Option[FbInfo] = {
+    FbInfo.find(id.get)
+  }
+
 }
 
 object User {
@@ -92,5 +96,12 @@ object User {
     }
   }
 
+  def findByFacebookId(fbId: Long): Option[User] = {
+    val foundFbInfo = FbInfo.findByFacebookId(fbId)
+    foundFbInfo match {
+      case Some(f) => find(f.userId)
+      case None => None
+    }
+  }
 
 }

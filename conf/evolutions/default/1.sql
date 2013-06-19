@@ -8,6 +8,15 @@ create table users (
   constraint pk_user primary key (id)
 );
 
+create table fb_info (
+  user_id         bigint not null,
+  fb_user_id      bigint not null,
+  token           text not null,
+  expires_at      bigint not null,
+  constraint pk_fb_info primary key (fb_user_id),
+  foreign key(user_id) references users(id) on delete cascade
+);
+
 create sequence users_seq;
 
 create table gift_list_role (
@@ -60,6 +69,8 @@ create table photo_relation (
 drop table if exists users;
 
 drop sequence if exists users_seq;
+
+drop table if exists fb_info;
 
 drop table if exists gift_list_role;
 

@@ -2,8 +2,42 @@ truncate users;
 truncate gift_list_role;
 truncate gift_list;
 
+ap(error -> Buffer(access_denied), error_code -> Buffer(200), error_description -> Buffer(Permissions error), error_reason -> Buffer(user_denied))
+
+
 
 # database connection
 psql -h ec2-50-19-228-92.compute-1.amazonaws.com -d d456iu0htqfsn7 -U coseltbnjzjtwh
 
 password: TO58idt6GS0XbP9Rq6S1Q2RIt
+
+
+
+facebookUserId match {
+                    case Some(fbId) => {
+                      val foundUser = User.findByFacebookId(fbId)
+                      foundUser match {
+                        case Some(foundUser) => {
+                          // existing user
+                          val fbInfo = foundUser.getFacebookInfo.get // should have facebook info
+                          val updatedFbInfo = fbInfo.copy(token = token, expiresAt = new DateTime().plusSeconds(timeleft).getMillis)
+                          FbInfo.update(updatedFbInfo)
+                          Redirect(routes.GiftLists.index).withSession("email" -> foundUser.email.get)
+                        }
+                        case None => {
+                          // new user
+                          val user = User.create(User(email = Some(""), password = Some(""))) // create the user
+                          user match {
+                            case Some(user) => {
+                              FbInfo.create(FbInfo(userId = user.id.get, token = token, fbUserId = fbId, expiresAt = new DateTime().plusSeconds(timeleft).getMillis))
+                              Redirect(routes.GiftLists.index).withSession("email" -> user.email.get)
+                            }
+                            case None => Logger.info("Error creating user"); Redirect(routes.Application.index)
+                          }
+                        }
+                      }
+                    }
+                    case None => {
+                      Logger.info("Facebook error unverified token"); Redirect(routes.Application.index)
+                    }
+                  }

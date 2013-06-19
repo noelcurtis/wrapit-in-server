@@ -24,3 +24,13 @@ Item should have getPhoto:Option[Photo]
 * Get the URL
 * Resolve the Image and push it to AWS
 * Create a PhotoRelation and add Item/Photo to it
+
+
+## Facebook Auth
+
+Following steps should be taken to check whether user is authenticated
+
+* Check the session for email
+* If user is a facebook user check the validity of their Facebook token
+* If their facebook token is valid, add email to the session and contiue as logged in
+* else clear the session and redirect to the login page

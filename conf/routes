@@ -11,6 +11,11 @@ GET     /login                      controllers.Application.index
 GET     /create                     controllers.Application.create
 POST    /create                     controllers.Application.handlecreate
 
+# Facebook
+GET     /fblogin                    controllers.FacebookAuth.facebookAuthenticate
+GET     /fbredirect                 controllers.FacebookAuth.facebookRedirect
+#GET     /fbidentity                 controllers.FacebookAuth.facebookIdentityRedirect
+
 # Lists
 GET     /list                   controllers.GiftLists.index
 GET     /list/create            controllers.GiftLists.create
