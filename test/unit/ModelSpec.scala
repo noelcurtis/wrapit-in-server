@@ -109,6 +109,7 @@ class ModelSpec extends Specification {
       newUser match {
         case Some(newUser) => {
           newUser.id should_!= (None)
+          newUser.token should_!=(None)
         }
         case None => failure("User creation failed")
       }

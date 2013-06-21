@@ -52,6 +52,7 @@ object ImageGetter {
     valid
   }
 
+  // Does not work for all URL's TODO: change URL validation to use WEB requests with WS instead.
   def validateUrl(testUrl: String): Boolean = {
        validateUrl(testUrl, false);
   }

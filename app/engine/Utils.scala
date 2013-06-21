@@ -53,17 +53,25 @@ object Utils {
   def daysLeftFromDate(value: Option[Date]): String = {
     value match {
       case Some(value) => {
-        val interval = new Interval(new Instant(), new DateTime(value))
-        val days = interval.toPeriod(PeriodType.days()).getDays
-        if (days < 60) {
-          var t = "days"
-          if (days == 1) t = "day"
-          s"Ends in $days $t"
-        }
-        else {
-          val dformat = new SimpleDateFormat("MMM d, yyyy")
-          val dt = dformat.format(value)
-          s"Ends $dt"
+        val valueDateTime = new DateTime(value)
+        if (valueDateTime.isBeforeNow) {
+          "Ended"
+        } else {
+          val interval = new Interval(new Instant(), valueDateTime)
+          val days = interval.toPeriod(PeriodType.days()).getDays
+          if (days == 0) {
+            "Due today"
+          }
+          else if (days < 60) {
+            var t = "days"
+            if (days == 1) t = "day"
+            s"Ends in $days $t"
+          }
+          else {
+            val dformat = new SimpleDateFormat("MMM d, yyyy")
+            val dt = dformat.format(value)
+            s"Ends $dt"
+          }
         }
       }
       case None => ""

@@ -93,6 +93,7 @@ object GiftList {
    * @return
    */
   def addItem(item: Item, giftListId: Long): Option[Long] = {
+    Logger.info(s"Adding $item to $giftListId")
     val nItem = item.copy(giftListId = Some(giftListId))
     val cItem = Item.create(nItem)
     cItem match {

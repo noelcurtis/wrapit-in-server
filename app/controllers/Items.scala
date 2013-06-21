@@ -9,8 +9,8 @@ import engine.ImageGetter
 object Items extends Controller with Secured {
 
   def webimages(listId: Long, itemId: Long) = IsAuthenticated {
-    email => implicit request =>
-      val user = User.find(email)
+    authToken => implicit request =>
+      val user = User.findByToken(authToken)
       user match {
         case Some(user) => {
           val foundItem = Item.findById(itemId)
@@ -28,8 +28,8 @@ object Items extends Controller with Secured {
 
 
   def update(listId: Long, itemId: Long) = IsAuthenticated {
-    email => implicit request =>
-      val user = User.find(email)
+    authToken => implicit request =>
+      val user = User.findByToken(authToken)
       user match {
         case Some(user) => {
           val url = request.getQueryString("imgUrl")

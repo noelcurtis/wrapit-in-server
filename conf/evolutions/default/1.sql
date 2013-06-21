@@ -5,6 +5,7 @@ create table users (
   email                     varchar(255) not null unique,
   encrypted_password        varchar(255) not null,
   last_sign_in              timestamp not null,
+  token                     text not null,
   constraint pk_user primary key (id)
 );
 

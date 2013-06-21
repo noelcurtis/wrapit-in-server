@@ -9,12 +9,13 @@ import play.api.data.Forms._
 import scala.Some
 import java.text.SimpleDateFormat
 import engine.ImageGetter
+import org.joda.time.DateTime
 
 object GiftLists extends Controller with Secured {
 
   def index = IsAuthenticated {
-    email => _ =>
-      val user = User.find(email)
+    authToken => _ =>
+      val user = User.findByToken(authToken)
       user match {
         case Some(user) => Ok(html.gift_lists.index(GiftListRole.find(user.id.get)))
         case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
@@ -28,13 +29,13 @@ object GiftLists extends Controller with Secured {
       "notes" -> text
     ).verifying(
       // Add an additional constraint: dueDate must be after today
-      "Date can be today or some future day.", formValues => !formValues._2.isBeforeNow
+      "Date can be today or some future day.", formValues =>  !formValues._2.isBefore(new DateTime().minusHours(24))
     )
   )
 
   def create = IsAuthenticated {
-    email => implicit request =>
-      val user = User.find(email)
+    authToken => implicit request =>
+      val user = User.findByToken(authToken)
       user match {
         case Some(user) => Ok(html.gift_lists.create(createGiftForm))
         case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
@@ -42,7 +43,7 @@ object GiftLists extends Controller with Secured {
   }
 
   def handlecreate = IsAuthenticated {
-    email => implicit request =>
+    authToken => implicit request =>
     // consider email will always exist
       createGiftForm.bindFromRequest.fold(
         formWithErrors => {
@@ -50,7 +51,7 @@ object GiftLists extends Controller with Secured {
           BadRequest(html.gift_lists.create(formWithErrors))
         },
         giftList => {
-          val user = User.find(email)
+          val user = User.findByToken(authToken)
           // parse the date
           val newList = GiftList(name = Some(giftList._1), dueDate = Some(giftList._2.toDate), purpose = Some(giftList._3))
           // create a new list
@@ -64,7 +65,7 @@ object GiftLists extends Controller with Secured {
   }
 
   def show(id: Long) = IsAuthenticated {
-    email => implicit request =>
+    authToken => implicit request =>
       val list = GiftList.find(id)
       val items = Item.find(id)
       Ok(views.html.gift_lists.show(list, items))
@@ -78,13 +79,12 @@ object GiftLists extends Controller with Secured {
       "getImage" -> number
     ).verifying(
       // Add an additional constraint: link should be a valid URL
-      "Your URL seems invalid.", formValues => !ImageGetter.validateUrl(formValues._3)
     )
   )
 
   def additem(id: Long) = IsAuthenticated {
-    email => implicit request =>
-      val user = User.find(email)
+    authToken => implicit request =>
+      val user = User.findByToken(authToken)
       user match {
         case Some(user) => Ok(html.items.create(itemCreateForm, id))
         case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
@@ -92,7 +92,7 @@ object GiftLists extends Controller with Secured {
   }
 
   def handleadditem(listId: Long) = IsAuthenticated {
-    email => implicit request =>
+    authToken => implicit request =>
       itemCreateForm.bindFromRequest().fold(
         formWithErrors => {
           BadRequest(html.items.create(formWithErrors, listId))
@@ -100,7 +100,6 @@ object GiftLists extends Controller with Secured {
         item => {
           // parse the date
           val newItem = Item(name = Some(item._1), needed = Some(item._2), url = Some(item._3))
-          Logger.info(newItem.toString)
           // add item to the list
           val newItemId = GiftList.addItem(newItem, listId)
           newItemId match {
