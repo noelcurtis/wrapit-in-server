@@ -1,13 +1,16 @@
 import _root_.models.{Item, GiftList, User}
 import org.joda.time.DateTime
-import play.api._
 
 import models._
 import anorm._
 import java.util.Date
 import play.api.db.DB
+import play.api.mvc.RequestHeader
 import play.Logger
 import play.api.Play.current
+import play.api._
+import play.api.mvc._
+import play.api.mvc.Results._
 
 object Global extends GlobalSettings {
 
@@ -22,6 +25,11 @@ object Global extends GlobalSettings {
 
   override def onStop(app: Application) {
 
+  }
+
+  override def onError(request: RequestHeader, ex: Throwable) = {
+    Logger.error("Application Error \n\n" + request.toString() + "\n\n" + ex.getMessage)
+    InternalServerError(ex.getMessage)
   }
 
 }

@@ -1,6 +1,6 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{SimpleResult, Result, Action, Controller}
 import play.api.libs.ws.WS
 import play.api.Play
 import play.api.Play.current
@@ -57,7 +57,7 @@ object FacebookAuth extends Controller {
                   Logger.info("Token " + token + " Expires " + timeleft)
                   // verify the token
                   val facebookUserId = fbDebugToken(token)
-                  Ok
+                  fbCreateAuthUser(token, facebookUserId, timeleft)
                 }
                 case _ => Logger.info("Facebook error " + body.toString); Redirect(routes.Application.index)
               }
@@ -67,6 +67,38 @@ object FacebookAuth extends Controller {
       } else {
         Logger.info("Facebook error " + request.queryString.toString)
         Redirect(routes.Application.index)
+      }
+    }
+  }
+
+
+  def fbCreateAuthUser(token:String, facebookUserId: Option[Long], timeleft: Int) : Result = {
+    facebookUserId match {
+      case Some(fbId) => {
+        val foundUser = User.findByFacebookId(fbId)
+        foundUser match {
+          case Some(foundUser) => {
+            // existing user
+            val fbInfo = foundUser.getFacebookInfo.get // should have facebook info
+            val updatedFbInfo = fbInfo.copy(token = token, expiresAt = new DateTime().plusSeconds(timeleft).getMillis)
+            FbInfo.update(updatedFbInfo)
+            Redirect(routes.GiftLists.index).withSession("authtoken" -> foundUser.token.get)
+          }
+          case None => {
+            // new user
+            val user = User.create(User(email = Some(""), password = Some(""))) // create the user
+            user match {
+              case Some(user) => {
+                FbInfo.create(FbInfo(userId = user.id.get, token = token, fbUserId = fbId, expiresAt = new DateTime().plusSeconds(timeleft).getMillis))
+                Redirect(routes.GiftLists.index).withSession("authtoken" -> user.token.get)
+              }
+              case None => Logger.info("Error creating user"); Redirect(routes.Application.index)
+            }
+          }
+        }
+      }
+      case None => {
+        Logger.info("Facebook error unverified token"); Redirect(routes.Application.index)
       }
     }
   }

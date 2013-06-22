@@ -8,6 +8,7 @@ import play.Logger
 import com.google.common.hash.Hashing
 import anorm.SqlParser._
 import anorm.~
+import play.api.cache.Cache
 
 case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Option[String],
                 lastSignIn: Option[Date] = None, token: Option[String] = Some("")) {
@@ -100,9 +101,11 @@ object User {
   }
 
   def findByToken(token: String): Option[User] = {
-    DB.withConnection {
-      implicit connection =>
-        SQL("select * from users where token = {token}").on('token -> token).as(User.parseSingle.singleOpt)
+    Cache.getOrElse[Option[User]](token){
+      DB.withConnection {
+        implicit connection =>
+          SQL("select * from users where token = {token}").on('token -> token).as(User.parseSingle.singleOpt)
+      }
     }
   }
 

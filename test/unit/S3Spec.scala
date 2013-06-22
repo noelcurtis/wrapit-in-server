@@ -19,27 +19,16 @@ class S3Spec extends Specification {
 
   "S3" should {
 
-    "Allow to upload a file to Amazon S3" in new WithApplication {
-      val bucket = S3(bucketName)
-      val result = bucket + BucketFile("testPrefix/README.txt", "text/plain", """
-		        This is a bucket used for testing the S3 module of play""".getBytes, None, Some(Map("Cache-Control" -> s"max-age=$cacheTime, must-revalidate")))
-      val value = Await.result(result, FiniteDuration(10, "seconds"))
-      value.fold({ e => failure(e.toString) }, { s => success })
-      assert(true)
-
-    }
-
     "Allow to get an Image and upload to Amazon S3" in new WithApplication {
       val imgResult = Await.result(WS.url("http://g-ecx.images-amazon.com/images/G/01/kindle/dp/2012/KT/KT-slate-01-lg._V395919237_.jpg").get, FiniteDuration(20, "seconds"))
       val bytes = imgResult.getAHCResponse.getResponseBodyAsBytes
       val cType = imgResult.getAHCResponse.getContentType
 
       val bucket = S3(bucketName)
-      val awsUpload = bucket + BucketFile("image/testimage.jpg", cType, bytes, None, Some(Map("Cache-Control" -> s"max-age=$cacheTime, must-revalidate")))
+      val awsUpload = bucket + BucketFile("test/testimage.jpg", cType, bytes, None, Some(Map("Cache-Control" -> s"max-age=$cacheTime, must-revalidate")))
       val value = Await.result(awsUpload, FiniteDuration(10, "seconds"))
       value.fold({ e => failure(e.toString) }, { s => success })
     }
-
   }
 
 }

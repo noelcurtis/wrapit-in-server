@@ -65,7 +65,7 @@ object FbInfo {
         SQL(
           """
           update fb_info
-          set token = {token}, fbUserId = {fb_user_id}, expiresAt = {expires_at}
+          set token = {token}, fb_user_id = {fbUserId}, expires_at = {expiresAt}
           where user_id = {userId}
           """
         ).on(
