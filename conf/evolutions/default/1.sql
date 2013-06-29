@@ -65,9 +65,32 @@ create table photo_relation (
   constraint pk_photo_join primary key (owner_id, photo_id)
 );
 
+create table comments (
+  id              bigint not null,
+  note            text not null,
+  constraint pk_comments primary key (id)
+);
+
+create sequence comments_seq;
+
+create table comment_relation (
+  id              bigint not null,
+  comment_id      bigint not null,
+  user_id         bigint not null,
+  item_id         bigint not null,
+  created_at      timestamp,
+  constraint pk_comment_relation primary key (id),
+  foreign key(user_id) references users(id) on delete cascade,
+  foreign key(comment_id) references comments(id) on delete cascade,
+  foreign key(item_id) references item(id) on delete cascade
+);
+
+create sequence comment_relation_seq;
+
+
 # --- !Downs
 
-drop table if exists users;
+drop table if exists users cascade;
 
 drop sequence if exists users_seq;
 
@@ -88,4 +111,12 @@ drop table if exists photo cascade;
 drop sequence if exists photo_seq;
 
 drop table if exists photo_relation;
+
+drop table if exists comments cascade;
+
+drop sequence if exists comments_seq;
+
+drop table if exists comment_relation;
+
+drop sequence if exists comment_relation_seq;
 

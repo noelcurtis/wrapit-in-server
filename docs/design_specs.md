@@ -34,3 +34,19 @@ Following steps should be taken to check whether user is authenticated
 * If user is a facebook user check the validity of their Facebook token
 * If their facebook token is valid, add email to the session and contiue as logged in
 * else clear the session and redirect to the login page
+
+
+##  Comments
+
+* Users can comment on an Item
+* User -> CommentRelation ->  Comment
+                          ->  Item
+* To create a comment: First create the comment, then create the comment relation. All via ajax.                          
+
+
+
+
+
+
+
+

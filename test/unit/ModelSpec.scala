@@ -76,11 +76,13 @@ abstract class WithCleanDb extends WithApplication {
         Logger.debug("Clearing database for test.");
         SQL(
           """
-            |truncate photo_relation, photo, item, gift_list_role, fb_info, users, gift_list;
+            truncate comment, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
             |ALTER SEQUENCE gift_list_seq RESTART;
             |ALTER SEQUENCE item_seq RESTART;
             |ALTER SEQUENCE users_seq RESTART;
             |ALTER SEQUENCE photo_seq RESTART;
+            |ALTER SEQUENCE comment_seq RESTART;
+            |ALTER SEQUENCE comment_relation_seq RESTART;
           """.stripMargin).execute()
       }
     }
@@ -205,6 +207,47 @@ class ModelSpec extends Specification {
     "check empty list returned for non existant user" in new WithCleanDb {
       val roles = GiftListRole.find(123445)
       assert(roles.isEmpty)
+    }
+
+  }
+
+  "Comments Model" should {
+
+    val testComment = "Some new comment"
+
+    "allow Comments creation" in new WithCleanDb {
+      val newComment = Comments.create(testComment)
+      newComment match {
+        case Some(newComment) =>  {
+          newComment.id should_!=(null) // asset not null
+          newComment.note shouldEqual(testComment)
+        }
+        case None => failure("Could not create the comment" + newComment.toString)
+      }
+    }
+
+    "allow CommentRelation creation" in new WithCleanDb {
+      val newCR = CommentRelation(commentId = 1, userId = 1, itemId = 1)
+      val createdCR = CommentRelation.create(newCR)
+      createdCR match {
+        case Some(c) => {
+          c.id should_!=(null)
+          c.createdAt should_!=(null)
+        }
+        case None => failure("Could not create the CommentRelation " + createdCR.toString)
+      }
+    }
+
+    "allow Comments creation for User and Item" in new WithCleanDb {
+      val createdCR = Comments.create(1, 1, testComment)
+      createdCR match {
+        case Some(c) => {
+          c.id should_!=(null)
+          c.createdAt should_!=(null)
+          c.getComment().get.note shouldEqual(testComment)
+        }
+        case None => failure("Could not create the CommentRelation " + createdCR.toString)
+      }
     }
 
   }
