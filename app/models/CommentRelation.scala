@@ -16,7 +16,7 @@ case class CommentRelation (id : Pk[Long] = NotAssigned, commentId: Long, userId
 
   def getComment() : Option[Comments] = {
     comment match {
-      case Some(c) => comment
+      case Some(c) => comment // if comment is set just return it
       case None => {
         // lazy fetch the comment
         val found = Comments.find(commentId)
@@ -50,6 +50,20 @@ object CommentRelation {
     }
   }
 
+  /**
+   * Parse a CommentRelation with a Comment from a ResultSet
+   */
+  val parseWithComment = {
+    CommentRelation.parseSingle ~
+      Comments.parseSingle map {
+      case commentRelation ~ comments => {
+        commentRelation.setComment(comments)
+        commentRelation
+      }
+    }
+  }
+
+
   def create(commentRelation : CommentRelation) : Option[CommentRelation] = {
     try{
       DB.withConnection {
@@ -73,7 +87,51 @@ object CommentRelation {
           }
       }
     } catch {
-      case e:Exception => Logger.error("Could not create Comment Relation " + commentRelation.toString); None
+      case e:Exception => Logger.error("Could not create Comment Relation " + commentRelation.toString + " " + e.getMessage); None
+    }
+  }
+
+  /**
+   * Use to find all comments by a User for an Item
+   * @param userId
+   * @param itemId
+   * @return
+   */
+  def find(userId: Long, itemId: Long) : List[CommentRelation] = {
+    DB.withConnection {
+      implicit connection => {
+        val results: List[CommentRelation] = SQL(
+          """
+            select * from comment_relation
+            left join comments on comment_relation.comment_id = comments.id
+            where user_id = {userId} and item_id = {itemId} order by created_at desc
+          """).on(
+          'userId -> userId,
+          'itemId -> itemId
+        ).as(CommentRelation.parseWithComment *)
+        results
+      }
+    }
+  }
+
+  /**
+   * Use to find all Comments for an Item
+   * @param itemId
+   * @return
+   */
+  def find(itemId: Long) : List[CommentRelation] = {
+    DB.withConnection {
+      implicit connection => {
+        val results: List[CommentRelation] = SQL(
+          """
+            select * from comment_relation
+            left join comments on comment_relation.comment_id = comments.id
+            where item_id = {itemId} order by created_at desc
+          """).on(
+          'itemId -> itemId
+        ).as(CommentRelation.parseWithComment *)
+        results
+      }
     }
   }
 

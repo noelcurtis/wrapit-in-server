@@ -93,12 +93,12 @@ object InitialData {
         Logger.debug("Clearing database for dev.");
         SQL(
           """
-            |truncate comment, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
+            |truncate comments, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
             |ALTER SEQUENCE gift_list_seq RESTART;
             |ALTER SEQUENCE item_seq RESTART;
             |ALTER SEQUENCE users_seq RESTART;
             |ALTER SEQUENCE photo_seq RESTART;
-            |ALTER SEQUENCE comment_seq RESTART;
+            |ALTER SEQUENCE comments_seq RESTART;
             |ALTER SEQUENCE comment_relation_seq RESTART;
           """.stripMargin).execute()
       }

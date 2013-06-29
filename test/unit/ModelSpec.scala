@@ -76,12 +76,12 @@ abstract class WithCleanDb extends WithApplication {
         Logger.debug("Clearing database for test.");
         SQL(
           """
-            truncate comment, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
+            truncate comments, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
             |ALTER SEQUENCE gift_list_seq RESTART;
             |ALTER SEQUENCE item_seq RESTART;
             |ALTER SEQUENCE users_seq RESTART;
             |ALTER SEQUENCE photo_seq RESTART;
-            |ALTER SEQUENCE comment_seq RESTART;
+            |ALTER SEQUENCE comments_seq RESTART;
             |ALTER SEQUENCE comment_relation_seq RESTART;
           """.stripMargin).execute()
       }
@@ -214,6 +214,7 @@ class ModelSpec extends Specification {
   "Comments Model" should {
 
     val testComment = "Some new comment"
+    val testComment1 = "Some other comment"
 
     "allow Comments creation" in new WithCleanDb {
       val newComment = Comments.create(testComment)
@@ -227,6 +228,8 @@ class ModelSpec extends Specification {
     }
 
     "allow CommentRelation creation" in new WithCleanDb {
+      val newComment = Comments.create(testComment) // create a comment for FK constraint
+
       val newCR = CommentRelation(commentId = 1, userId = 1, itemId = 1)
       val createdCR = CommentRelation.create(newCR)
       createdCR match {
@@ -248,6 +251,19 @@ class ModelSpec extends Specification {
         }
         case None => failure("Could not create the CommentRelation " + createdCR.toString)
       }
+    }
+
+    "allow Find of CommentRelations for an Item" in new WithCleanDb {
+      val createdCR1 = Comments.create(1, 1, testComment)
+      val createdCR2 = Comments.create(2, 1, testComment1)
+
+      val found = CommentRelation.find(1)
+      found.size should_==(2)
+
+      val dt1 = new DateTime(found(0).createdAt)
+      val dt2 = new DateTime(found(1).createdAt)
+
+      assert(dt1.isAfter(dt2))
     }
 
   }

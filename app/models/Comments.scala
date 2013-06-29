@@ -21,7 +21,7 @@ object Comments {
    */
   val parseSingle = {
     get[Pk[Long]]("comments.id") ~
-      get[String]("comments.notes") map {
+      get[String]("comments.note") map {
       case commentId ~ note => Comments(commentId, note)
     }
   }
