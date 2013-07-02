@@ -1,0 +1,79 @@
+@(item: Item, comments: List[CommentRelation], giftListId: Long)
+
+    @moreCss = @{
+        val route = routes.Assets.at("stylesheets/item-detail.css")
+        s"<link rel='stylesheet' media='screen' href='$route'>"
+    }
+
+@main(title = "WrapIt.in", moreCss = moreCss) {
+
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="navvy-item pull-left">
+                    <a href="@routes.GiftLists.show(giftListId)"><span class="fui-triangle-left-large"></span></a>
+                </div>
+                <span class="navvy-title">WrapIt.in</span>
+                @*<div class="navvy-item pull-right">*@
+                    @*<a href="@routes.GiftLists.create()"><span class="fui-plus"></span></a>*@
+                @*</div>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="container list">
+        <ul class="nav nav-list item-detail">
+            <li class="image-cell">
+                <div class="image-wrapper">
+                    <div class="image-holder">
+                        @if(item.getPhoto.isDefined && item.getPhoto.get.getPath.isDefined) {
+                            <img src="@item.getPhoto.get.getPath">
+                        } else {
+                            <div class="item-icon icon-gift"></div>
+                        }
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="mini-nav item-nav">
+                    <a href="#fakelink" class="btn btn-primary">Buy online</a>
+                    <a href="#fakelink" class="btn btn-primary checkbox" onclick="">
+                        <label for="it-bought">
+                            <span class="icons">
+                                <span class="first-icon fui-checkbox-unchecked"></span>
+                                <span class="second-icon fui-checkbox-checked"></span>
+                            </span>
+                            <input type="checkbox" value="" id="it-bought" data-toggle="checkbox">
+                            Mark bought
+                        </label>
+                    </a>
+                </div>
+            </li>
+            @*<li class="comment-cell clearfix">*@
+                @*<div class="comment-wrapper">*@
+                    @*<div class="c-text">*@
+                        @*A test comment that is cool. A test comment that is cool. A test comment that is cool.*@
+                    @*</div>*@
+                    @*<div class="c-author">*@
+                        @*Noel Curtis*@
+                    @*</div>*@
+                @*</div>*@
+            @*</li>*@
+            @*<li class="comment-cell clearfix">*@
+                @*<div class="comment-wrapper">*@
+                    @*<div class="c-text">*@
+                        @*A test comment that is cool. A test comment that is cool. A test comment that is cool.*@
+                    @*</div>*@
+                    @*<div class="c-author">*@
+                        @*Noel Curtis*@
+                    @*</div>*@
+                @*</div>*@
+            @*</li>*@
+            <li class="comment-add-cell">
+                <textarea class="input-block-level" rows="1" placeholder="Type a comment..."></textarea>
+                <div class="btn btn-primary" style="display: inline-block; padding: 7px 7px 7px 9px"><i class="icon-plus"></i></div>
+            </li>
+        </ul>
+    </div>
+
+}

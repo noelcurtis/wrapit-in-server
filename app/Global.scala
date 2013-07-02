@@ -43,8 +43,8 @@ object InitialData {
   def insert = {
     Logger.debug("Creating test data.");
     // create some users
-    val foobar = User.create(User(NotAssigned, Some("foobar@gmail.com"), Some("foobar"), Some(new Date())))
-    val foobar1 = User.create(User(NotAssigned, Some("foobar1@gmail.com"), Some("foobar1"), Some(new Date())))
+    val foobar = User.create(User(NotAssigned, Some("foobar@gmail.com"), Some("foobar"), Some(new Date())), Some("a"))
+    val foobar1 = User.create(User(NotAssigned, Some("foobar1@gmail.com"), Some("foobar1"), Some(new Date())), Some("b"))
 
     val dateInFuture = new DateTime().plusDays(42);
 

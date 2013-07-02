@@ -40,7 +40,7 @@
             }
             @for(item <- items) {
                 <li>
-                    <a href="" class="item-wrapper">
+                    <a href="@routes.Items.show(list.get.id.get, item.id.get)" class="item-wrapper">
                         @if(item.getPhoto.isDefined && item.getPhoto.get.getPath.isDefined) {
                             <div class="img-preview" style="background-image: url('@item.getPhoto.get.getPath.getOrElse("")')"> </div>
                         } else {
@@ -53,7 +53,7 @@
                         <div class="sub-info"><span class="info-value">1</span> <i class="icon-comment" style="margin-right: 10px; margin-bottom: 2px"></i> <span class="info-value">2</span> <i class="icon-heart"></i></div>
                     </div>
                     <div class="item-detail fui-arrow-right pull-right"></div>
-                    <div class="item-remain pull-right">@item.purchased/@item.needed</div>
+                    @*<div class="item-remain pull-right">@item.purchased/@item.needed</div>*@
                     </a>
                 </li>
             }

@@ -1,0 +1,90 @@
+.nav-list.item-detail
+{
+    padding: 0px;
+}
+
+.nav-list li.image-cell,
+.nav-list li.comment-cell,
+.nav-list li.comment-add-cell,
+{
+    margin-bottom: 0px;
+}
+
+.nav-list li.comment-add-cell textarea
+{
+    width: 89%;
+    display: inline-block;
+}
+
+.nav-list li.comment-cell .c-text
+{
+    padding: 0px 5px;
+}
+
+.nav-list li.comment-cell .c-author
+{
+    float: right;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.image-wrapper .image-holder img
+{
+    display: block;
+    margin: 0px auto;
+    max-height: 220px;
+}
+
+.item-nav
+{
+    width: 320px;
+    margin: 0px auto;
+}
+
+.btn.checkbox
+{
+    padding: 10.5px 10px;
+}
+
+.mini-nav .btn
+{
+    border-radius: 0px;
+    width: 134px;
+    margin: 0px;
+}
+
+.mini-nav .checkbox label
+{
+    margin-bottom: 0px;
+    margin-left: 25px;
+    font-size: 14.5px;
+    line-height: 19px;
+    font-weight: 500;
+}
+
+.mini-nav .btn.checkbox
+{
+    width: 144px;
+}
+
+.mini-nav .checkbox,
+.mini-nav .radio
+{
+    margin-bottom: 0px;
+    padding-left: 5px;
+}
+
+.mini-nav .checkbox.checked,
+.mini-nav .radio.checked
+{
+    color: #ffffff;
+}
+
+.mini-nav .checkbox .icons,
+.mini-nav .radio .icons
+{
+    color: #34495e;
+    top: 12px;
+    left: 20px;
+}

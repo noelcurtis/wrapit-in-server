@@ -141,8 +141,7 @@ object Item {
           val bytes = r.getAHCResponse.getResponseBodyAsBytes
           if (r.getAHCResponse.getStatusCode != HttpStatus.SC_OK) {
             Logger.error(s"Could not find image at URL $externalUrl")
-          }
-          else {
+          } else {
             Logger.info(s"Getting Photo {$externalUrl} for Item {$item} ended");
             val hash = Hashing.sha256().hashBytes(bytes).toString // create a hash code from the array
             val folder = "items"
@@ -156,8 +155,7 @@ object Item {
               } else {
                 Logger.info(s"File does not exist for folder $folder and filename $filename"); uploadPhoto(folder, filename, contentType, bytes, item)
               }
-            }
-            else { // FAKE THE UPLOAD
+            } else { // FAKE THE UPLOAD
               fakeCreate(folder, filename, item)
             }
           }
@@ -189,6 +187,7 @@ object Item {
 
   private def fakeCreate(folder: String, filename: String, item: Item)
   {
+    Logger.info("Fake creating Photo");
     val newPhoto = Photo.create(Photo(folder = folder, fileName = filename))
     newPhoto match {
       case Some(photo) => {

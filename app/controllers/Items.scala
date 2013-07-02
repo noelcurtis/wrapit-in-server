@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.Controller
-import models.{Item, User}
+import models.{Item, User, CommentRelation}
 import views.html
 import play.Logger
 import engine.ImageGetter
@@ -13,6 +13,7 @@ object Items extends Controller with Secured {
       val user = User.findByToken(authToken)
       user match {
         case Some(user) => {
+
           val foundItem = Item.findById(itemId)
           foundItem match {
             case Some(foundItem) => {
@@ -21,6 +22,7 @@ object Items extends Controller with Secured {
             }
             case None => Logger.error(s"Could not find item with id {$itemId}"); Redirect(routes.Application.index)
           }
+
         }
         case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
       }
@@ -32,6 +34,7 @@ object Items extends Controller with Secured {
       val user = User.findByToken(authToken)
       user match {
         case Some(user) => {
+
           val url = request.getQueryString("imgUrl")
           val item = Item.findById(itemId)
           item match {
@@ -39,6 +42,27 @@ object Items extends Controller with Secured {
             case None => Logger.error(s"Item not found id ${itemId}")
           }
           Redirect(routes.GiftLists.show(listId))
+
+        }
+        case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
+      }
+  }
+
+  def show(listId: Long, itemId: Long) = IsAuthenticated {
+    authToken => implicit request =>
+      val user = User.findByToken(authToken)
+      user match {
+        case Some(user) => {
+
+          val item = Item.findById(itemId)
+          item match {
+            case Some(item) => {
+              val comments = CommentRelation.find(item.id.get) // get all the comments
+              Ok(views.html.items.show(item, comments, listId))
+            }
+            case None => Redirect(routes.GiftLists.show(listId)) // go back to the List page
+          }
+
         }
         case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
       }

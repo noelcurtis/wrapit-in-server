@@ -34,11 +34,11 @@ object User {
     }
   }
 
-  def create(user: User): Option[User] = {
+  def create(user: User, fakeToken: Option[String] = None): Option[User] = {
     try {
       val hf = Hashing.sha256();
       val hpwd = hf.hashString(user.password.getOrElse(""));
-      val token = UUID.randomUUID().toString
+      val token = if (fakeToken.isDefined) fakeToken.get else UUID.randomUUID().toString
       DB.withConnection {
         implicit connection =>
           val createdId: Option[Long] = SQL(

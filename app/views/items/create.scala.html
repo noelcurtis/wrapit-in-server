@@ -41,17 +41,19 @@
                     </a>
                 </li>
 
-                <li>
-                    <a class="item-wrapper">
-                        <div class="control-group @if(form.error("needed").isDefined){ error }">
-                            <div class="input-prepend input-datepicker">
-                                <button type="button" class="btn" style="padding: 9px 6px 10px 12px"><span class="fui-question" style="font-size: 18px"></span></button>
-                                <input type="text" autocomplete="off" name="needed" placeholder="How many do you need?" class="flat" value="@if(form.data.get("needed").isDefined){ @form.data.get("needed").get }">
-                                <label class="error-note">Should be a number.</label>
-                            </div>
-                        </div>
-                    </a>
-                </li>
+                <input type="hidden" autocomplete="off" name="needed" placeholder="How many do you need?" class="flat" value="1">
+
+                @*<li>*@
+                    @*<a class="item-wrapper">*@
+                        @*<div class="control-group @if(form.error("needed").isDefined){ error }">*@
+                            @*<div class="input-prepend input-datepicker">*@
+                                @*<button type="button" class="btn" style="padding: 9px 6px 10px 12px"><span class="fui-question" style="font-size: 18px"></span></button>*@
+                                @*<input type="text" autocomplete="off" name="needed" placeholder="How many do you need?" class="flat" value="@if(form.data.get("needed").isDefined){ @form.data.get("needed").get }">*@
+                                @*<label class="error-note">Should be a number.</label>*@
+                            @*</div>*@
+                        @*</div>*@
+                    @*</a>*@
+                @*</li>*@
 
                 <li>
                     <a class="item-wrapper">
