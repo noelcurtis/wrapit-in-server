@@ -14,6 +14,7 @@ import play.api.Play.current
 import play.api.db.DB
 import org.joda.time.DateTime
 import scala.Some
+import engine.{Creator, Purchaser}
 
 
 abstract class WithCleanDb extends WithApplication {
@@ -76,7 +77,7 @@ abstract class WithCleanDb extends WithApplication {
         Logger.debug("Clearing database for test.");
         SQL(
           """
-            truncate comments, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
+            truncate user_item_relation, comments, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
             |ALTER SEQUENCE gift_list_seq RESTART;
             |ALTER SEQUENCE item_seq RESTART;
             |ALTER SEQUENCE users_seq RESTART;
@@ -184,6 +185,14 @@ class ModelSpec extends Specification {
         case None => failure("Could not add Photo to an Item.")
       }
     }
+
+    "allow to create an Item with an ItemRelation" in new WithCleanDb {
+      val newRelation = Item.createWithRelation(Item(name = Some("Yellow Gift"), needed = Some(1), giftListId = Some(1)), User.find(1).get)
+      newRelation match {
+        case Some(newRelation) => newRelation.itemId.should_!=(null); newRelation.userId.should_!=(null); newRelation.relationType.should_==(Creator)
+        case None => failure("Could not create ItemRelation")
+      }
+    }
   }
 
   "Gift List Role Model" should {
@@ -264,6 +273,28 @@ class ModelSpec extends Specification {
       val dt2 = new DateTime(found(1).createdAt)
 
       assert(dt1.isAfter(dt2))
+    }
+
+  }
+
+  "ItemRelation Model" should {
+
+    "allow to create and find ItemRelation" in new WithCleanDb {
+
+      val createdIR1 = ItemRelation.create(ItemRelation(21, 21, Purchaser));
+      val createdIR2 = ItemRelation.create(ItemRelation(21, 21, Creator));
+      ItemRelation.create(ItemRelation(21, 22, Creator)); // some more just for kicks
+      ItemRelation.create(ItemRelation(21, 23, Creator));
+
+      createdIR1 match {
+        case Some(createdIR1) => createdIR1.relationType.shouldEqual(Purchaser)
+        case None => failure("Could not create ItemRelation")
+      }
+
+      createdIR2 match {
+        case Some(createdIR2) => createdIR2.relationType.shouldEqual(Creator)
+        case None => failure("Could not create ItemRelation")
+      }
     }
 
   }

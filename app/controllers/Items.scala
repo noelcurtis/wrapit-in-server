@@ -1,10 +1,11 @@
 package controllers
 
 import play.api.mvc.Controller
-import models.{Item, User, CommentRelation}
+import models.{Comments, Item, User, CommentRelation}
 import views.html
 import play.Logger
 import engine.ImageGetter
+import play.api.libs.json.Json
 
 object Items extends Controller with Secured {
 
@@ -67,5 +68,64 @@ object Items extends Controller with Secured {
         case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
       }
   }
+
+  def addComment() = IsAuthenticated {
+    authToken => implicit request =>
+      val user = User.findByToken(authToken)
+      user match {
+        case Some(user) => {
+
+          val comment = request.getQueryString("comment");
+          // get comment from query
+          val itemId = request.getQueryString("itemId"); // get the item from query
+          if (itemId.isDefined && comment.isDefined) {
+            val user = User.findByToken(authToken)
+            val item = Item.findById(itemId.get.toLong)
+            if (item.isDefined) {
+              val createdCR = Comments.create(user.get.id.get, item.get.id.get, comment.get) // create the comment
+              createdCR match {
+                case Some(c) => Ok(Json.toJson(Map("status" -> "ok")))
+                case None => Ok(Json.toJson(Map("status" -> "error", "message" -> "comment not created")))
+              }
+            } else {
+              Ok(Json.toJson(Map("status" -> "error", "message" -> "item not found")))
+            }
+          }
+          else {
+            Ok(Json.toJson(Map("status" -> "error", "message" -> "invalid parameters")))
+          }
+
+        }
+        case None => Logger.error("No user!"); Ok(Json.toJson(Map("status" -> "error", "message" -> "invalid user")))
+      }
+  }
+
+
+  def updatePurchased() = IsAuthenticated {
+    authToken => implicit request =>
+      val user = User.findByToken(authToken)
+      user match {
+        case Some(user) => {
+
+          val purchased = request.getQueryString("isPurchased"); // get the purchased changed
+          val itemId = request.getQueryString("itemId"); // get the item id
+          if (purchased.isDefined && itemId.isDefined) {
+            val p = if (purchased.get.toBoolean) 1 else 0
+            val item = Item.findById(itemId.get.toLong)
+            if (item.isDefined) {
+              Item.update(item.get.copy(purchased = Some(p))) // update the item
+              Ok(Json.toJson(Map("status" -> "ok")))
+            } else {
+              Ok(Json.toJson(Map("status" -> "error", "message" -> "item not found")))
+            }
+          } else {
+            Ok(Json.toJson(Map("status" -> "error", "message" -> "invalid parameters")))
+          }
+
+        }
+        case None => Logger.error("No user!"); Ok(Json.toJson(Map("status" -> "error", "message" -> "invalid user")))
+      }
+  }
+
 
 }

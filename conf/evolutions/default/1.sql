@@ -87,6 +87,13 @@ create table comment_relation (
 
 create sequence comment_relation_seq;
 
+create table user_item_relation (
+  user_id       bigint not null,
+  item_id       bigint not null,
+  r_type        int not null,
+  constraint pk_user_item_join primary key (user_id, item_id, r_type)
+)
+
 
 # --- !Downs
 
@@ -119,4 +126,6 @@ drop sequence if exists comments_seq;
 drop table if exists comment_relation;
 
 drop sequence if exists comment_relation_seq;
+
+drop table if exists user_item_relation;
 

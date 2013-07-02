@@ -15,7 +15,7 @@ import fly.play.s3.{BucketFile, S3}
 import play.api.libs.concurrent.Execution.Implicits._
 import org.apache.http.HttpStatus
 import com.google.common.hash.Hashing
-import engine.Utils
+import engine.{Creator, ItemRelationType, Utils}
 
 case class Item(id: Pk[Long] = NotAssigned, name: Option[String], url: Option[String] = Some(""), needed: Option[Int] = Some(1),
                 purchased: Option[Int] = Some(0), giftListId: Option[Long] = None) {
@@ -53,7 +53,7 @@ object Item {
     try {
       Logger.info("Creating Item " + item.toString)
       DB.withConnection {
-        implicit connection =>
+        implicit connection => {
           val createdId: Option[Long] = SQL(
             """insert into item(id, gift_list_id, name, url, needed, purchased)
             values((select nextval('item_seq')), {giftListId}, {name}, {url}, {needed}, {purchased})"""
@@ -69,11 +69,58 @@ object Item {
             case Some(createdId) => Some(item.copy(id = anorm.Id(createdId)))
             case None => None
           }
+        }
       }
     } catch {
       case e: Exception => {
         Logger.error(e.getMessage)
         None
+      }
+    }
+  }
+
+  def createWithRelation(item: Item, user: User): Option[ItemRelation] = {
+    DB.withTransaction {
+      implicit connection => {
+      // create the Item
+        val createdId: Option[Long] = SQL(
+          """insert into item(id, gift_list_id, name, url, needed, purchased)
+            values((select nextval('item_seq')), {giftListId}, {name}, {url}, {needed}, {purchased})"""
+        ).on(
+          'giftListId -> item.giftListId,
+          'name -> item.name,
+          'url -> item.url,
+          'needed -> item.needed,
+          'purchased -> item.purchased
+        ).executeInsert()
+
+        createdId match {
+          case Some(createdId) => {
+            // create the ItemRelation
+            SQL(
+              """insert into user_item_relation(user_id, item_id, r_type)
+            values({userId}, {itemId}, {rType})"""
+            ).on(
+              'userId -> user.id.get,
+              'itemId -> createdId,
+              'rType -> Creator.value
+            ).executeInsert()
+
+            // find the ItemRelation to ensure it has been created
+            val createdRelation: Option[ItemRelation] = SQL(
+              """select * from user_item_relation where user_id = {userId} and item_id = {itemId} and r_type = {relationType}""").on(
+              'userId -> user.id.get,
+              'itemId -> createdId,
+              'relationType -> Creator.value
+            ).as(ItemRelation.parseSingle.singleOpt)
+
+            createdRelation match {
+              case Some(c) => Some(c)
+              case None => Logger.error(s"ItemRelation not created user: ${user.id.get} itemId: ${createdId} {Creator}"); None
+            }
+          }
+          case None => None
+        }
       }
     }
   }
@@ -133,7 +180,7 @@ object Item {
       val url = new URL(externalUrl)
       //val extension = url.getFile.dropWhile(_ != '.').replaceFirst(".", "") // get the file extension
       val extension = ".jpg"
-      Logger.info(s"Getting Photo {$externalUrl} for Item {"+ item.id +"} started");
+      Logger.info(s"Getting Photo {$externalUrl} for Item {" + item.id + "} started");
       // get the file and push to S3
       WS.url(externalUrl).get().map {
         r => {
@@ -153,16 +200,18 @@ object Item {
               if (foundPhotos > 0) {
                 Logger.info(s"File already exists for folder $folder and filename $filename")
               } else {
-                Logger.info(s"File does not exist for folder $folder and filename $filename"); uploadPhoto(folder, filename, contentType, bytes, item)
+                Logger.info(s"File does not exist for folder $folder and filename $filename");
+                uploadPhoto(folder, filename, contentType, bytes, item)
               }
-            } else { // FAKE THE UPLOAD
+            } else {
+              // FAKE THE UPLOAD
               fakeCreate(folder, filename, item)
             }
           }
         }
       }
     } catch {
-      case e: Exception => Logger.info(s"Error adding Photo {$externalUrl} to Item {"+ item.id +"}" + e.getMessage)
+      case e: Exception => Logger.info(s"Error adding Photo {$externalUrl} to Item {" + item.id + "}" + e.getMessage)
     }
   }
 
@@ -177,7 +226,7 @@ object Item {
         newPhoto match {
           case Some(photo) => {
             PhotoRelation.create(item.id.get, photo.id.get) // Add the Photo to the Item
-            Logger.info("Uploading Photo to AWS for Item {"+ item.id +"} ended");
+            Logger.info("Uploading Photo to AWS for Item {" + item.id + "} ended");
           }
           case None => Logger.error("Photo could not be created " + newPhoto.toString)
         }
@@ -185,8 +234,7 @@ object Item {
     }
   }
 
-  private def fakeCreate(folder: String, filename: String, item: Item)
-  {
+  private def fakeCreate(folder: String, filename: String, item: Item) {
     Logger.info("Fake creating Photo");
     val newPhoto = Photo.create(Photo(folder = folder, fileName = filename))
     newPhoto match {

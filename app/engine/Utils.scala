@@ -7,6 +7,19 @@ import org.joda.time.{PeriodType, DateTime, Instant, Interval}
 import play.api.cache.Cache
 import play.api.Play.current
 
+abstract sealed case class ItemRelationType(value: Int)
+
+object ItemRelationType {
+  def fromInt(value: Int) : ItemRelationType = {
+    if (value == 1) Creator
+    else if (value == 2) Purchaser
+    else Creator
+  }
+}
+
+object Creator extends ItemRelationType(1)
+object Purchaser extends ItemRelationType(2)
+
 object Utils {
 
   val dateFormatter = new SimpleDateFormat("MM/dd/yyyy")
@@ -85,5 +98,4 @@ object Utils {
       case e: Exception => default
     }
   }
-
 }

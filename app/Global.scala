@@ -93,7 +93,7 @@ object InitialData {
         Logger.debug("Clearing database for dev.");
         SQL(
           """
-            |truncate comments, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
+            |truncate user_item_relation, comments, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
             |ALTER SEQUENCE gift_list_seq RESTART;
             |ALTER SEQUENCE item_seq RESTART;
             |ALTER SEQUENCE users_seq RESTART;
