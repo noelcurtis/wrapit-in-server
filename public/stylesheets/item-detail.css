@@ -14,6 +14,7 @@
 {
     width: 89%;
     display: inline-block;
+    margin: 9px 0;
 }
 
 .nav-list li.comment-cell .c-text
