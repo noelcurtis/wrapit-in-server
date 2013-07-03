@@ -96,6 +96,7 @@ object Item {
 
         createdId match {
           case Some(createdId) => {
+            val newItem = item.copy(id = anorm.Id(createdId))
             // create the ItemRelation
             SQL(
               """insert into user_item_relation(user_id, item_id, r_type)
@@ -115,7 +116,7 @@ object Item {
             ).as(ItemRelation.parseSingle.singleOpt)
 
             createdRelation match {
-              case Some(c) => Some(c)
+              case Some(c) => c.setItem(newItem); Some(c)
               case None => Logger.error(s"ItemRelation not created user: ${user.id.get} itemId: ${createdId} {Creator}"); None
             }
           }

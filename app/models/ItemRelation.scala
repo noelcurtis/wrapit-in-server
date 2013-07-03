@@ -10,7 +10,19 @@ import anorm.~
 import scala.Some
 import play.api.Play.current
 
-case class ItemRelation (userId: Long, itemId: Long, relationType: ItemRelationType)
+case class ItemRelation (userId: Long, itemId: Long, relationType: ItemRelationType) {
+
+  var item: Item = null
+
+  def setItem(item: Item) = {
+    this.item = item
+  }
+
+  def getItem : Item = {
+    this.item
+  }
+
+}
 
 
 object ItemRelation {

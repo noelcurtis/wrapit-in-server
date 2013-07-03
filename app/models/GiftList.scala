@@ -92,12 +92,12 @@ object GiftList {
    * @param item
    * @return
    */
-  def addItem(item: Item, giftListId: Long): Option[Long] = {
+  def addItem(item: Item, user: User, giftListId: Long): Option[Long] = {
     Logger.info(s"Adding $item to $giftListId")
     val nItem = item.copy(giftListId = Some(giftListId))
-    val cItem = Item.create(nItem)
-    cItem match {
-      case Some(item) => Some(item.id.get)
+    val cItemRelation = Item.createWithRelation(nItem, user)
+    cItemRelation match {
+      case Some(ir) => Some(ir.getItem.id.get)
       case None => {
         Logger.error("Failed to add item " + item.toString + " to list " + giftListId)
         None

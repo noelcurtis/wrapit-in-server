@@ -5,11 +5,16 @@
         s"<link rel='stylesheet' media='screen' href='$route'>"
     }
 
-@main(title = "WrapIt.in", moreCss = moreCss) {
+    @moreJs = @{
+        val route = routes.Assets.at("javascripts/item-detail.js")
+        s"<script src='$route' type='text/javascript'></script>"
+    }
+
+@main(title = "WrapIt.in", moreCss = moreCss, moreJs = moreJs) {
 
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
-            <div class="container">
+            <div class="container clearfix  ">
                 <div class="navvy-item pull-left">
                     <a href="@routes.GiftLists.show(giftListId)"><span class="fui-triangle-left-large"></span></a>
                 </div>
@@ -35,45 +40,34 @@
                 </div>
             </li>
             <li>
-                <div class="mini-nav item-nav">
-                    <a href="#fakelink" class="btn btn-primary">Buy online</a>
-                    <a href="#fakelink" class="btn btn-primary checkbox" onclick="">
-                        <label for="it-bought">
-                            <span class="icons">
-                                <span class="first-icon fui-checkbox-unchecked"></span>
-                                <span class="second-icon fui-checkbox-checked"></span>
-                            </span>
-                            <input type="checkbox" value="" id="it-bought" data-toggle="checkbox">
-                            Mark bought
-                        </label>
-                    </a>
+                <div class="mini-nav item-nav clearfix">
+                    <a href="@item.url" class="btn btn-primary" target="_blank">See it online</a>
+                    <a href="#fakelink" class="btn btn-primary pull-right">Mark bought</a>
                 </div>
             </li>
-            @*<li class="comment-cell clearfix">*@
-                @*<div class="comment-wrapper">*@
-                    @*<div class="c-text">*@
-                        @*A test comment that is cool. A test comment that is cool. A test comment that is cool.*@
-                    @*</div>*@
-                    @*<div class="c-author">*@
-                        @*Noel Curtis*@
-                    @*</div>*@
-                @*</div>*@
-            @*</li>*@
-            @*<li class="comment-cell clearfix">*@
-                @*<div class="comment-wrapper">*@
-                    @*<div class="c-text">*@
-                        @*A test comment that is cool. A test comment that is cool. A test comment that is cool.*@
-                    @*</div>*@
-                    @*<div class="c-author">*@
-                        @*Noel Curtis*@
-                    @*</div>*@
-                @*</div>*@
-            @*</li>*@
+            @for(comment <- comments) {
+            <li class="comment-cell clearfix">
+                <div class="comment-wrapper">
+                    <div class="c-text">
+                        @comment.getComment().get.note
+                    </div>
+                    <div class="c-author">
+                        @comment.getUser().get.email
+                    </div>
+                </div>
+            </li>
+            }
             <li class="comment-add-cell">
-                <textarea class="input-block-level" rows="1" placeholder="Type a comment..."></textarea>
-                <div class="btn btn-primary" style="display: inline-block; padding: 7px 7px 7px 9px"><i class="icon-plus"></i></div>
+                <input id="item-detail-comment" type="text" class="input-block-level" placeholder="Type a comment...">
+                @*<div class="btn btn-primary" style="display: inline-block; padding: 7px 7px 8px 9px; margin-bottom: 1px"><i class="icon-plus"></i></div>*@
             </li>
         </ul>
     </div>
 
 }
+
+<script>
+    // vars needed by the JS
+    var itdGiftListId = @giftListId;
+    var itdItemID = @item.id.getOrElse("");
+</script>

@@ -67,16 +67,16 @@ object InitialData {
 
     // create some items for gift lists
     // foobarList
-    val i1 = GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobarListC.get.giftListId)
-    val i2 = GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobarListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobarListC.get.giftListId)
-    val i3 = GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobarListC.get.giftListId)
+    val i1 = GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1), url = Some("http://uncrate.com/stuff/heritage-helmets/")), foobar.get, foobarListC.get.giftListId)
+    val i2 = GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1), url = Some("http://uncrate.com/stuff/heritage-helmets/")), foobar.get, foobarListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1), url = Some("http://uncrate.com/stuff/heritage-helmets/")), foobar.get, foobarListC.get.giftListId)
+    val i3 = GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1), url = Some("http://uncrate.com/stuff/heritage-helmets/")), foobar.get, foobarListC.get.giftListId)
 
     // foobar1List
-    val i4 = GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    val i5 = GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
-    val i6 = GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1)), foobar1ListC.get.giftListId)
+    val i4 = GiftList.addItem(Item(name = Some("Yellow Gift"), needed = Some(1), url = Some("http://uncrate.com/stuff/heritage-helmets/")), foobar.get, foobar1ListC.get.giftListId)
+    GiftList.addItem(Item(name = Some("Green Gift"), needed = Some(1), url = Some("http://uncrate.com/stuff/heritage-helmets/")), foobar.get, foobar1ListC.get.giftListId)
+    val i5 = GiftList.addItem(Item(name = Some("Blue Gift"), needed = Some(1), url = Some("http://uncrate.com/stuff/heritage-helmets/")), foobar.get, foobar1ListC.get.giftListId)
+    val i6 = GiftList.addItem(Item(name = Some("Fish Gift"), needed = Some(1), url = Some("http://uncrate.com/stuff/heritage-helmets/")), foobar.get, foobar1ListC.get.giftListId)
 
     // Add photos to the items
     Item.addPhoto(Item.findById(i1.get).get, "http://store.storeimages.cdn-apple.com/3423/as-images.apple.com/is/image/AppleInc/HB956?wid=276&hei=153&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1369943390003", false)

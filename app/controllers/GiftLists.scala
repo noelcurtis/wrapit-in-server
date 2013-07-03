@@ -92,29 +92,39 @@ object GiftLists extends Controller with Secured {
   }
 
   def handleadditem(listId: Long) = IsAuthenticated {
-    authToken => implicit request =>
-      itemCreateForm.bindFromRequest().fold(
-        formWithErrors => {
-          BadRequest(html.items.create(formWithErrors, listId))
-        },
-        item => {
-          // parse the date
-          val newItem = Item(name = Some(item._1), needed = Some(item._2), url = Some(item._3))
-          // add item to the list
-          val newItemId = GiftList.addItem(newItem, listId)
-          newItemId match {
-            case Some(newItemId) => {
-              if (item._4 == 1) {
-                Redirect(routes.Items.webimages(listId, newItemId)) // Get images from the web
-              }
-              else {
-                Redirect(routes.GiftLists.show(listId)) // Upload an image from your device
+    authToken => implicit request => {
+      val user = User.findByToken(authToken)
+      user match {
+        case Some(user) => {
+
+          // Bind the form and create the item
+          itemCreateForm.bindFromRequest().fold(
+            formWithErrors => {
+              BadRequest(html.items.create(formWithErrors, listId))
+            },
+            item => {
+              // parse the date
+              val newItem = Item(name = Some(item._1), needed = Some(item._2), url = Some(item._3))
+              // add item to the list
+              val newItemId = GiftList.addItem(newItem, user, listId)
+              newItemId match {
+                case Some(newItemId) => {
+                  if (item._4 == 1) {
+                    Redirect(routes.Items.webimages(listId, newItemId)) // Get images from the web
+                  }
+                  else {
+                    Redirect(routes.GiftLists.show(listId)) // Upload an image from your device
+                  }
+                }
+                case None => Logger.error("Could not add Item " + newItem.toString + " to GiftList " + listId); Redirect(routes.GiftLists.show(listId))
               }
             }
-            case None => Logger.error("Could not add Item " + newItem.toString + " to GiftList " + listId); Redirect(routes.GiftLists.show(listId))
-          }
+          )
+
         }
-      )
+        case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
+      }
+    }
   }
 
 }

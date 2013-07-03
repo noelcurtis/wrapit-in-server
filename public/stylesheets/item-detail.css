@@ -10,11 +10,10 @@
     margin-bottom: 0px;
 }
 
-.nav-list li.comment-add-cell textarea
+.nav-list li.comment-add-cell input[type="text"]
 {
-    width: 89%;
-    display: inline-block;
-    margin: 9px 0;
+    margin: 9px 0px 1px 0px;
+    height: 41px;
 }
 
 .nav-list li.comment-cell .c-text
@@ -35,6 +34,7 @@
     display: block;
     margin: 0px auto;
     max-height: 220px;
+    width: auto;
 }
 
 .item-nav
@@ -59,7 +59,7 @@
 {
     margin-bottom: 0px;
     margin-left: 25px;
-    font-size: 14.5px;
+    font-size:  14.994px;
     line-height: 19px;
     font-weight: 500;
 }
@@ -88,4 +88,13 @@
     color: #34495e;
     top: 12px;
     left: 20px;
+}
+
+@media (max-width: 767px) {
+
+    .nav-list li.comment-add-cell input[type="text"]
+    {
+        height: 41px;
+    }
+
 }

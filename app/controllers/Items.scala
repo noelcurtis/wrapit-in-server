@@ -59,6 +59,7 @@ object Items extends Controller with Secured {
           item match {
             case Some(item) => {
               val comments = CommentRelation.find(item.id.get) // get all the comments
+              Logger.info(item.toString)
               Ok(views.html.items.show(item, comments, listId))
             }
             case None => Redirect(routes.GiftLists.show(listId)) // go back to the List page
@@ -69,20 +70,19 @@ object Items extends Controller with Secured {
       }
   }
 
-  def addComment() = IsAuthenticated {
+  def addComment(listId: Long, itemId: Long) = IsAuthenticated {
     authToken => implicit request =>
       val user = User.findByToken(authToken)
       user match {
         case Some(user) => {
 
-          val comment = request.getQueryString("comment");
+          val formData = request.body.asFormUrlEncoded
           // get comment from query
-          val itemId = request.getQueryString("itemId"); // get the item from query
-          if (itemId.isDefined && comment.isDefined) {
-            val user = User.findByToken(authToken)
-            val item = Item.findById(itemId.get.toLong)
+          if (formData.isDefined && formData.get.get("comment").isDefined) {
+            val item = Item.findById(itemId)
             if (item.isDefined) {
-              val createdCR = Comments.create(user.get.id.get, item.get.id.get, comment.get) // create the comment
+              val c = formData.get.get("comment").get.head
+              val createdCR = Comments.create(user.id.get, itemId, c) // create the comment
               createdCR match {
                 case Some(c) => Ok(Json.toJson(Map("status" -> "ok")))
                 case None => Ok(Json.toJson(Map("status" -> "error", "message" -> "comment not created")))

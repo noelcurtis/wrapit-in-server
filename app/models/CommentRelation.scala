@@ -13,6 +13,7 @@ case class CommentRelation (id : Pk[Long] = NotAssigned, commentId: Long, userId
                             itemId: Long, createdAt: Date = new Date()) {
 
   private[this] var comment: Option[Comments] = None // ref to comment
+  private[this] var user: Option[User] = None // ref to user
 
   def getComment() : Option[Comments] = {
     comment match {
@@ -30,6 +31,24 @@ case class CommentRelation (id : Pk[Long] = NotAssigned, commentId: Long, userId
 
   def setComment(comment: Comments) = {
     this.comment = Some(comment)
+  }
+
+  def getUser() : Option[User] = {
+    user match {
+      case Some(u) => user
+      case None => {
+        // lazy fetch the comment
+        val found = User.find(userId)
+        found match {
+          case Some(u) => user = Some(u); user
+          case None => Logger.error("No User for CommentRelation " + this.toString); None
+        }
+      }
+    }
+  }
+
+  def setUser(user: User) = {
+    this.user = Some(user)
   }
 
 }
@@ -50,13 +69,16 @@ object CommentRelation {
     }
   }
 
+
   /**
-   * Parse a CommentRelation with a Comment from a ResultSet
+   * Parse a CommentRelation with a User and Comment from a ResultSet
    */
-  val parseWithComment = {
+  val parseWithUserComment = {
     CommentRelation.parseSingle ~
+      User.parseSingle ~
       Comments.parseSingle map {
-      case commentRelation ~ comments => {
+      case commentRelation ~ user ~comments => {
+        commentRelation.setUser(user)
         commentRelation.setComment(comments)
         commentRelation
       }
@@ -102,13 +124,13 @@ object CommentRelation {
       implicit connection => {
         val results: List[CommentRelation] = SQL(
           """
-            select * from comment_relation
-            left join comments on comment_relation.comment_id = comments.id
-            where user_id = {userId} and item_id = {itemId} order by created_at desc
+            select * from comment_relation a, users b, comments c
+            where a.comment_id = c.id and a.user_id = b.id and a.user_id = {userId} and a.item_id = {itemId}
+            order by a.created_at desc
           """).on(
           'userId -> userId,
           'itemId -> itemId
-        ).as(CommentRelation.parseWithComment *)
+        ).as(CommentRelation.parseWithUserComment *)
         results
       }
     }
@@ -124,12 +146,12 @@ object CommentRelation {
       implicit connection => {
         val results: List[CommentRelation] = SQL(
           """
-            select * from comment_relation
-            left join comments on comment_relation.comment_id = comments.id
-            where item_id = {itemId} order by created_at desc
+            select * from comment_relation a, users b, comments c
+            where a.comment_id = c.id and a.user_id = b.id and a.item_id = {itemId}
+            order by a.created_at desc
           """).on(
           'itemId -> itemId
-        ).as(CommentRelation.parseWithComment *)
+        ).as(CommentRelation.parseWithUserComment *)
         results
       }
     }

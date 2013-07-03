@@ -28,6 +28,7 @@ POST     /list/:id/add                                controllers.GiftLists.hand
 GET      /list/:listId/items/:itemId/webimages        controllers.Items.webimages(listId: Long, itemId: Long)
 GET      /list/:listId/items/:itemId/addUrl           controllers.Items.update(listId: Long, itemId: Long)
 GET      /list/:id/items/:itemId                      controllers.Items.show(id: Long, itemId: Long)
+POST     /list/:id/items/:itemId/comment              controllers.Items.addComment(id: Long, itemId: Long)
 
 # Test
 GET      /testroles                                   controllers.Test.testroles
