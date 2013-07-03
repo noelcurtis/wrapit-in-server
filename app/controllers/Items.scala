@@ -1,11 +1,12 @@
 package controllers
 
 import play.api.mvc.Controller
-import models.{Comments, Item, User, CommentRelation}
+import models._
 import views.html
 import play.Logger
-import engine.ImageGetter
+import engine.{Purchaser, ImageGetter}
 import play.api.libs.json.Json
+import scala.Some
 
 object Items extends Controller with Secured {
 
@@ -60,7 +61,7 @@ object Items extends Controller with Secured {
             case Some(item) => {
               val comments = CommentRelation.find(item.id.get) // get all the comments
               Logger.info(item.toString)
-              Ok(views.html.items.show(item, comments, listId))
+              Ok(views.html.items.show(item, comments, listId, user))
             }
             case None => Redirect(routes.GiftLists.show(listId)) // go back to the List page
           }
@@ -101,20 +102,23 @@ object Items extends Controller with Secured {
   }
 
 
-  def updatePurchased() = IsAuthenticated {
+  def updatePurchased(listId: Long, itemId: Long) = IsAuthenticated {
     authToken => implicit request =>
       val user = User.findByToken(authToken)
       user match {
         case Some(user) => {
 
-          val purchased = request.getQueryString("isPurchased"); // get the purchased changed
-          val itemId = request.getQueryString("itemId"); // get the item id
-          if (purchased.isDefined && itemId.isDefined) {
-            val p = if (purchased.get.toBoolean) 1 else 0
-            val item = Item.findById(itemId.get.toLong)
+          val formData = request.body.asFormUrlEncoded
+          if (formData.isDefined && formData.get.get("purchased").isDefined) {
+            val p = formData.get.get("purchased").get.head.toInt
+            val item = Item.findById(itemId)
             if (item.isDefined) {
               Item.update(item.get.copy(purchased = Some(p))) // update the item
-              Ok(Json.toJson(Map("status" -> "ok")))
+              if (p == 1)
+                ItemRelation.create(ItemRelation(user.id.get, itemId, Purchaser)) // create an ItemRelation
+              else
+                ItemRelation.delete(user.id.get, itemId, Purchaser) // delete the ItemRelation
+              Ok(Json.toJson(Map("status" -> "ok", "purchased" -> p.toString)))
             } else {
               Ok(Json.toJson(Map("status" -> "error", "message" -> "item not found")))
             }

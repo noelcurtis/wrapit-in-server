@@ -73,6 +73,18 @@ object ItemRelation {
     }
   }
 
+  def delete(userId: Long, itemId: Long, relationType: ItemRelationType) = {
+    DB.withConnection {
+      implicit connection => {
+        SQL("delete from user_item_relation where user_id = {userId} and item_id = {itemId} and r_type = {relationType}").on(
+          'userId -> userId,
+          'itemId -> itemId,
+          'relationType -> relationType.value
+        ).execute()
+      }
+    }
+  }
+
   def find(userId: Long, itemId: Long, relationType: ItemRelationType): Option[ItemRelation] = {
     DB.withConnection {
       implicit connection => {

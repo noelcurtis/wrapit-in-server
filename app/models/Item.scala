@@ -173,7 +173,6 @@ object Item {
     }
   }
 
-
   val cacheTime = 864000
 
   def addPhoto(item: Item, externalUrl: String, withUpload: Boolean = true) = {

@@ -126,7 +126,7 @@ object CommentRelation {
           """
             select * from comment_relation a, users b, comments c
             where a.comment_id = c.id and a.user_id = b.id and a.user_id = {userId} and a.item_id = {itemId}
-            order by a.created_at desc
+            order by a.created_at asc
           """).on(
           'userId -> userId,
           'itemId -> itemId
@@ -148,7 +148,7 @@ object CommentRelation {
           """
             select * from comment_relation a, users b, comments c
             where a.comment_id = c.id and a.user_id = b.id and a.item_id = {itemId}
-            order by a.created_at desc
+            order by a.created_at asc
           """).on(
           'itemId -> itemId
         ).as(CommentRelation.parseWithUserComment *)
