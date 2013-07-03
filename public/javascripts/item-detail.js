@@ -46,16 +46,16 @@ function itemDetailUpdatePurchased(giftListId, itemId, purchased) {
             if (purchased == 1)
             {
                 $("#item-detail-purchased").hide(); // toggle buttons
-                $(".buy-badge.bought").show({duration: 100});
+                $(".buy-badge.bought").show({duration: 200});
                 $("#item-detail-available").show();
-                $(".buy-badge.available").hide({duration: 100});
+                $(".buy-badge.available").hide({duration: 200});
             }
             else
             {
                 $("#item-detail-purchased").show(); // toggle buttons
-                $(".buy-badge.bought").hide({duration: 100});
+                $(".buy-badge.bought").hide({duration: 200});
                 $("#item-detail-available").hide();
-                $(".buy-badge.available").show({duration: 100});
+                $(".buy-badge.available").show({duration: 200});
             }
         }
     }).fail(function(data) {
