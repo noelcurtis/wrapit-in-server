@@ -31,6 +31,18 @@
             <li class="image-cell">
                 <div class="image-wrapper">
                     <div class="image-holder">
+                        <div class="buy-badge available" @if(item.purchased.getOrElse(0) != 0){style="display: none"}>
+                            <div class="badge-wrapper">
+                                <i class="icon-certificate"></i>
+                                <div class="badge-text">Available!</div>
+                            </div>
+                        </div>
+                        <div class="buy-badge bought" @if(item.purchased.getOrElse(0) == 0 ){style="display: none"}>
+                            <div class="badge-wrapper">
+                                <i class="icon-certificate"></i>
+                                <div class="badge-text">Bought!</div>
+                            </div>
+                        </div>
                         @if(item.getPhoto.isDefined && item.getPhoto.get.getPath.isDefined) {
                             <img src="@item.getPhoto.get.getPath">
                         } else {

@@ -46,12 +46,16 @@ function itemDetailUpdatePurchased(giftListId, itemId, purchased) {
             if (purchased == 1)
             {
                 $("#item-detail-purchased").hide(); // toggle buttons
+                $(".buy-badge.bought").show({duration: 100});
                 $("#item-detail-available").show();
+                $(".buy-badge.available").hide({duration: 100});
             }
             else
             {
                 $("#item-detail-purchased").show(); // toggle buttons
+                $(".buy-badge.bought").hide({duration: 100});
                 $("#item-detail-available").hide();
+                $(".buy-badge.available").show({duration: 100});
             }
         }
     }).fail(function(data) {

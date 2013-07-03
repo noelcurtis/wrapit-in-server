@@ -29,6 +29,41 @@
     font-size: 12px;
 }
 
+.image-wrapper .image-holder
+{
+    position: relative;
+    width: 320px;
+    margin: 0px auto;
+}
+
+.image-wrapper .image-holder .buy-badge
+{
+    position: absolute;
+}
+
+.buy-badge.available
+{
+    color: #2ECC71;
+}
+
+.buy-badge.bought
+{
+    color: #E74C3C;
+    right: 0px;
+}
+
+.buy-badge .badge-wrapper
+{
+    position: relative;
+    background-color: #ECF0F1;
+    padding: 0px 4px;
+}
+
+.buy-badge .badge-wrapper .badge-text
+{
+    display: inline-block;
+}
+
 .image-wrapper .image-holder img
 {
     display: block;
