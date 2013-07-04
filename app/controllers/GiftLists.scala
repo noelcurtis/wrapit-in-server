@@ -29,7 +29,7 @@ object GiftLists extends Controller with Secured {
       "notes" -> text
     ).verifying(
       // Add an additional constraint: dueDate must be after today
-      "Date can be today or some future day.", formValues =>  !formValues._2.isBefore(new DateTime().minusHours(24))
+      "Date can be today or some future day.", formValues => !formValues._2.isBefore(new DateTime().minusHours(24))
     )
   )
 

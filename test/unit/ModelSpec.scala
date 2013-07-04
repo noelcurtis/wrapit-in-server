@@ -272,7 +272,7 @@ class ModelSpec extends Specification {
       val dt1 = new DateTime(found(0).createdAt)
       val dt2 = new DateTime(found(1).createdAt)
 
-      assert(dt1.isAfter(dt2))
+      assert(dt2.isAfter(dt1))
     }
 
   }
@@ -295,6 +295,18 @@ class ModelSpec extends Specification {
         case Some(createdIR2) => createdIR2.relationType.shouldEqual(Creator)
         case None => failure("Could not create ItemRelation")
       }
+    }
+
+  }
+
+
+  "PhotoRelation Model" should {
+
+    "allow to find Photos for all GiftLists for a User" in new WithCleanDb {
+
+      val giftListPhotos = PhotoRelation.findAllForUserGiftList(1)
+      assert(giftListPhotos.size > 0)
+
     }
 
   }
