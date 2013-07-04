@@ -55,13 +55,13 @@ object Items extends Controller with Secured {
       val user = User.findByToken(authToken)
       user match {
         case Some(user) => {
-
+          val itemRelation = ItemRelation.find(itemId, Purchaser) // find ItemRelation of Purchaser
           val item = Item.findById(itemId)
           item match {
             case Some(item) => {
               val comments = CommentRelation.find(item.id.get) // get all the comments
               Logger.info(item.toString)
-              Ok(views.html.items.show(item, comments, listId, user))
+              Ok(views.html.items.show(item, itemRelation, comments, listId, user))
             }
             case None => Redirect(routes.GiftLists.show(listId)) // go back to the List page
           }
@@ -113,12 +113,20 @@ object Items extends Controller with Secured {
             val p = formData.get.get("purchased").get.head.toInt
             val item = Item.findById(itemId)
             if (item.isDefined) {
+
+              val relation = ItemRelation.find(user.id.get, itemId, Purchaser) // find a Purchaser relation
               Item.update(item.get.copy(purchased = Some(p))) // update the item
-              if (p == 1)
+              if (p == 1 && item.get.purchased.getOrElse(0) < 1)
                 ItemRelation.create(ItemRelation(user.id.get, itemId, Purchaser)) // create an ItemRelation
-              else
-                ItemRelation.delete(user.id.get, itemId, Purchaser) // delete the ItemRelation
+              else {
+                relation match {
+                  // delete the ItemRelation only if this user owns the ItemRelation
+                  case Some(relation) => ItemRelation.delete(user.id.get, itemId, Purchaser)
+                  case None => Logger.info("User " + user.id + " does not own Purchaser relation on item " + item.get.id)
+                }
+              }
               Ok(Json.toJson(Map("status" -> "ok", "purchased" -> p.toString)))
+
             } else {
               Ok(Json.toJson(Map("status" -> "error", "message" -> "item not found")))
             }

@@ -99,4 +99,17 @@ object ItemRelation {
     }
   }
 
+
+  def find(itemId: Long, relationType: ItemRelationType) : Option[ItemRelation] = {
+    DB.withConnection {
+      implicit connection => {
+        val item: Option[ItemRelation] = SQL(
+          """
+            |select * from user_item_relation where item_id = {itemId} and r_type = {relationType}
+          """.stripMargin).on('itemId -> itemId, 'relationType -> relationType.value).as(ItemRelation.parseSingle.singleOpt)
+        item
+      }
+    }
+  }
+
 }

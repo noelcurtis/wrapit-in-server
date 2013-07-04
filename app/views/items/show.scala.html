@@ -1,4 +1,4 @@
-@(item: Item, comments: List[CommentRelation], giftListId: Long, user: User)
+@(item: Item, itemRelation: Option[ItemRelation], comments: List[CommentRelation], giftListId: Long, user: User)
 
     @moreCss = @{
         val route = routes.Assets.at("stylesheets/item-detail.css")
@@ -53,9 +53,13 @@
             </li>
             <li>
                 <div class="mini-nav item-nav clearfix">
+
                     <a href="@item.url" class="btn btn-primary" target="_blank">See it online</a>
+
                     <a id="item-detail-purchased" href="javascript: updatePurchased(1);" class="btn btn-primary pull-right" @if(item.purchased.getOrElse(0) == 1){style="display: none"}>Mark bought</a>
-                    <a id="item-detail-available" href="javascript: updatePurchased(0);" class="btn btn-primary pull-right" @if(item.purchased.getOrElse(0) != 1){style="display: none"}>Mark available</a>
+
+                    <a id="item-detail-available" href="javascript: @if(itemRelation.isDefined && itemRelation.get.userId == user.id.get || !itemRelation.isDefined){updatePurchased(0);}" class="btn btn-primary pull-right @if(itemRelation.isDefined && itemRelation.get.userId == user.id.get || !itemRelation.isDefined){enabled}else{disabled}" @if(item.purchased.getOrElse(0) != 1){style="display: none"}>Mark available</a>
+
                 </div>
             </li>
             <li class="comment-cell clearfix" style="display: none">
