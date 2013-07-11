@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
-import models.{Item, GiftListRole, GiftList, User}
+import models._
 import views.html
 import play.Logger
 import play.api.data.Form
@@ -10,6 +10,9 @@ import scala.Some
 import java.text.SimpleDateFormat
 import engine.ImageGetter
 import org.joda.time.DateTime
+import play.api.libs.json.Json
+import scala.Some
+import engine.Utils.mapWrites
 
 object GiftLists extends Controller with Secured {
 
@@ -17,7 +20,11 @@ object GiftLists extends Controller with Secured {
     authToken => _ =>
       val user = User.findByToken(authToken)
       user match {
-        case Some(user) => Ok(html.gift_lists.index(GiftListRole.find(user.id.get)))
+        case Some(user) => {
+          val photosJson = Json.toJson(PhotoRelation.findAllForUserGiftList(user.id.get))
+          val giftListRole = GiftListRole.find(user.id.get)
+          Ok(html.gift_lists.index(giftListRole, photosJson))
+        }
         case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
       }
   }

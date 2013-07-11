@@ -15,6 +15,7 @@ import play.api.db.DB
 import org.joda.time.DateTime
 import scala.Some
 import engine.{Creator, Purchaser}
+import play.api.libs.json.{Writes, Json, JsObject, JsValue}
 
 
 abstract class WithCleanDb extends WithApplication {
@@ -306,6 +307,15 @@ class ModelSpec extends Specification {
 
       val giftListPhotos = PhotoRelation.findAllForUserGiftList(1)
       assert(giftListPhotos.size > 0)
+
+    }
+
+    "allow to render all Photos for all GiftLists for a User in Json" in new WithCleanDb {
+
+      val giftListPhotos = PhotoRelation.findAllForUserGiftList(1)
+      import engine.Utils.mapWrites
+      val json = Json.toJson(giftListPhotos)
+      Logger.info(json.toString())
 
     }
 

@@ -1,11 +1,18 @@
-@(giftLists: List[GiftListRole])
+@(giftLists: List[GiftListRole], photosJson: play.api.libs.json.JsValue)
 
     @moreCss = @{
         val route = routes.Assets.at("stylesheets/item-list.css")
-        s"<link rel='stylesheet' media='screen' href='$route'>"
+        val route2 = routes.Assets.at("framework/flippant/flippant.css")
+        s"<link rel='stylesheet' media='screen' href='$route'>" +
+                s"<link rel='stylesheet' media='screen' href='$route2'>"
     }
 
-@main(title = "WrapIt.in", moreCss = moreCss) {
+    @moreJs = @{
+        val route1 = routes.Assets.at("framework/flippant/flippant.js")
+        s"<script src='$route1' type='text/javascript'></script>"
+    }
+
+@main(title = "WrapIt.in", moreCss = moreCss, moreJs = moreJs) {
 
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
@@ -26,8 +33,9 @@
         @for(list <- giftLists) {
             @if(list.getGiftList.isDefined) {
                 <li>
-                    <a href="@routes.GiftLists.show(list.getGiftList.get.id.get)" class="item-wrapper">
-                        <div class="item-icon fui-user"></div>
+                    <a href="@routes.GiftLists.show(list.getGiftList.get.id.get)" class="item-wrapper gl-@list.giftListId">
+                        <div class="img-preview" style="display: none"></div>
+                        <div class="item-icon icon-gift" style="margin-left: 31px; margin-right: 31px"></div>
                         <div class="item-content">
                             <h4 class="item-name">
                             @{
@@ -48,3 +56,48 @@
         </ul>
     </div>
 }
+
+<script>
+    var photosJson = null;
+    @if(photosJson != null) {
+        photosJson = @Html(photosJson.toString());
+    }
+
+    function changeImage(listId, currentImageCount)
+    {
+        var myimage = $('.item-list .gl-' + listId + " .img-preview"); // get the image div
+
+        var newImage = photosJson[listId][currentImageCount];
+
+        // animate the change in image
+        myimage.fadeTo('slow', 0.3, function() {
+            $(this).css('background-image', 'url(' + newImage + ')');
+        }).fadeTo('slow', 1);
+
+        currentImageCount++;
+        if (currentImageCount >= photosJson[listId].length)
+        {
+            currentImageCount = 0;
+        }
+
+        setTimeout(function() {
+            changeImage(listId, currentImageCount);
+        }, getRandom(1000, 5000));
+    }
+
+    $(function() {
+        if (photosJson != null)
+        {
+            for (var key in photosJson)
+            {
+                if (photosJson[key].length > 0)
+                {
+                    $('.item-list .gl-' + key + " .img-preview").show();
+                    $('.item-list .gl-' + key + " .item-icon.icon-gift").hide();
+                    changeImage(key, 0);
+                }
+            }
+        }
+    });
+
+</script>

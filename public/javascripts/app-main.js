@@ -10,3 +10,10 @@ function toggleCheck(e)
         $(label).addClass("checked");
     }
 }
+
+
+// Returns a random number between min and max
+function getRandom(min, max)
+{
+    return Math.random() * (max - min) + min;
+}

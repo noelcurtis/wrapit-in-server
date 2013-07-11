@@ -120,19 +120,23 @@ object PhotoRelation {
       implicit connection => {
         SQL(
           """select b.*, c.* from item a, photo_relation b, photo c
-            | where gift_list_id = {giftListId} and b.owner_id = a.id
-            | and b.photo_id = c.id""".stripMargin
+              where gift_list_id = {giftListId} and b.owner_id = a.id
+              and b.photo_id = c.id""".stripMargin
         ).on('giftListId -> giftListId).as(PhotoRelation.parseWithPhoto *)
       }
     }
   }
 
-  def findAllForUserGiftList(userId: Long) : List[(Long, PhotoRelation)] = {
+  def findAllForUserGiftList(userId: Long) : Map[Long, List[String]] = {
     DB.withConnection {
       implicit connection => {
-        SQL(
-          """select a.gift_list_id, c.*, p.* from gift_list_role a, item b, photo_relation c, photo p where a.user_id = {userId} and a.gift_list_id = b.gift_list_id and c.owner_id = b.id and c.photo_id = p.id""".stripMargin
+        val results = SQL(
+          """select a.gift_list_id, c.*, p.* from gift_list_role a, item b,
+             photo_relation c, photo p where a.user_id = {userId} and
+             a.gift_list_id = b.gift_list_id and c.owner_id = b.id and c.photo_id = p.id"""
         ).on('userId -> userId).as(PhotoRelation.parseWithGiftListIdAndPhoto *)
+        val asMap = results.groupBy(_._1).map { case (k,v) => (k,v.map(_._2.getPhoto().get.getPath.getOrElse("")))}
+        asMap
       }
     }
   }

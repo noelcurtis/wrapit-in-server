@@ -6,6 +6,17 @@ import play.api.Logger
 import org.joda.time.{PeriodType, DateTime, Instant, Interval}
 import play.api.cache.Cache
 import play.api.Play.current
+import java.lang.String
+import scala.Predef._
+import java.lang.String
+import scala.Some
+import play.api.libs.json.{Writes, Json, JsObject, JsValue}
+import org.json.JSONObject
+import scala.collection.mutable.ListBuffer
+import play.api.libs.json.JsObject
+import scala.Predef.String
+import java.lang.String
+import scala.Some
 
 abstract sealed case class ItemRelationType(value: Int)
 
@@ -98,4 +109,13 @@ object Utils {
       case e: Exception => default
     }
   }
+
+  implicit val mapWrites : Writes[Map[Long, List[String]]] = new Writes[Map[Long, List[String]]] {
+    def writes(v: Map[Long, List[String]]): JsValue = {
+      val values: ListBuffer[(String, JsValue)] = ListBuffer()
+      v.keys.foreach( key => values += (key.toString -> Json.toJson(v.get(key).get)))
+      JsObject(values.toSeq)
+    }
+  }
+
 }

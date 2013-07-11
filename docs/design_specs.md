@@ -41,7 +41,14 @@ Following steps should be taken to check whether user is authenticated
 * Users can comment on an Item
 * User -> CommentRelation ->  Comment
                           ->  Item
-* To create a comment: First create the comment, then create the comment relation. All via ajax.                          
+* To create a comment: First create the comment, then create the comment relation. All via ajax. 
+
+
+## Photo Changes
+
+* For each array of photos
+* Start a new changing function
+*                          
 
 
 
