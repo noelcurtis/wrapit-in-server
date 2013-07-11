@@ -1,11 +1,9 @@
-import _root_.models.{Item, GiftList, User}
 import org.joda.time.DateTime
 
 import models._
 import anorm._
 import java.util.Date
 import play.api.db.DB
-import play.api.mvc.RequestHeader
 import play.Logger
 import play.api.Play.current
 import play.api._

@@ -1,9 +1,7 @@
 package controllers
 
-import play.api.mvc.{SimpleResult, Result, Action, Controller}
+import play.api.mvc.{Result, Action, Controller}
 import play.api.libs.ws.WS
-import play.api.Play
-import play.api.Play.current
 import engine.Utils;
 import play.Logger;
 import scala.concurrent.{Await, ExecutionContext}

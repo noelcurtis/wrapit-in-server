@@ -1,10 +1,7 @@
 package controllers
 
 import play.api.mvc.{Action, Controller}
-import models.{Item, GiftListRole, User, GiftList}
-import anorm.NotAssigned
-import java.util.Date
-import play.Logger
+import models.{Item, GiftListRole}
 import engine.ImageGetter
 
 

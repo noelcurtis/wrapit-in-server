@@ -4,7 +4,6 @@ import play.api.mvc._
 import play.api.data.Form
 import play.api.data.Forms._
 import models.User
-import views.html
 
 object Application extends Controller {
 

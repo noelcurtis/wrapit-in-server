@@ -6,7 +6,6 @@ import play.Logger
 import play.api.db.DB
 import anorm.~
 import scala.Some
-import java.util.Date
 import play.api.Play.current
 
 case class Comments(id : Pk[Long] = NotAssigned, note: String) {

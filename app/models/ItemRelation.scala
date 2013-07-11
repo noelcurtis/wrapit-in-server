@@ -1,6 +1,5 @@
 package models
 
-import engine.ItemRelationType
 import anorm.SqlParser._
 import engine.ItemRelationType
 import anorm._

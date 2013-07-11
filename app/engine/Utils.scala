@@ -6,14 +6,10 @@ import play.api.Logger
 import org.joda.time.{PeriodType, DateTime, Instant, Interval}
 import play.api.cache.Cache
 import play.api.Play.current
-import java.lang.String
 import scala.Predef._
-import java.lang.String
-import scala.Some
-import play.api.libs.json.{Writes, Json, JsObject, JsValue}
+import play.api.libs.json.{Writes, Json, JsValue}
 import scala.collection.mutable.ListBuffer
 import play.api.libs.json.JsObject
-import scala.Predef.String
 import java.lang.String
 import scala.Some
 

@@ -2,7 +2,6 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-import java.util.Date
 import play.Logger
 import play.api.db.DB
 import anorm.~

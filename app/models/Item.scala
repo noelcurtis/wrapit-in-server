@@ -2,8 +2,6 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-import scala.Some
-import java.util.Date
 import play.Logger
 import play.api.db.DB
 import anorm.~
@@ -15,7 +13,7 @@ import fly.play.s3.{BucketFile, S3}
 import play.api.libs.concurrent.Execution.Implicits._
 import org.apache.http.HttpStatus
 import com.google.common.hash.Hashing
-import engine.{Creator, ItemRelationType, Utils}
+import engine.{Creator, Utils}
 
 case class Item(id: Pk[Long] = NotAssigned, name: Option[String], url: Option[String] = Some(""), needed: Option[Int] = Some(1),
                 purchased: Option[Int] = Some(0), giftListId: Option[Long] = None) {

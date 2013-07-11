@@ -1,14 +1,11 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.Controller
 import models._
 import views.html
 import play.Logger
 import play.api.data.Form
 import play.api.data.Forms._
-import scala.Some
-import java.text.SimpleDateFormat
-import engine.ImageGetter
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import scala.Some

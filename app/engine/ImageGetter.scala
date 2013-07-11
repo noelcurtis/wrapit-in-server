@@ -1,10 +1,8 @@
 package engine
 
 import play.Logger
-import play.api.libs.ws.WS
 import java.net.URL
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import scala.collection.mutable
 
 object ImageGetter {
