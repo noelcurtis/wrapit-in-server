@@ -157,6 +157,8 @@ ul.nav-list.item-list .item-wrapper .item-remain
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+    min-width: 11px;
+    text-align: center;
 }
 
 ul.nav-list.item-list .item-wrapper .control-group

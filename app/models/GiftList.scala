@@ -10,7 +10,19 @@ import scala.Some
 import play.api.Play.current
 
 case class GiftList(id: Pk[Long] = NotAssigned, name: Option[String], purpose: Option[String],
-                    dueDate: Option[Date])
+                    dueDate: Option[Date]) {
+
+  private[this] var itemCount : Option[Int] = None;
+
+  //TODO: update to cache item count for lists.
+  def getItemCount : Int = {
+    itemCount.getOrElse(id match {
+      case NotAssigned => itemCount = Some(0); itemCount.get
+      case _ => val items = Item.find(id.get); itemCount = Some(items.size); itemCount.get
+    })
+  }
+
+}
 
 
 object GiftList {
