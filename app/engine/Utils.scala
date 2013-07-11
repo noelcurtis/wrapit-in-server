@@ -11,7 +11,6 @@ import scala.Predef._
 import java.lang.String
 import scala.Some
 import play.api.libs.json.{Writes, Json, JsObject, JsValue}
-import org.json.JSONObject
 import scala.collection.mutable.ListBuffer
 import play.api.libs.json.JsObject
 import scala.Predef.String
