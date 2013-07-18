@@ -48,7 +48,9 @@
                             <span class="sub">@engine.Utils.daysLeftFromDate(list.getGiftList.get.dueDate)</span>
                         </div>
                         <div class="item-detail fui-arrow-right pull-right"></div>
+                        @if(list.getGiftList.get.getItemCount > 0){
                         <div class="item-remain pull-right">@{list.getGiftList.get.getItemCount}</div>
+                        }
                     </a>
                 </li>
             }
@@ -70,9 +72,9 @@
         var newImage = photosJson[listId][currentImageCount];
 
         // animate the change in image
-        myimage.fadeTo('slow', 0.3, function() {
+        myimage.fadeTo('fast', 0.3, function() {
             $(this).css('background-image', 'url(' + newImage + ')');
-        }).fadeTo('slow', 1);
+        }).fadeTo('fast', 1);
 
         currentImageCount++;
         if (currentImageCount >= photosJson[listId].length)
@@ -85,16 +87,26 @@
         }, getRandom(1000, 5000));
     }
 
+    function showFirst(listId)
+    {
+        var newImage = photosJson[listId][0];
+        $('.item-list .gl-' + listId + " .img-preview").css('background-image', 'url(' + newImage + ')');
+    }
+
     $(function() {
         if (photosJson != null)
         {
             for (var key in photosJson)
             {
-                if (photosJson[key].length > 0)
+                if (photosJson[key].length > 1)
                 {
                     $('.item-list .gl-' + key + " .img-preview").show();
                     $('.item-list .gl-' + key + " .item-icon.icon-gift").hide();
                     changeImage(key, 0);
+                }
+                else if (photosJson[key].length == 1)
+                {
+                    showFirst(key);
                 }
             }
         }
