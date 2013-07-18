@@ -12,7 +12,7 @@
 
 @main(title = "WrapIt.in", moreCss = moreCss, moreJs = moreJs) {
 
-    <div class="navbar navbar-fixed-top navbar-inverse">
+    <div class="navbar navbar-inverse">
         <div class="navbar-inner">
             <div class="container clearfix  ">
                 <div class="navvy-item pull-left">
@@ -46,7 +46,11 @@
                         @if(item.getPhoto.isDefined && item.getPhoto.get.getPath.isDefined) {
                             <img src="@item.getPhoto.get.getPath">
                         } else {
-                            <div class="item-icon icon-gift"></div>
+                            <div class="image-placeholder">
+                                <div class="buy-badge add-image">
+                                    <a href="#">Add An Image</a>
+                                </div>
+                            </div>
                         }
                     </div>
                 </div>
@@ -54,7 +58,11 @@
             <li>
                 <div class="mini-nav item-nav clearfix">
 
-                    <a href="@item.url" class="btn btn-primary" target="_blank">See it online</a>
+                    @if(!item.url.get.equals("")) {
+                        <a href="@item.url" class="btn btn-primary" target="_blank">See it online</a>
+                    } else {
+                        <a href="#" class="btn btn-primary" target="_blank">Add a URL</a>
+                    }
 
                     <a id="item-detail-purchased" href="javascript: updatePurchased(1);" class="btn btn-primary pull-right" @if(item.purchased.getOrElse(0) == 1){style="display: none"}>Mark bought</a>
 

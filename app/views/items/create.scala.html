@@ -13,7 +13,7 @@
 @main(title = "WrapIt.in", moreCss = moreCss, moreJs = moreJs) {
 
     @helper.form(routes.GiftLists.handleadditem(giftListId)) {
-        <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar navbar-inverse">
             <div class="navbar-inner">
                 <div class="container">
                     <div class="navvy-item pull-left clearfix">
@@ -60,7 +60,7 @@
                         <div class="control-group @if(form.error("link").isDefined || (form.error("").isDefined && form.error("").get.message.toLowerCase.contains("url"))){ error }">
                             <div class="input-prepend input-datepicker">
                                 <button type="button" class="btn"><span class="fui-link"></span></button>
-                                <input type="text" autocomplete="off" name="link" placeholder="A web URL " class="flat" value="@if(form.data.get("link").isDefined){ @form.data.get("link").get }">
+                                <input type="text" autocomplete="off" name="link" placeholder="Paste in a URL" class="flat" value="@if(form.data.get("link").isDefined){ @form.data.get("link").get }">
                                 <label class="error-note">Your URL seems invalid.</label>
                             </div>
                         </div>

@@ -56,7 +56,20 @@
 {
     position: relative;
     background-color: rgb(75, 9, 35);
-    padding: 0px 4px;
+    padding: 2px 4px;
+}
+
+.buy-badge.add-image
+{
+    right: 110px;
+    top:50px;
+    font-size: 16px;
+    font-style: italic;
+}
+
+.buy-badge.add-image:hover
+{
+    cursor: pointer;
 }
 
 .buy-badge .badge-wrapper .badge-text
@@ -69,6 +82,13 @@
     display: block;
     margin: 0px auto;
     max-height: 220px;
+    width: auto;
+}
+
+.image-wrapper .image-holder .image-placeholder
+{
+    margin: 0px auto;
+    height: 100px;
     width: auto;
 }
 

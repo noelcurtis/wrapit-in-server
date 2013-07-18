@@ -113,7 +113,11 @@ object GiftLists extends Controller with Secured {
               val newItemId = GiftList.addItem(newItem, user, listId)
               newItemId match {
                 case Some(newItemId) => {
-                  if (item._4 == 1) {
+                  if (item._3.equals("") && item._4 == 1) // no URL and get images from web
+                  {
+                    Redirect(routes.GiftLists.show(listId))
+                  }
+                  else if (item._4 == 1) {
                     Redirect(routes.Items.webimages(listId, newItemId)) // Get images from the web
                   }
                   else {
