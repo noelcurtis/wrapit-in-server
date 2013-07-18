@@ -276,11 +276,6 @@ ul.nav-list.item-list .item-wrapper .sub-info i
 
 @media (max-width: 979px)
 {
-    body
-    {
-        padding-top: 40px;
-    }
-
     .navbar-fixed-top, .navbar-fixed-bottom
     {
         position: fixed;
