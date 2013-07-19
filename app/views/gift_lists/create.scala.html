@@ -34,8 +34,8 @@
                         <div class="control-group @if(form.error("name").isDefined){ error }">
                             <div class="input-prepend input-datepicker">
                                 <button type="button" class="btn"><span class="fui-list-numbered"></span></button>
-                                <input type="text" name="name" placeholder="A name for your list" class="flat" autocomplete="off" value="@if(form.data.get("name").isDefined){ @form.data.get("name").get }" id="datepicker-name">
-                                <label class="error-note">Please enter a name for the list.</label>
+                                <input type="text" name="name" placeholder="A name for your list" class="flat" autocomplete="off" value="@if(form.data.get("name").isDefined){@form.data.get("name").get}" id="datepicker-name">
+                                <label class="error-note">Please enter a name for the list ;-(</label>
                             </div>
                         </div>
                     </a>
@@ -46,8 +46,8 @@
                         <div class="control-group @if(form.error("dueDate").isDefined || (form.error("").isDefined && form.error("").get.message.toLowerCase.contains("date"))){ error }">
                             <div class="input-prepend input-datepicker">
                                 <button type="button" class="btn"><span class="fui-calendar"></span></button>
-                                <input type="text" name="dueDate" placeholder="When is this list due" autocomplete="off" value="@if(form.data.get("dueDate").isDefined){ @form.data.get("dueDate").get }" class="flat" id="datepicker-duedate">
-                                <label class="error-note">Date can be today or some future day.</label>
+                                <input type="text" name="dueDate" placeholder="When is this list due" autocomplete="off" value="@if(form.data.get("dueDate").isDefined){@form.data.get("dueDate").get}" class="flat" id="datepicker-duedate">
+                                <label class="error-note">Date can be today or some future day ;-(</label>
                             </div>
                         </div>
                     </a>

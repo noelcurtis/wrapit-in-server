@@ -46,3 +46,19 @@ body
     font-size: 18px;
     cursor: pointer;
 }
+
+.no-images
+{
+    font-size: 20px;
+    text-align: center;
+}
+
+a:hover
+{
+    cursor: pointer;
+}
+
+h4.no-images
+{
+    margin-bottom: 20px;
+}

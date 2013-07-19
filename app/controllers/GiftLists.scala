@@ -79,7 +79,7 @@ object GiftLists extends Controller with Secured {
     tuple(
       "name" -> nonEmptyText,
       "needed" -> number,
-      "link" -> text,
+      "link" -> nonEmptyText,
       "getImage" -> number
     ).verifying(
       // Add an additional constraint: link should be a valid URL

@@ -27,6 +27,11 @@
         </div>
     </div>
 
+    @if(imageUrls.isEmpty) {
+        <div class="spacer" style="height: 40px"></div>
+        <h4 class="no-images"><i class="icon-frown"></i> We could not find an image</h4>
+        <a class="no-images"><h4>Upload one yourself</h4></a>
+    } else {
     <div id="fluid-image-container" class="clearfix">
     @for(image <- imageUrls) {
 
@@ -37,5 +42,5 @@
 
     }
     </div>
-
+    }
 }

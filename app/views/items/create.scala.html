@@ -34,8 +34,8 @@
                         <div class="control-group @if(form.error("name").isDefined){ error }">
                             <div class="input-prepend input-datepicker">
                                 <button type="button" class="btn" style="padding: 6px 6px 8px 12px"><span class="icon-gift" style="font-size: 22px"></span></button>
-                                <input type="text" autocomplete="off" name="name" placeholder="A name for this item" class="flat" value="@if(form.data.get("name").isDefined){ @form.data.get("name").get }">
-                                <label class="error-note">This item needs a name.</label>
+                                <input type="text" autocomplete="off" name="name" placeholder="A name for this item" class="flat" value="@if(form.data.get("name").isDefined){@form.data.get("name").get}">
+                                <label class="error-note">This item needs a name ;-(</label>
                             </div>
                         </div>
                     </a>
@@ -60,8 +60,8 @@
                         <div class="control-group @if(form.error("link").isDefined || (form.error("").isDefined && form.error("").get.message.toLowerCase.contains("url"))){ error }">
                             <div class="input-prepend input-datepicker">
                                 <button type="button" class="btn"><span class="fui-link"></span></button>
-                                <input type="text" autocomplete="off" name="link" placeholder="Paste in a URL" class="flat" value="@if(form.data.get("link").isDefined){ @form.data.get("link").get }">
-                                <label class="error-note">Your URL seems invalid.</label>
+                                <input type="text" autocomplete="off" name="link" placeholder="Paste in a URL" class="flat" value="@if(form.data.get("link").isDefined){@form.data.get("link").get}">
+                                <label class="error-note">This item needs a URL ;-(</label>
                             </div>
                         </div>
                     </a>
