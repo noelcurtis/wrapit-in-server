@@ -12,24 +12,16 @@ import scala.collection.mutable.ListBuffer
 import play.api.libs.json.JsObject
 import java.lang.String
 import scala.Some
-
-abstract sealed case class ItemRelationType(value: Int)
-
-object ItemRelationType {
-  def fromInt(value: Int) : ItemRelationType = {
-    if (value == 1) Creator
-    else if (value == 2) Purchaser
-    else Creator
-  }
-}
-
-object Creator extends ItemRelationType(1)
-object Purchaser extends ItemRelationType(2)
+import com.google.common.hash.Hashing
 
 object Utils {
 
-  val dateFormatter = new SimpleDateFormat("MM/dd/yyyy")
+  val dateFormatter = new SimpleDateFormat("MM/dd/yyyy") //Global date format
 
+  /**
+   * Uset to get base AWS path "https://s3.amazonaws.com/wi-dev"
+   * @return
+   */
   def getAwsBucketPath = {
     getAwsBasePath + getAwsBucket
   }
@@ -53,6 +45,11 @@ object Utils {
     bucket
   }
 
+  /**
+   * Use to get a date from a String
+   * @param value
+   * @return
+   */
   def dateFromString(value: Option[String]): Option[Date] = {
     value match {
       case Some(value) => {
@@ -69,6 +66,11 @@ object Utils {
     }
   }
 
+  /**
+   * Helper to get time left from a date
+   * @param value
+   * @return
+   */
   def daysLeftFromDate(value: Option[Date]): String = {
     value match {
       case Some(value) => {
@@ -97,6 +99,12 @@ object Utils {
     }
   }
 
+  /**
+   * Use to convert a String to an Int
+   * @param value
+   * @param default
+   * @return
+   */
   def toInt(value: String, default: Int): Int = {
     try {
       value.toInt
@@ -105,11 +113,56 @@ object Utils {
     }
   }
 
+  /**
+   * Use to convert a Map[Long, List[String]] to JSValue
+   */
   implicit val mapWrites : Writes[Map[Long, List[String]]] = new Writes[Map[Long, List[String]]] {
     def writes(v: Map[Long, List[String]]): JsValue = {
       val values: ListBuffer[(String, JsValue)] = ListBuffer()
       v.keys.foreach( key => values += (key.toString -> Json.toJson(v.get(key).get)))
       JsObject(values.toSeq)
+    }
+  }
+
+  /**
+   * Use to get a AWS file path example: items/fjdfkdkfj93j-2.jpg
+   * @param data
+   * @param folder
+   * @param extension
+   */
+  def getAwsFilePath(data: Array[Byte], folder: AWSFolder, extension: String) : (String, String) = {
+    val hash = Hashing.sha256().hashBytes(data).toString // create a hash code from the array
+    val filename = hash + "." + extension
+    (folder.value, filename)
+  }
+
+  /**
+   * Use to get path for a Temp file
+   * @param filename
+   * @param extension
+   * @return
+   */
+  def getTempFilePath(filename: String, extension: String) : String = {
+    val r = new scala.util.Random
+    "/" + TempFolder.value + "/" + r.nextInt(10000) + "/" + filename + "." + extension
+  }
+
+  /**
+   * Use to get a file Extension from Content Type ex: image/jpg
+   * @param contentType
+   * @return
+   */
+  def getExtension(contentType: Option[String]) : String = {
+    contentType match {
+      case Some(c) => {
+        val s = c.split("/")
+        if (s != null && s.length > 1) {
+          s(1)
+        } else {
+          ".jpeg"
+        }
+      }
+      case None => ".jpeg"
     }
   }
 

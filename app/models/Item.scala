@@ -13,7 +13,7 @@ import fly.play.s3.{BucketFile, S3}
 import play.api.libs.concurrent.Execution.Implicits._
 import org.apache.http.HttpStatus
 import com.google.common.hash.Hashing
-import engine.{Creator, Utils}
+import engine.{ItemsFolder, AWSFolder, Creator, Utils}
 
 case class Item(id: Pk[Long] = NotAssigned, name: Option[String], url: Option[String] = Some(""), needed: Option[Int] = Some(1),
                 purchased: Option[Int] = Some(0), giftListId: Option[Long] = None) {
@@ -172,7 +172,7 @@ object Item {
   }
 
   val cacheTime = 864000
-  val extension = ".jpg"
+  val defaultContentType = "image/jpg"
 
   def addPhoto(item: Item, externalUrl: String, withUpload: Boolean = true) = {
     try {
@@ -188,22 +188,20 @@ object Item {
             Logger.error(s"Could not find image at URL $externalUrl")
           } else {
             Logger.info(s"Getting Photo {$externalUrl} for Item {$item} ended");
-            val hash = Hashing.sha256().hashBytes(bytes).toString // create a hash code from the array
-            val folder = "items"
-            val filename = hash + extension
+            val path = Utils.getAwsFilePath(bytes, ItemsFolder, Utils.getExtension(Some(contentType)))
 
             // check if file already exists
-            val foundPhotos = Photo.getCount(folder, filename)
+            val foundPhotos = Photo.getCount(path._1, path._2)
             if (withUpload) {
               if (foundPhotos > 0) {
-                Logger.info(s"File already exists for folder $folder and filename $filename")
+                Logger.info(s"File already exists for folder $path")
               } else {
-                Logger.info(s"File does not exist for folder $folder and filename $filename");
-                uploadPhoto(folder, filename, contentType, bytes, item)
+                Logger.info(s"File does not exist for folder $path");
+                uploadPhoto(path._1, path._2, contentType, bytes, item)
               }
             } else {
               // FAKE THE UPLOAD
-              fakeCreate(folder, filename, item)
+              fakeCreate(path._1, path._2, item)
             }
           }
         }
@@ -213,18 +211,16 @@ object Item {
     }
   }
 
-  def addPhoto(item: Item, bytes: Array[Byte], contentType: String) = {
-    val hash = Hashing.sha256().hashBytes(bytes).toString // create a hash code from the array
-    val folder = "items"
-    val filename = hash + extension
+  def addPhoto(item: Item, bytes: Array[Byte], contentType: Option[String]) = {
+    val path = Utils.getAwsFilePath(bytes, ItemsFolder, Utils.getExtension(contentType))
 
-    val foundPhotos = Photo.getCount(folder, filename)
+    val foundPhotos = Photo.getCount(path._1, path._2)
     // check if the file already exists
     if (foundPhotos > 0) {
-      Logger.info(s"File already exists for folder $folder and filename $filename")
+      Logger.info(s"File already exists for folder $path")
     } else {
-      Logger.info(s"File does not exist for folder $folder and filename $filename");
-      uploadPhoto(folder, filename, contentType, bytes, item)
+      Logger.info(s"File does not exist for folder $path")
+      uploadPhoto(path._1, path._2, contentType.getOrElse(defaultContentType), bytes, item)
     }
   }
 

@@ -3,10 +3,11 @@ package controllers
 import play.api.mvc.Controller
 import models._
 import play.Logger
-import engine.{Purchaser, ImageGetter}
+import engine.{Utils, Purchaser, ImageGetter}
 import play.api.libs.json.Json
 import scala.Some
 import play.api.mvc._
+import com.google.common.io.Files
 
 object Items extends Controller with Secured {
 
@@ -155,13 +156,22 @@ object Items extends Controller with Secured {
   def uploadPhoto(listId: Long, itemId: Long) = Action(parse.multipartFormData) { request =>
     val foundItem = Item.findById(itemId)
     foundItem match {
-      case Some(i) => {
+      case Some(item) => {
         request.body.file("picture").map { picture =>
           import java.io.File
-          val filename = picture.filename
-          val contentType = picture.contentType
-          picture.ref.moveTo(new File("/tmp/picture"))
-          Redirect(routes.Items.show(listId, itemId))
+          try {
+
+            val filename = picture.filename // get the file name
+            val contentType = picture.contentType // get the content type
+            val tmpFile = new File(Utils.getTempFilePath(filename, Utils.getExtension(contentType))) // get temp file path
+            picture.ref.moveTo(tmpFile) // move to temp file
+            val asBytes = Files.toByteArray(tmpFile) // convert to byte array
+            Item.addPhoto(item, asBytes, contentType) // add the photo to the Item
+
+          } catch {
+            case e:Exception => Logger.error(e.getMessage)
+          }
+          Redirect(routes.Items.show(listId, itemId)) // redirect to the item page once added
         }.getOrElse {
           Redirect(routes.GiftLists.show(listId)).flashing(
             "error" -> "Missing file"
