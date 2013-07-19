@@ -47,9 +47,7 @@
                             <img src="@item.getPhoto.get.getPath">
                         } else {
                             <div class="image-placeholder">
-                                <div class="buy-badge add-image">
-                                    <a href="#">Add An Image</a>
-                                </div>
+                                <a href="@routes.Items.uploadPhoto(giftListId, item.id.get)">Add an image</a>
                             </div>
                         }
                     </div>

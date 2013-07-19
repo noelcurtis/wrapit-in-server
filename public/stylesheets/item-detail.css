@@ -41,6 +41,16 @@
     position: absolute;
 }
 
+.image-placeholder
+{
+    text-align: center;
+    display: block;
+    vertical-align: middle;
+    height: 60px;
+    padding-top: 50px;
+    font-size: 20px;
+}
+
 .buy-badge.available
 {
     color: #2ECC71;
@@ -82,13 +92,6 @@
     display: block;
     margin: 0px auto;
     max-height: 220px;
-    width: auto;
-}
-
-.image-wrapper .image-holder .image-placeholder
-{
-    margin: 0px auto;
-    height: 100px;
     width: auto;
 }
 

@@ -1,0 +1,27 @@
+@(giftListId: Long, itemId: Long)
+
+
+@main(title = "WrapIt.in") {
+
+    @helper.form(action = routes.Items.uploadPhoto(giftListId, itemId), 'enctype -> "multipart/form-data") {
+
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container clearfix">
+                <div class="navvy-item pull-left">
+                    <a href="@routes.GiftLists.index()"><span class="fui-triangle-left-large"></span></a>
+                </div>
+                <span class="navvy-title">New List</span>
+                <div class="navvy-item pull-right">
+                    <button class="navvy-button fui-check" type="submit"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <input type="file" name="picture">
+    </div>
+    }
+
+}

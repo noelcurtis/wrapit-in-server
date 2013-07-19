@@ -3,39 +3,41 @@
 # ~~~~
 
 # Home page
-GET      /                                            controllers.Application.index
+GET         /                                            controllers.Application.index
 
 # Application
-POST     /login                                       controllers.Application.authenticate
-GET      /login                                       controllers.Application.index
-GET      /create                                      controllers.Application.create
-POST     /create                                      controllers.Application.handlecreate
+POST        /login                                       controllers.Application.authenticate
+GET         /login                                       controllers.Application.index
+GET         /create                                      controllers.Application.create
+POST        /create                                      controllers.Application.handlecreate
 
 # Facebook
-GET      /fblogin                                     controllers.FacebookAuth.facebookAuthenticate
-GET      /fbredirect                                  controllers.FacebookAuth.facebookRedirect
+GET         /fblogin                                     controllers.FacebookAuth.facebookAuthenticate
+GET         /fbredirect                                  controllers.FacebookAuth.facebookRedirect
 #GET     /fbidentity                 controllers.FacebookAuth.facebookIdentityRedirect
 
 # Lists
-GET      /list                                        controllers.GiftLists.index
-GET      /list/create                                 controllers.GiftLists.create
-POST     /list/create                                 controllers.GiftLists.handlecreate
+GET         /list                                        controllers.GiftLists.index
+GET         /list/create                                 controllers.GiftLists.create
+POST        /list/create                                 controllers.GiftLists.handlecreate
 
 # Items
-GET      /list/:id/items                              controllers.GiftLists.show(id: Long)
-GET      /list/:id/add                                controllers.GiftLists.additem(id: Long)
-POST     /list/:id/add                                controllers.GiftLists.handleadditem(id: Long)
-GET      /list/:listId/items/:itemId/webimages        controllers.Items.webimages(listId: Long, itemId: Long)
-GET      /list/:listId/items/:itemId/addUrl           controllers.Items.update(listId: Long, itemId: Long)
-GET      /list/:id/items/:itemId                      controllers.Items.show(id: Long, itemId: Long)
-POST     /list/:id/items/:itemId/comment              controllers.Items.addComment(id: Long, itemId: Long)
-POST     /list/:id/items/:itemId/purchased            controllers.Items.updatePurchased(id: Long, itemId: Long)
+GET         /list/:id/items                              controllers.GiftLists.show(id: Long)
+GET         /list/:id/add                                controllers.GiftLists.additem(id: Long)
+POST        /list/:id/add                                controllers.GiftLists.handleadditem(id: Long)
+GET         /list/:listId/items/:itemId/webimages        controllers.Items.webimages(listId: Long, itemId: Long)
+GET         /list/:listId/items/:itemId/addUrl           controllers.Items.update(listId: Long, itemId: Long)
+GET         /list/:id/items/:itemId                      controllers.Items.show(id: Long, itemId: Long)
+POST        /list/:id/items/:itemId/comment              controllers.Items.addComment(id: Long, itemId: Long)
+POST        /list/:id/items/:itemId/purchased            controllers.Items.updatePurchased(id: Long, itemId: Long)
+GET         /list/:id/items/:itemId/uploadPhoto          controllers.Items.addPhoto(id: Long, itemId: Long)
+POST        /list/:id/items/:itemId/uploadPhoto          controllers.Items.uploadPhoto(id: Long, itemId: Long)
 
 # Test
-GET      /testroles                                   controllers.Test.testroles
-GET      /testimages                                  controllers.Test.testimages
-GET      /testphoto                                   controllers.Test.testphoto
-GET      /testfoundphoto                              controllers.Test.testfoundphoto
+GET         /testroles                                   controllers.Test.testroles
+GET         /testimages                                  controllers.Test.testimages
+GET         /testphoto                                   controllers.Test.testphoto
+GET         /testfoundphoto                              controllers.Test.testfoundphoto
 
 # Map static resources from the /public folder to the /assets URL path
-GET      /assets/*file                                controllers.Assets.at(path="/public", file)
+GET         /assets/*file                                controllers.Assets.at(path="/public", file)

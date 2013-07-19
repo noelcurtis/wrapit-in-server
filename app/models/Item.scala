@@ -172,12 +172,12 @@ object Item {
   }
 
   val cacheTime = 864000
+  val extension = ".jpg"
 
   def addPhoto(item: Item, externalUrl: String, withUpload: Boolean = true) = {
     try {
       val url = new URL(externalUrl)
       //val extension = url.getFile.dropWhile(_ != '.').replaceFirst(".", "") // get the file extension
-      val extension = ".jpg"
       Logger.info(s"Getting Photo {$externalUrl} for Item {" + item.id + "} started");
       // get the file and push to S3
       WS.url(externalUrl).get().map {
@@ -210,6 +210,21 @@ object Item {
       }
     } catch {
       case e: Exception => Logger.info(s"Error adding Photo {$externalUrl} to Item {" + item.id + "}" + e.getMessage)
+    }
+  }
+
+  def addPhoto(item: Item, bytes: Array[Byte], contentType: String) = {
+    val hash = Hashing.sha256().hashBytes(bytes).toString // create a hash code from the array
+    val folder = "items"
+    val filename = hash + extension
+
+    val foundPhotos = Photo.getCount(folder, filename)
+    // check if the file already exists
+    if (foundPhotos > 0) {
+      Logger.info(s"File already exists for folder $folder and filename $filename")
+    } else {
+      Logger.info(s"File does not exist for folder $folder and filename $filename");
+      uploadPhoto(folder, filename, contentType, bytes, item)
     }
   }
 

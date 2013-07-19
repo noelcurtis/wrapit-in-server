@@ -6,6 +6,7 @@ import play.Logger
 import engine.{Purchaser, ImageGetter}
 import play.api.libs.json.Json
 import scala.Some
+import play.api.mvc._
 
 object Items extends Controller with Secured {
 
@@ -138,5 +139,38 @@ object Items extends Controller with Secured {
       }
   }
 
+
+  def addPhoto(listId: Long, itemId: Long) = IsAuthenticated {
+    authToken => implicit request =>
+      val user = User.findByToken(authToken)
+      user match {
+        case Some(user) => {
+          Ok(views.html.items.photoupload(listId, itemId))
+        }
+        case None => Logger.error("No user!"); Redirect(routes.Application.index).withNewSession
+      }
+  }
+
+
+  def uploadPhoto(listId: Long, itemId: Long) = Action(parse.multipartFormData) { request =>
+    val foundItem = Item.findById(itemId)
+    foundItem match {
+      case Some(i) => {
+        request.body.file("picture").map { picture =>
+          import java.io.File
+          val filename = picture.filename
+          val contentType = picture.contentType
+          picture.ref.moveTo(new File("/tmp/picture"))
+          Redirect(routes.Items.show(listId, itemId))
+        }.getOrElse {
+          Redirect(routes.GiftLists.show(listId)).flashing(
+            "error" -> "Missing file"
+          )
+        }
+      }
+      case None => Logger.error("Item not found: " + itemId); Redirect(routes.GiftLists.show(listId)) // go back to the List page
+    }
+
+  }
 
 }
