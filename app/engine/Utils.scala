@@ -13,6 +13,8 @@ import play.api.libs.json.JsObject
 import java.lang.String
 import scala.Some
 import com.google.common.hash.Hashing
+import org.im4java.core.{IMOperation, ConvertCmd}
+import java.io.File
 
 object Utils {
 
@@ -139,12 +141,11 @@ object Utils {
   /**
    * Use to get path for a Temp file
    * @param filename
-   * @param extension
    * @return
    */
-  def getTempFilePath(filename: String, extension: String) : String = {
+  def getTempFilePath(filename: String) : String = {
     val r = new scala.util.Random
-    "/" + TempFolder.value + "/" + r.nextInt(10000) + "/" + filename + "." + extension
+    "/" + TempFolder.value + "/" + r.nextInt(9999999) + "/" + filename
   }
 
   /**
@@ -163,6 +164,24 @@ object Utils {
         }
       }
       case None => ".jpeg"
+    }
+  }
+
+  def resizeImage(file: File) : Option[String]= {
+    try {
+      // create command
+      val cmd = new ConvertCmd()
+      // create the operation, add images and operators/options
+      val op = new IMOperation()
+      op.addImage(file.getPath)
+      op.resize(320, 200)
+      val smallImagePath = file.getPath + ".small"
+      op.addImage(smallImagePath)
+      // execute the operation
+      cmd.run(op)
+      Some(smallImagePath)
+    } catch {
+      case e:Exception => Logger.error("Image Resize Error " + e.getMessage); None
     }
   }
 

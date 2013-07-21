@@ -11,17 +11,56 @@
                 <div class="navvy-item pull-left">
                     <a href="@routes.GiftLists.index()"><span class="fui-triangle-left-large"></span></a>
                 </div>
-                <span class="navvy-title">New List</span>
+                <span class="navvy-title"></span>
                 <div class="navvy-item pull-right">
-                    <button class="navvy-button fui-check" type="submit"></button>
+                    <button class="navvy-button fui-check" style="display: none" type="submit"></button>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="control-group">
-        <input type="file" name="picture">
+        <div style='height: 0px;width:0px; overflow:hidden;'>
+            <input type="file" name="picture" id="pup-picture">
+        </div>
+        <div class="control-group" style="width: 300px; margin: 0px auto">
+            <label id="pup-upload-label" for="pup-upload" style="text-align: center; font-size: 20px; text-overflow: ellipsis; padding: 25px 0px 20px 0px"></label>
+            <button id="pup-upload" name="pup-upload" class="btn btn-primary btn-huge btn-block no-radius" onclick="pupGetFile(); return false;">Upload a Photo</button>
+        </div>
     </div>
     }
 
 }
+
+<script>
+
+    $(function() {
+
+        // OnChange of the File input
+        $("#pup-picture").change(function() {
+            var v = cleanPath($(this).val())
+            if (v != null && typeof v != "undefined" && v != "")
+            {
+                $("#pup-upload-label").html(v).show();
+                $('button[type="submit"]').show();
+            }
+        });
+
+    });
+
+    // Fire click event for file input
+    function pupGetFile() {
+        $("#pup-picture").click();
+    }
+
+    // Use to convert c:/something/show.jpg to show.jpg
+    function cleanPath(path) {
+        if (path.indexOf("\\") != -1)
+        {
+            var s = path.split("\\")
+            return s[s.length -1]
+        }
+        return path
+    }
+
+</script>

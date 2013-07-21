@@ -97,6 +97,16 @@ object Photo {
     }
   }
 
+  def find(folder: String, fileName: String) : List[Photo] = {
+    DB.withConnection {
+      implicit connection =>
+        SQL("select * from photo where folder = {folder} and file_name = {fileName}").on(
+          'folder -> folder,
+          'fileName -> fileName
+        ).as(Photo.parseSingle *)
+    }
+  }
+
   def getCount(folder: String, fileName: String): Long = {
     DB.withConnection {
       implicit connection =>

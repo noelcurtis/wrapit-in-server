@@ -8,6 +8,7 @@ import play.api.libs.json.Json
 import scala.Some
 import play.api.mvc._
 import com.google.common.io.Files
+import java.io.File
 
 object Items extends Controller with Secured {
 
@@ -158,15 +159,20 @@ object Items extends Controller with Secured {
     foundItem match {
       case Some(item) => {
         request.body.file("picture").map { picture =>
-          import java.io.File
           try {
 
             val filename = picture.filename // get the file name
             val contentType = picture.contentType // get the content type
-            val tmpFile = new File(Utils.getTempFilePath(filename, Utils.getExtension(contentType))) // get temp file path
+            val tmpFile = new File(Utils.getTempFilePath(filename)) // get temp file path
             picture.ref.moveTo(tmpFile) // move to temp file
-            val asBytes = Files.toByteArray(tmpFile) // convert to byte array
-            Item.addPhoto(item, asBytes, contentType) // add the photo to the Item
+            val smallerFilePath = Utils.resizeImage(tmpFile) // resize the file
+            smallerFilePath match {
+              case Some(s) => {
+                val asBytes = Files.toByteArray(new File(s)) // convert to byte array
+                Item.addPhoto(item, asBytes, contentType) // upload s3 and add the photo to the Item
+              }
+              case None => Logger.error("Not Image to push to S3")
+            }
 
           } catch {
             case e:Exception => Logger.error(e.getMessage)

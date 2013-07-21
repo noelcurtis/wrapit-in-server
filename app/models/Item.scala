@@ -191,10 +191,11 @@ object Item {
             val path = Utils.getAwsFilePath(bytes, ItemsFolder, Utils.getExtension(Some(contentType)))
 
             // check if file already exists
-            val foundPhotos = Photo.getCount(path._1, path._2)
+            val foundPhotos = Photo.find(path._1, path._2)
             if (withUpload) {
-              if (foundPhotos > 0) {
+              if (foundPhotos.size > 0) {
                 Logger.info(s"File already exists for folder $path")
+                PhotoRelation.create(item.id.get, foundPhotos.head.id.get) // Add the Photo to the Item
               } else {
                 Logger.info(s"File does not exist for folder $path");
                 uploadPhoto(path._1, path._2, contentType, bytes, item)
@@ -214,10 +215,11 @@ object Item {
   def addPhoto(item: Item, bytes: Array[Byte], contentType: Option[String]) = {
     val path = Utils.getAwsFilePath(bytes, ItemsFolder, Utils.getExtension(contentType))
 
-    val foundPhotos = Photo.getCount(path._1, path._2)
+    val foundPhotos = Photo.find(path._1, path._2)
     // check if the file already exists
-    if (foundPhotos > 0) {
+    if (foundPhotos.size > 0) {
       Logger.info(s"File already exists for folder $path")
+      PhotoRelation.create(item.id.get, foundPhotos.head.id.get) // Add the Photo to the Item
     } else {
       Logger.info(s"File does not exist for folder $path")
       uploadPhoto(path._1, path._2, contentType.getOrElse(defaultContentType), bytes, item)

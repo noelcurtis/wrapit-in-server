@@ -57,14 +57,14 @@
                 <div class="mini-nav item-nav clearfix">
 
                     @if(!item.url.get.equals("")) {
-                        <a href="@item.url" class="btn btn-primary" target="_blank">See it online</a>
+                        <a href="@item.url" class="btn btn-primary no-radius" target="_blank">See it online</a>
                     } else {
-                        <a href="#" class="btn btn-primary" target="_blank">Add a URL</a>
+                        <a href="#" class="btn btn-primary no-radius" target="_blank">Add a URL</a>
                     }
 
-                    <a id="item-detail-purchased" href="javascript: updatePurchased(1);" class="btn btn-primary pull-right" @if(item.purchased.getOrElse(0) == 1){style="display: none"}>Mark bought</a>
+                    <a id="item-detail-purchased" href="javascript: updatePurchased(1);" class="btn btn-primary pull-right no-radius" @if(item.purchased.getOrElse(0) == 1){style="display: none"}>Mark bought</a>
 
-                    <a id="item-detail-available" href="javascript: @if(itemRelation.isDefined && itemRelation.get.userId == user.id.get || !itemRelation.isDefined){updatePurchased(0);}" class="btn btn-primary pull-right @if(itemRelation.isDefined && itemRelation.get.userId == user.id.get || !itemRelation.isDefined){enabled}else{disabled}" @if(item.purchased.getOrElse(0) != 1){style="display: none"}>Mark available</a>
+                    <a id="item-detail-available" href="javascript: @if(itemRelation.isDefined && itemRelation.get.userId == user.id.get || !itemRelation.isDefined){updatePurchased(0);}" class="btn btn-primary pull-right no-radius @if(itemRelation.isDefined && itemRelation.get.userId == user.id.get || !itemRelation.isDefined){enabled}else{disabled}" @if(item.purchased.getOrElse(0) != 1){style="display: none"}>Mark available</a>
 
                 </div>
             </li>
