@@ -7,12 +7,19 @@ import play.api.Play.current
 import play.Logger
 import com.google.common.hash.Hashing
 import anorm.SqlParser._
-import anorm.~
 import play.api.cache.Cache
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
+import anorm.~
+import scala.Some
 
 case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Option[String],
                 lastSignIn: Option[Date] = None, token: Option[String] = Some("")) {
 
+  /**
+   * Use to get facebook info for a User
+   * @return
+   */
   def getFacebookInfo:Option[FbInfo] = {
     FbInfo.find(id.get)
   }
@@ -20,6 +27,14 @@ case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Opt
 }
 
 object User {
+
+  /**
+   * Use to read a User from a Json structure
+   */
+  implicit val reader : Reads[(String, String)]= (
+    (__ \ "email").read[String] and
+    (__ \ "password").read[String]
+  ).tupled
 
   /**
    * Parse a User from a ResultSet
@@ -34,6 +49,12 @@ object User {
     }
   }
 
+  /**
+   * Use to create a User, fakeToken: Only to be used to test purposes, otherwise pass as none
+   * @param user
+   * @param fakeToken
+   * @return
+   */
   def create(user: User, fakeToken: Option[String] = None): Option[User] = {
     try {
       val hf = Hashing.sha256();
