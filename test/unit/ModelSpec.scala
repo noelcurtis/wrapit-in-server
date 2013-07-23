@@ -20,8 +20,8 @@ import play.api.libs.json.{Writes, Json, JsObject, JsValue}
 
 abstract class WithCleanDb extends WithApplication {
   override def around[T: AsResult](t: => T) = super.around {
-    cleanDb // clean the database
-    insert // create some test data
+    //cleanDb // clean the database
+    //insert // create some test data
     AsResult(t)
   }
 
@@ -78,7 +78,7 @@ abstract class WithCleanDb extends WithApplication {
         Logger.debug("Clearing database for test.");
         SQL(
           """
-            truncate user_item_relation, comments, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
+            |truncate user_item_relation, comments, photo_relation, photo, comment_relation, item, gift_list_role, fb_info, users, gift_list;
             |ALTER SEQUENCE gift_list_seq RESTART;
             |ALTER SEQUENCE item_seq RESTART;
             |ALTER SEQUENCE users_seq RESTART;
