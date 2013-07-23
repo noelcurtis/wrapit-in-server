@@ -214,7 +214,7 @@ object Item {
 
   def addPhoto(item: Item, bytes: Array[Byte], contentType: Option[String]) = {
     val path = Utils.getAwsFilePath(bytes, ItemsFolder, Utils.getExtension(contentType))
-
+    Logger.info(s"Photo path $path")
     val foundPhotos = Photo.find(path._1, path._2)
     // check if the file already exists
     if (foundPhotos.size > 0) {

@@ -9,12 +9,13 @@ import play.api.Play.current
 import scala.Predef._
 import play.api.libs.json.{Writes, Json, JsValue}
 import scala.collection.mutable.ListBuffer
-import play.api.libs.json.JsObject
 import java.lang.String
-import scala.Some
 import com.google.common.hash.Hashing
 import org.im4java.core.{IMOperation, ConvertCmd}
 import java.io.File
+import scala.Some
+import play.api.libs.json.JsObject
+
 
 object Utils {
 
@@ -62,6 +63,26 @@ object Utils {
             Logger.error("Error parsing date" + e.getMessage)
             None
           }
+        }
+      }
+      case None => None
+    }
+  }
+
+  /**
+   * Use to get a date from a String
+   * @param value
+   * @param formatter
+   * @return
+   */
+  def dateFromString(value: Option[String], formatter: SimpleDateFormat) : Option[Date] = {
+    value match {
+      case Some(s) =>  {
+        try {
+          Some(formatter.parse(s))
+        }
+        catch {
+          case e: Exception => Logger.error(e.toString); None
         }
       }
       case None => None

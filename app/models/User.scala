@@ -12,6 +12,8 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import anorm.~
 import scala.Some
+import engine.Utils
+import java.text.SimpleDateFormat
 
 case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Option[String],
                 lastSignIn: Option[Date] = None, token: Option[String] = Some("")) {
@@ -29,12 +31,24 @@ case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Opt
 object User {
 
   /**
-   * Use to read a User from a Json structure
+   * Use to read a User from JSON
    */
-  implicit val reader : Reads[(String, String)]= (
-    (__ \ "email").read[String] and
-    (__ \ "password").read[String]
-  ).tupled
+  implicit val readUser : Reads[User] = (
+    (__ \ 'id).readNullable[Long].map[Pk[Long]](x => if(x.isDefined) anorm.Id(x.get) else NotAssigned) and
+      (__ \ 'email).readNullable[String] and
+      (__ \ 'password).readNullable[String] and
+      (__ \ 'lastSignIn).readNullable[String].map[Option[Date]](x => Utils.dateFromString(x, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"))) and
+      (__ \ 'token).readNullable[String]
+    )(User.apply _)
+
+  /**
+   * Use to write a User to JSON
+   */
+  implicit val writesUser : Writes[User] = (
+    (__ \ 'email).write[Option[String]] and
+      (__ \ 'lastSignIn).write[Option[Date]] and
+      (__ \ 'token).write[Option[String]]
+  )(x => (x.email, x.lastSignIn, x.token))
 
   /**
    * Parse a User from a ResultSet
