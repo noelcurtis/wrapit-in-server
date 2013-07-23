@@ -16,8 +16,8 @@ object Global extends GlobalSettings {
     Logger.debug("Application start")
     // seed data in dev mode
 //    if (play.Play.isDev) {
-//      InitialData.cleanDb
-//      InitialData.insert
+      InitialData.cleanDb
+      InitialData.insert
 //    }
   }
 
