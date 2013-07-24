@@ -33,6 +33,12 @@ POST        /list/:id/items/:itemId/purchased            controllers.Items.updat
 GET         /list/:id/items/:itemId/uploadPhoto          controllers.Items.addPhoto(id: Long, itemId: Long)
 POST        /list/:id/items/:itemId/uploadPhoto          controllers.Items.uploadPhoto(id: Long, itemId: Long)
 
+##### API #####
+
+#User
+POST        /apiv1/user                                  controllers.apiv1.User.create
+
+
 # Test
 GET         /testroles                                   controllers.Test.testroles
 GET         /testimages                                  controllers.Test.testimages
