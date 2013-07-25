@@ -15,17 +15,39 @@ __Method:__ POST
 __Request Body Data:__	All details to create the User account.		 
 <pre>
 	{
-    "username" : "barfoo",
     "email" :"bar@foo.com",
-    "password" : "foobar",
-    "passwordConfirmation" : "foobar"
+    "password" : "foobar"
 	}
 </pre>		
 __Response Status:__ 201 OK			
 __Response Body Data:__			 
 <pre>
 	{
-    "authToken": "dnfvnLfqs3MCbyqsc1Np", 
-    "email": "bar@foo.com",
-	}
+    "email":"foobar@gmail.com",
+    "lastSignIn":1374721831445, // date should be in this form only
+    "token":"a"
+  }
 </pre>
+
+
+### Authenticating A User
+
+__URI:__ __/apiv1/authenticate		
+__Method:__ POST	
+__Request Body Data:__	All details to auth the User account.		 
+<pre>
+	{
+    "email" :"bar@foo.com",
+    "password" : "foobar"
+	}
+</pre>		
+__Response Status:__ 200 OK			
+__Response Body Data:__			 
+<pre>
+	{
+    "email":"foobar@gmail.com",
+    "lastSignIn":1374721831445, // date should be in this form only
+    "token":"a"
+  }
+</pre>
+

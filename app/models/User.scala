@@ -37,7 +37,7 @@ object User {
     (__ \ 'id).readNullable[Long].map[Pk[Long]](x => if(x.isDefined) anorm.Id(x.get) else NotAssigned) and
       (__ \ 'email).readNullable[String] and
       (__ \ 'password).readNullable[String] and
-      (__ \ 'lastSignIn).readNullable[String].map[Option[Date]](x => Utils.dateFromString(x, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"))) and
+      (__ \ 'lastSignIn).readNullable[Date] and
       (__ \ 'token).readNullable[String]
     )(User.apply _)
 

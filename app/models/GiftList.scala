@@ -8,13 +8,15 @@ import anorm.SqlParser._
 import anorm.~
 import scala.Some
 import play.api.Play.current
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class GiftList(id: Pk[Long] = NotAssigned, name: Option[String], purpose: Option[String],
                     dueDate: Option[Date]) {
 
   private[this] var itemCount : Option[Int] = None;
 
-  //TODO: update to cache item count for lists.
+  //TODO: update to NOT cache itemCount !! only Lazy Load
   def getItemCount : Int = {
     itemCount.getOrElse(id match {
       case NotAssigned => itemCount = Some(0); itemCount.get
@@ -38,6 +40,26 @@ object GiftList {
       case id ~ name ~ purpose ~ dueDate => GiftList(id, name, purpose, dueDate)
     }
   }
+
+  /**
+   * Use to read a GiftList from JSON
+   */
+  implicit val readGiftList : Reads[GiftList] = (
+    (__ \ 'id).readNullable[Long].map[Pk[Long]](x => if(x.isDefined) anorm.Id(x.get) else NotAssigned) and
+      (__ \ 'name).readNullable[String] and
+      (__ \ 'purpose).readNullable[String] and
+      (__ \ 'dueDate).readNullable[Date]
+    )(GiftList.apply _)
+
+  /**
+   * Use to write a GiftList to JSON String
+   */
+  implicit val writesGiftList : Writes[GiftList] = (
+    (__ \ 'id).write[Long] and
+      (__ \ 'name).write[Option[String]] and
+      (__ \ 'dueDate).write[Option[Date]] and
+      (__ \ 'itemCount).write[Int]
+    )(x => (x.id.get, x.name, x.dueDate, x.getItemCount))
 
   /**
    * Use to create a Gift List
