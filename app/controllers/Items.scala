@@ -1,6 +1,5 @@
 package controllers
 
-import play.api.mvc.Controller
 import models._
 import play.Logger
 import engine.{Utils, Purchaser, ImageGetter}

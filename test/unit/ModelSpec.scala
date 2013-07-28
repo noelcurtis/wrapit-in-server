@@ -3,19 +3,16 @@ package unit
 import org.specs2.mutable._
 
 import play.api.test._
-import play.api.test.Helpers._
 import models._
 import anorm._
 import java.util.Date
 import play.Logger
-import org.specs2.execute.{AsResult, Result}
-import scala.Some
-import play.api.Play.current
+import org.specs2.execute.AsResult
 import play.api.db.DB
 import org.joda.time.DateTime
 import scala.Some
 import engine.{Creator, Purchaser}
-import play.api.libs.json.{Writes, Json, JsObject, JsValue}
+import play.api.libs.json.Json
 
 
 abstract class WithCleanDb extends WithApplication {

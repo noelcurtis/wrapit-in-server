@@ -1,9 +1,7 @@
 package controllers.apiv1
 
 import play.api.mvc.{Action, Controller}
-import engine.Utils
 import play.api.libs.json.Json
-import play.api.Logger
 
 object User extends Controller{
 

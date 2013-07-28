@@ -5,13 +5,17 @@ import play.api.db.DB
 import play.api.Play.current
 import play.Logger
 import anorm.SqlParser._
+import anorm.~
+import scala.Some
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class GiftListRole(userId: Long, giftListId: Long, role: Option[Int]) {
 
   private[this] var giftList: Option[GiftList] = None
 
   /**
-   * use to get the gift list
+   * Use to get a cached version of the GiftList
    * @return
    */
   def getGiftList: Option[GiftList] = {
@@ -72,6 +76,15 @@ object GiftListRole {
       }
     }
   }
+
+  /**
+   * Use to write a GiftListRole to JSON String
+   */
+  implicit val writesGiftListRole : Writes[GiftListRole] = (
+      (__ \ 'role).write[Option[Int]] and
+        (__ \ 'giftList).write[Option[GiftList]]
+    )(r => (r.role, r.getGiftList))
+
 
 
   def create(userId: Long, giftListId: Long, role: Option[Int]): Option[GiftListRole] = {

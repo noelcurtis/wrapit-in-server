@@ -56,7 +56,7 @@ object GiftLists extends Controller with Secured {
         },
         giftList => {
           val user = User.findByToken(authToken)
-          // parse the date
+          // parse the Giftlist
           val newList = GiftList(name = Some(giftList._1), dueDate = Some(giftList._2.toDate), purpose = Some(giftList._3))
           // create a new list
           val giftListRole = GiftList.create(newList, user.get.id.get)

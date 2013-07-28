@@ -1,11 +1,6 @@
 package unit
 
 import org.specs2.mutable.Specification
-import models.{GiftListRole, GiftList, User}
-import anorm.NotAssigned
-import java.util.Date
-import play.api.test.WithApplication
-import play.Logger
 
 class TestData extends Specification{
 

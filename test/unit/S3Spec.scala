@@ -1,16 +1,14 @@
 package unit
 
 
-import scala.concurrent.{ExecutionContext, Await, Future}
+import scala.concurrent.Await
 import scala.concurrent.duration.FiniteDuration
 
-import org.specs2.mutable.Before
 import org.specs2.mutable.Specification
 
 import fly.play.s3.{BucketFile, S3}
-import play.api.test.{WithApplication, FakeApplication}
-import play.api.libs.ws.{Response, WS}
-import play.test.WithServer
+import play.api.test.WithApplication
+import play.api.libs.ws.WS
 
 class S3Spec extends Specification {
 

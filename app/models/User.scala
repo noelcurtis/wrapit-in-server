@@ -12,8 +12,6 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import anorm.~
 import scala.Some
-import engine.Utils
-import java.text.SimpleDateFormat
 
 case class User(id: Pk[Long] = NotAssigned, email: Option[String], password: Option[String],
                 lastSignIn: Option[Date] = None, token: Option[String] = Some("")) {

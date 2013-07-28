@@ -16,12 +16,14 @@ case class GiftList(id: Pk[Long] = NotAssigned, name: Option[String], purpose: O
 
   private[this] var itemCount : Option[Int] = None;
 
-  //TODO: update to NOT cache itemCount !! only Lazy Load
+  /**
+   * Use to get the Item Count on the GiftList
+   * @return
+   */
   def getItemCount : Int = {
-    itemCount.getOrElse(id match {
-      case NotAssigned => itemCount = Some(0); itemCount.get
-      case _ => val items = Item.find(id.get); itemCount = Some(items.size); itemCount.get
-    })
+    val items = Item.find(id.get) // lazy load the itemCount
+    itemCount = Some(items.size)
+    itemCount.get
   }
 
 }
@@ -47,7 +49,7 @@ object GiftList {
   implicit val readGiftList : Reads[GiftList] = (
     (__ \ 'id).readNullable[Long].map[Pk[Long]](x => if(x.isDefined) anorm.Id(x.get) else NotAssigned) and
       (__ \ 'name).readNullable[String] and
-      (__ \ 'purpose).readNullable[String] and
+      (__ \ 'purpose).readNullable[String].map[Option[String]](x => x match {case Some(a) => Some(a); case None => Some("")}) and
       (__ \ 'dueDate).readNullable[Date]
     )(GiftList.apply _)
 

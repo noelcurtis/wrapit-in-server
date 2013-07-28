@@ -4,6 +4,7 @@ import play.api.mvc._
 import play.api.data.Form
 import play.api.data.Forms._
 import models.User
+import play.api.libs.json.Json
 
 object Application extends Controller {
 
@@ -104,14 +105,27 @@ trait Secured {
    */
   private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Application.index())
 
-  // --
-
   /**
    * Action for authenticated users.
    */
   def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(authToken, onUnauthorized) {
-    user =>
+    user => Action(request => f(user)(request))
+  }
+
+}
+
+
+trait Authenticated {
+
+  private def authToken(request: RequestHeader) = request.headers.get("Auth-Token")
+
+  private def onUnauthorized(request: RequestHeader) = Results.Ok(Json.obj("error" -> "no authtoken in headers"))
+
+  def isAuthenticated(f: => Option[User] => Request[AnyContent] => Result) = Security.Authenticated(authToken, onUnauthorized) {
+    authToken => {
+      val user = User.findByToken(authToken)
       Action(request => f(user)(request))
+    }
   }
 
 }

@@ -2,11 +2,9 @@ package unit
 
 import org.specs2.mutable._
 
-import play.api.test._
-import play.api.test.Helpers._
 
 import engine.ImageGetter
-import play.Logger;
+
 
 
 class ImageGetterSpec extends Specification{

@@ -35,9 +35,14 @@ POST        /list/:id/items/:itemId/uploadPhoto          controllers.Items.uploa
 
 ##### API #####
 
-#User
+# User
 POST        /apiv1/user                                  controllers.apiv1.User.create
 POST        /apiv1/authenticate                          controllers.apiv1.User.authenticate
+
+# Lists
+GET         /apiv1/lists                                 controllers.apiv1.GiftLists.index
+GET         /apiv1/lists/photos                          controllers.apiv1.GiftLists.photos
+POST        /apiv1/lists                                 controllers.apiv1.GiftLists.create
 
 
 # Test
