@@ -115,6 +115,9 @@ trait Secured {
 }
 
 
+/**
+ * Use to provide security features for the API actions
+ */
 trait Authenticated {
 
   private def authToken(request: RequestHeader) = request.headers.get("Auth-Token")
@@ -123,8 +126,8 @@ trait Authenticated {
 
   def isAuthenticated(f: => Option[User] => Request[AnyContent] => Result) = Security.Authenticated(authToken, onUnauthorized) {
     authToken => {
-      val user = User.findByToken(authToken)
-      Action(request => f(user)(request))
+      val user = User.findByToken(authToken) // find the user by auth token
+      Action(request => f(user)(request)) // pass on the user and request to the action
     }
   }
 
