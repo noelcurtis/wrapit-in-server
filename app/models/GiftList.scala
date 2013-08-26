@@ -21,9 +21,14 @@ case class GiftList(id: Pk[Long] = NotAssigned, name: Option[String], purpose: O
    * @return
    */
   def getItemCount : Int = {
-    val items = Item.find(id.get) // lazy load the itemCount
+    val items = Item.find(id.get)
     itemCount = Some(items.size)
     itemCount.get
+  }
+
+  def getPhotos : List[String] = {
+    val photos = PhotoRelation.findAllForGiftList(id.get)
+    photos.map(x => x.getPhoto().get.getPath.getOrElse(""))
   }
 
 }
@@ -53,15 +58,17 @@ object GiftList {
       (__ \ 'dueDate).readNullable[Date]
     )(GiftList.apply _)
 
+
   /**
    * Use to write a GiftList to JSON String
    */
-  implicit val writesGiftList : Writes[GiftList] = (
+  implicit val writesGiftListWithPhotos : Writes[GiftList] = (
     (__ \ 'id).write[Long] and
       (__ \ 'name).write[Option[String]] and
       (__ \ 'dueDate).write[Option[Date]] and
-      (__ \ 'itemCount).write[Int]
-    )(x => (x.id.get, x.name, x.dueDate, x.getItemCount))
+      (__ \ 'itemCount).write[Int] and
+      (__ \ 'photos).write[List[String]]
+  )(x => (x.id.get, x.name, x.dueDate, x.getItemCount, x.getPhotos))
 
   /**
    * Use to create a Gift List

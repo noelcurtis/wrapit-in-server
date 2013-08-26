@@ -82,7 +82,7 @@ object GiftListRole {
    */
   implicit val writesGiftListRole : Writes[GiftListRole] = (
       (__ \ 'role).write[Option[Int]] and
-        (__ \ 'giftList).write[Option[GiftList]]
+        (__ \ 'list).write[Option[GiftList]]
     )(r => (r.role, r.getGiftList))
 
 
